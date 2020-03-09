@@ -1,4 +1,9 @@
+aresponses==1.1.2
 coverage==5.0.3
+flake8==3.7.9
+flake8-docstrings==1.5.0
+isort==4.3.21
+mypy==0.761
 pylint==2.4.4
 pytest==5.3.5
 pytest-asyncio==0.10.0

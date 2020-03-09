@@ -51,4 +51,12 @@ RUN apt-get update \
 # Switch back to dialog for any ad-hoc use of apt-get
 ENV DEBIAN_FRONTEND=dialog
 
+# Install Python dependencies from requirements
+COPY ../requirements_test.txt ../requirements_dev.txt ./
+RUN pip3 install -r requirements_test.txt \
+    && rm -f requirements_test.txt
 
+RUN pip3 install -r requirements_test.txt; \
+    pip3 install -r requirements_dev.txt; \
+    pre-commit install; \
+    rm -f requirements_test.txt requirements_dev.txt
