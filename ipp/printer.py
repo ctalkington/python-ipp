@@ -1,7 +1,7 @@
 """Printer Model for IPP."""
 from yarl import URL
 
-from .const import DEFAULT_CHARSET, DEFAULT_LANGUAGE, DEFAULT_PRINTER_ATTRIBUTES, DEFAULT_JOB_ATTRIBUTES, DEFAULT_PROTO_VERSION
+from .const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PRINTER_ATTRIBUTES, DEFAULT_JOB_ATTRIBUTES, DEFAULT_PROTO_VERSION
 from .ipp import IPP
 from .enums import IppOperation
 
@@ -11,7 +11,7 @@ class Printer:
     def __init__(self, uri: str):
         self.uri = uri
         self.charset = DEFAULT_CHARSET
-        self.language = DEFAULT_LANGUAGE
+        self.language = DEFAULT_CHARSET_LANGUAGE
         self.version = DEFAULT_PROTO_VERSION
 
         url = URL(uri)

@@ -1,7 +1,7 @@
 """Constants for IPP."""
 
-DEFAULT_CHARSET_LANGUAGE = "en-US"
 DEFAULT_CHARSET = "utf-8"
+DEFAULT_CHARSET_LANGUAGE = "en-US"
 
 DEFAULT_CLASS_ATTRIBUTES = ["printer-name", "member-names"]
 
