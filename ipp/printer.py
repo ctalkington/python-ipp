@@ -13,7 +13,8 @@ from .const import (
 from .enums import IppOperation
 from .ipp import IPP
 
-class Printer:
+
+class Printer(IPP):
     """Abstraction for interaction with a printer using Internet Printing Protocol."""
 
     def __init__(self, uri: str, session: ClientSession = None):
@@ -24,12 +25,13 @@ class Printer:
 
         url = URL(uri)
         self.secure = url.scheme == "ipps"
-        self.ipp = IPP(
+
+        super().__init__(
             host=url.host,
             port=url.port,
             base_path=url.path,
             tls=self.secure,
-            session=session
+            session=session,
         )
 
     def _message(self, operation: str, msg: dict):
@@ -52,7 +54,7 @@ class Printer:
 
     async def execute(self, operation: str, message: dict):
         message = self._message(operation, message)
-        return await self.ipp._request(data=message)
+        return await self._request(data=message)
 
     async def get_attributes(self, attributes=None):
         response_data = await self.execute(
@@ -85,4 +87,3 @@ class Printer:
         )
 
         return {j["job-id"]: j for j in response_data["jobs"]}
-

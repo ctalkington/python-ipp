@@ -1,4 +1,6 @@
 """Exceptions for IPP."""
+
+
 class IPPError(Exception):
     """Generic IPP exception."""
 

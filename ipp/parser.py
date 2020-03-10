@@ -49,7 +49,7 @@ def parse_attribute(data: bytes, offset: int):
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
         if attribute["value-length"] > 0:
             attribute["value"] = data[
-                offset : offset + attribute["value-length"]
+                offset: offset + attribute["value-length"]
             ].decode("utf-8")
             offset += attribute["value-length"]
         else:
@@ -63,7 +63,7 @@ def parse_attribute(data: bytes, offset: int):
         attribute["value"] = struct.unpack_from(">iib", data, offset)
         offset += attribute["value-length"]
     else:
-        attribute["value"] = data[offset : offset + attribute["value-length"]].decode(
+        attribute["value"] = data[offset: offset + attribute["value-length"]].decode(
             "utf-8"
         )
         offset += attribute["value-length"]
@@ -156,6 +156,6 @@ def parse(raw_data: bytes, contains_data=False):
         data["operation-attributes"] = data["operation-attributes"][0]
 
     if contains_data:
-        data["data"] = raw_data[offset + 1 :]
+        data["data"] = raw_data[offset + 1:]
 
     return data

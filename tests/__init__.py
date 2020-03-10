@@ -35,7 +35,7 @@ class FakeResolver:
             return await self._resolver.resolve(host, port, family)
 
 
-class FakeIPP:
+class FakeIPPServer:
     def __init__(self, *, loop):
         self.loop = loop
         self.app = web.Application(loop=loop)
@@ -64,7 +64,7 @@ class FakeIPP:
         await self.app.cleanup()
 
     async def on_ipp_print(self, request):
-        if request.body == '1':
+        if request.body == "1":
             return web.Response(text="Hello, world 1")
-           
+
         return web.Response(text="Hello, world")

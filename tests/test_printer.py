@@ -1,8 +1,6 @@
 """Tests for Printer."""
 import pytest
-
 from aiohttp import ClientSession, TCPConnector
-
 from ipp import IPP, Printer
 from tests import DEFAULT_PRINTER_URI, FakeIPPServer, FakeResolver
 
