@@ -26,10 +26,16 @@ class FakeResolver:
     async def resolve(self, host, port=0, family=socket.AF_INET):
         fake_port = self._fakes.get(host)
         if fake_port is not None:
-            return [{'hostname': host,
-                     'host': self._LOCAL_HOST[family], 'port': fake_port,
-                     'family': family, 'proto': 0,
-                     'flags': socket.AI_NUMERICHOST}]
+            return [
+                {
+                    'hostname': host,
+                    'host': self._LOCAL_HOST[family],
+                    'port': fake_port,
+                    'family': family,
+                    'proto': 0,
+                    'flags': socket.AI_NUMERICHOST,
+                }
+            ]
         else:
             return await self._resolver.resolve(host, port, family)
 
@@ -38,9 +44,7 @@ class FakeIPP:
     def __init__(self, *, loop):
         self.loop = loop
         self.app = web.Application(loop=loop)
-        self.app.router.add_routes(
-            [web.post('/ipp/print', self.on_ipp_print)],
-        )
+        self.app.router.add_routes([web.post('/ipp/print', self.on_ipp_print)])
         self.handler = None
         self.server = None
         here = pathlib.Path(__file__)
