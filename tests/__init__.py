@@ -1,8 +1,6 @@
 """Tests for IPP."""
 DEFAULT_PRINTER_URI = "ipps://printer.example.com:631/ipp/print"
 
-"""Mocks for IPP"""
-import aiohttp
 from aiohttp import web
 from aiohttp.resolver import DefaultResolver
 from aiohttp.test_utils import unused_port
