@@ -106,7 +106,9 @@ class IPP:
 
             raise IPPError(response.status, {"message": contents.decode("utf8")})
 
-        if response.status == 200:
+        content_type = response.headers.get("Content-Type", "")
+
+        if "application/ipp" in content_type:
             contents = await response.read()
             contents = parse_response(contents)
 
