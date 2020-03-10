@@ -1,4 +1,5 @@
 """Printer Model for IPP."""
+from aiohttp.client import ClientSession
 from deepmerge import always_merger
 from yarl import URL
 
@@ -16,7 +17,7 @@ from .enums import IppOperation
 class Printer:
     """Abstraction for interaction with a printer using Internet Printing Protocol."""
 
-    def __init__(self, uri: str):
+    def __init__(self, uri: str, session: ClientSession = None):
         self.uri = uri
         self.charset = DEFAULT_CHARSET
         self.language = DEFAULT_CHARSET_LANGUAGE
@@ -25,7 +26,7 @@ class Printer:
         url = URL(uri)
         self.secure = url.scheme == "ipps"
         self.ipp = IPP(
-            host=url.host, port=url.port, base_path=url.path, tls=self.secure
+            host=url.host, port=url.port, base_path=url.path, tls=self.secure, session=session
         )
 
     def _message(self, operation: str, msg: dict):
