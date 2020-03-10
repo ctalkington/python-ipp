@@ -2,7 +2,7 @@
 	"name": "Python IPP Dev",
 	"context": "..",
 	"dockerFile": "../Dockerfile.dev",
-	"settings": { 
+	"settings": {
 		"terminal.integrated.shell.linux": "/bin/bash",
 		"python.pythonPath": "/usr/local/bin/python",
 		"python.linting.enabled": true,
