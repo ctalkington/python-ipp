@@ -1,4 +1,5 @@
 """Printer Model for IPP."""
+from deepmerge import always_merger
 from yarl import URL
 
 from .const import (
@@ -43,7 +44,7 @@ class Printer:
         if msg is not dict:
             msg = {}
 
-        return {**base, **msg}
+        return always_merger.merge(base, msg)
 
     async def execute(self, operation: str, message: dict):
         message = self._message(operation, message)
@@ -67,7 +68,6 @@ class Printer:
         response_data = await self.execute(
             IppOperation.GET_JOBS,
             {
-                "printer-uri": self.uri,
                 "which-jobs": which_jobs,
                 "my-jobs": my_jobs,
                 "requested-attributes": attributes + ["job-id"]
