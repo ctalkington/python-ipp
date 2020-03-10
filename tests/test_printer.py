@@ -1,5 +1,5 @@
 """Tests for Printer."""
-import aiohttp
+import aiohttp import ClientSession, TCPConnector
 import pytest
 
 from ipp import IPP, Printer
@@ -16,21 +16,21 @@ async def info(event_loop):
 @pytest.fixture()
 async def session(event_loop, info):
     resolver = FakeResolver(info, loop=event_loop)
-    connector = aiohttp.TCPConnector(loop=event_loop, resolver=resolver, verify_ssl=False)
-    session = aiohttp.ClientSession(connector=connector, loop=event_loop)
+    connector = TCPConnector(loop=event_loop, resolver=resolver, verify_ssl=False)
+    session = ClientSession(connector=connector, loop=event_loop)
     yield session
     await session.close()
 
 
-def test_init() -> None:
+def test_init(session) -> None:
     instance = Printer(DEFAULT_PRINTER_URI)
     assert isinstance(instance, Printer)
     assert isinstance(instance.ipp, IPP)
 
 
 @pytest.mark.asyncio
-async def test_get_attributes() -> None:
-    instance = Printer(DEFAULT_PRINTER_URI)
+async def test_get_attributes(session) -> None:
+    instance = Printer(DEFAULT_PRINTER_URI, session=session)
     attributes = await instance.get_attributes()
 
     assert attributes == {}
@@ -38,7 +38,7 @@ async def test_get_attributes() -> None:
 
 @pytest.mark.asyncio
 async def test_get_jobs() -> None:
-    instance = Printer(DEFAULT_PRINTER_URI)
+    instance = Printer(DEFAULT_PRINTER_URI, session=session)
     jobs = await instance.get_jobs()
 
     assert jobs == {}
