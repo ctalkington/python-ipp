@@ -13,22 +13,22 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v2.5.0
     hooks:
-        - id: trailing-whitespace
-        - id: end-of-file-fixer
-        - id: check-merge-conflict
-        - id: debug-statements
-        - id: check-docstring-first
-        - id: check-json
-        - id: check-yaml
-        - id: requirements-txt-fixer
-        - id: check-byte-order-marker
-        - id: check-case-conflict
-        - id: check-executables-have-shebangs
-        - id: fix-encoding-pragma
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+      - id: check-merge-conflict
+      - id: debug-statements
+      - id: check-docstring-first
+      - id: check-json
+      - id: check-yaml
+      - id: requirements-txt-fixer
+      - id: check-byte-order-marker
+      - id: check-case-conflict
+      - id: check-executables-have-shebangs
+      - id: fix-encoding-pragma
         args: ["--remove"]
-        - id: check-ast
-        - id: detect-private-key
-        - id: forbid-new-submodules
+      - id: check-ast
+      - id: detect-private-key
+      - id: forbid-new-submodules
   - repo: https://github.com/pre-commit/pre-commit
     rev: v2.1.1
     hooks:
