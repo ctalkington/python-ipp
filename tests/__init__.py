@@ -24,12 +24,12 @@ class FakeResolver:
         if fake_port is not None:
             return [
                 {
-                    'hostname': host,
-                    'host': self._LOCAL_HOST[family],
-                    'port': fake_port,
-                    'family': family,
-                    'proto': 0,
-                    'flags': socket.AI_NUMERICHOST,
+                    "hostname": host,
+                    "host": self._LOCAL_HOST[family],
+                    "port": fake_port,
+                    "family": family,
+                    "proto": 0,
+                    "flags": socket.AI_NUMERICHOST,
                 }
             ]
         else:
