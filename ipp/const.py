@@ -16,7 +16,7 @@ DEFAULT_JOB_ATTRIBUTES = [
     "job-k-octets",
     "number-of-documents",
     "copies",
-    "job-originating-user-name"
+    "job-originating-user-name",
 ]
 
 DEFAULT_PRINTER_ATTRIBUTES = [
@@ -30,7 +30,7 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "printer-state-reason",
     "printer-uri-supported",
     "device-uri",
-    "printer-is-shared"
+    "printer-is-shared",
 ]
 
 DEFAULT_PORT = 631
