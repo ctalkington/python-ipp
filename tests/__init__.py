@@ -64,4 +64,7 @@ class FakeIPP:
         await self.app.cleanup()
 
     async def on_ipp_print(self, request):
+        if request.body == '1':
+            return web.Response(text="Hello, world 1")
+           
         return web.Response(text="Hello, world")
