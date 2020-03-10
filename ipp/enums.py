@@ -2,7 +2,7 @@
 from enum import IntEnum
 
 
-class IppStatus(IntEnum):
+class IppStatus(IntEnum):  # fmt: off
     CUPS_INVALID = -1
     OK = 0x0000
     OK_IGNORED_OR_SUBSTITUTED = 0x0001
@@ -68,7 +68,7 @@ class IppStatus(IntEnum):
     ERROR_CUPS_UPGRADE_REQUIRED = 0x1002
 
 
-class IppOperation(IntEnum):
+class IppOperation(IntEnum): # fmt: off
     CUPS_INVALID = -0x0001
     CUPS_NONE = 0x0000
     PRINT_JOB = 0x0002
@@ -188,7 +188,7 @@ class IppOperation(IntEnum):
     CUPS_CREATE_LOCAL_PRINTER = 0x4028
 
 
-class IppTag(IntEnum):
+class IppTag(IntEnum):  # fmt: off
     CUPS_INVALID = -1
     ZERO = 0x00
     OPERATION = 0x01
@@ -234,7 +234,7 @@ class IppTag(IntEnum):
     CUPS_CONST = -0x7fffffff - 1
 
 
-class IppJobState(IntEnum):
+class IppJobState(IntEnum):  # fmt: off
     PENDING = 0x03
     HELD = 0x04
     PROCESSING = 0x05
@@ -244,7 +244,7 @@ class IppJobState(IntEnum):
     COMPLETED = 0x09
 
 
-class IppDocumentState(IntEnum):
+class IppDocumentState(IntEnum):  # fmt: off
     PENDING = 0x03
     PROCESSING = 0x05
     CANCELED = 0x07
@@ -252,7 +252,7 @@ class IppDocumentState(IntEnum):
     COMPLETED = 0x08
 
 
-class IppPrinterState(IntEnum):
+class IppPrinterState(IntEnum):  # fmt: off
     IDLE = 0x0003
     PROCESSING = 0x0004
     STOPPED = 0x0005
