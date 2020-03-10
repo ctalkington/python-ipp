@@ -28,6 +28,7 @@ repos:
         args: ["--remove"]
       - id: check-ast
       - id: detect-private-key
+        exclude: ^tests/server.key$
       - id: forbid-new-submodules
   - repo: https://github.com/pre-commit/pre-commit
     rev: v2.1.1
