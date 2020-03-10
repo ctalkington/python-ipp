@@ -39,7 +39,7 @@ class FakeIPP:
         self.loop = loop
         self.app = web.Application(loop=loop)
         self.app.router.add_routes(
-            [web.post('/ipp/print', self.on_ipp_print),
+            [web.post('/ipp/print', self.on_ipp_print)],
         )
         self.handler = None
         self.server = None
