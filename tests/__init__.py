@@ -1,9 +1,14 @@
 """Tests for IPP."""
-DEFAULT_PRINTER_URI = "ipps://printer.example.com:631/ipp/print"
+import asyncio
+import pathlib
+import socket
+import ssl
 
 from aiohttp import web
 from aiohttp.resolver import DefaultResolver
 from aiohttp.test_utils import unused_port
+
+DEFAULT_PRINTER_URI = "ipps://printer.example.com:631/ipp/print"
 
 
 class FakeResolver:
