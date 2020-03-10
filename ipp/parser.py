@@ -20,7 +20,7 @@ def parse_attribute(data: bytes, offset: int):
     attribute["name-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
 
-    attribute["name"] = data[offset : offset + attribute["name-length"]].decode("utf-8")
+    attribute["name"] = data[offset: offset + attribute["name-length"]].decode("utf-8")
     offset += attribute["name-length"]
 
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
