@@ -12,11 +12,7 @@ DEFAULT_PRINTER_URI = "ipps://printer.example.com:631/ipp/print"
 
 
 class FakeResolver:
-    _LOCAL_HOST = {
-        0: "127.0.0.1",
-        socket.AF_INET: "127.0.0.1",
-        socket.AF_INET6: "::1"
-    }
+    _LOCAL_HOST = {0: "127.0.0.1", socket.AF_INET: "127.0.0.1", socket.AF_INET6: "::1"}
 
     def __init__(self, fakes, *, loop):
         """fakes -- dns -> port dict"""
@@ -44,7 +40,7 @@ class FakeIPP:
     def __init__(self, *, loop):
         self.loop = loop
         self.app = web.Application(loop=loop)
-        self.app.router.add_routes([web.post('/ipp/print', self.on_ipp_print)])
+        self.app.router.add_routes([web.post("/ipp/print", self.on_ipp_print)])
         self.handler = None
         self.server = None
         here = pathlib.Path(__file__)
