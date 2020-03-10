@@ -6,6 +6,7 @@ from aiohttp import ClientSession, TCPConnector
 from ipp import IPP, Printer
 from tests import DEFAULT_PRINTER_URI, FakeIPPServer, FakeResolver
 
+
 @pytest.fixture()
 async def info(event_loop):
     fake_ipp = FakeIPPServer(loop=event_loop)
