@@ -34,10 +34,6 @@ repos:
     rev: v2.1.1
     hooks:
       - id: validate_manifest
-  - repo: https://github.com/pre-commit/mirrors-autopep8
-    rev: v1.5
-    hooks:
-      - id: autopep8
   - repo: https://github.com/pre-commit/mirrors-isort
     rev: v4.3.21
     hooks:

@@ -21,7 +21,8 @@ def parse_attribute(data: bytes, offset: int):
     attribute["name-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
 
-    attribute["name"] = data[offset: offset + attribute["name-length"]].decode("utf-8")
+    offset_length = offset + attribute["name-length"]
+    attribute["name"] = data[offset:offset_length].decode("utf-8")
     offset += attribute["name-length"]
 
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
@@ -49,9 +50,8 @@ def parse_attribute(data: bytes, offset: int):
         offset += attribute["value-length"]
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
         if attribute["value-length"] > 0:
-            attribute["value"] = data[
-                offset: offset + attribute["value-length"]
-            ].decode("utf-8")
+            offset_length = offset + attribute["value-length"]
+            attribute["value"] = data[offset:offset_length].decode("utf-8")
             offset += attribute["value-length"]
         else:
             attribute["value"] = None
@@ -64,9 +64,8 @@ def parse_attribute(data: bytes, offset: int):
         attribute["value"] = struct.unpack_from(">iib", data, offset)
         offset += attribute["value-length"]
     else:
-        attribute["value"] = data[offset: offset + attribute["value-length"]].decode(
-            "utf-8"
-        )
+        offset_length = offset + attribute["value-length"]
+        attribute["value"] = data[offset:offset_length].decode("utf-8")
         offset += attribute["value-length"]
 
     return attribute, offset
@@ -159,6 +158,7 @@ def parse(raw_data: bytes, contains_data=False):
         data["operation-attributes"] = data["operation-attributes"][0]
 
     if contains_data:
-        data["data"] = raw_data[offset + 1:]
+        offset_start = offset + 1
+        data["data"] = raw_data[offset_start:]
 
     return data
