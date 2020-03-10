@@ -6,13 +6,12 @@ from yarl import URL
 from .const import (
     DEFAULT_CHARSET,
     DEFAULT_CHARSET_LANGUAGE,
-    DEFAULT_PRINTER_ATTRIBUTES,
     DEFAULT_JOB_ATTRIBUTES,
+    DEFAULT_PRINTER_ATTRIBUTES,
     DEFAULT_PROTO_VERSION,
 )
-from .ipp import IPP
 from .enums import IppOperation
-
+from .ipp import IPP
 
 class Printer:
     """Abstraction for interaction with a printer using Internet Printing Protocol."""
@@ -26,7 +25,11 @@ class Printer:
         url = URL(uri)
         self.secure = url.scheme == "ipps"
         self.ipp = IPP(
-            host=url.host, port=url.port, base_path=url.path, tls=self.secure, session=session
+            host=url.host,
+            port=url.port,
+            base_path=url.path,
+            tls=self.secure,
+            session=session
         )
 
     def _message(self, operation: str, msg: dict):
