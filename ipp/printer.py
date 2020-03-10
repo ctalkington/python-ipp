@@ -36,6 +36,7 @@ class Printer:
                 "attributes-charset": self.charset,
                 "attributes-natural-language": self.language,
                 "printer-uri": self.uri,
+                "requesting-user-name": "PythonIPP",
             },
         }
 
@@ -52,8 +53,6 @@ class Printer:
         response_data = await self.execute(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
-                "printer-uri": self.uri,
-                "requesting-user-name": "PythonIPP",
                 "requested-attributes": attributes
                 if attributes
                 else DEFAULT_PRINTER_ATTRIBUTES,
