@@ -1,11 +1,9 @@
 """Tests for Printer."""
+import asyncio
 from collections import namedtuple
 
-import asyncio
 import pytest
-
 from aiohttp import ClientSession, TCPConnector
-
 from ipp import Printer
 from tests import (
     DEFAULT_PRINTER_URI,
@@ -23,6 +21,7 @@ _RedirectContext = namedtuple("RedirectContext", "add_server session")
 
 @pytest.fixture
 async def aiohttp_redirector():
+    """Set up AIOHTTP Resolver with ClientSession."""
     resolver = FakeResolver()
     connector = TCPConnector(resolver=resolver, use_dns_cache=False)
     async with ClientSession(connector=connector) as session:
@@ -47,7 +46,7 @@ async def test_get_attributes(aiohttp_redirector) -> None:
         assert request.path_qs == "/ipp/print"
         server.send_response(
             request,
-            body=RESPONSE_GET_PRINTER_ATTRIBUTES_FULL,
+            text=RESPONSE_GET_PRINTER_ATTRIBUTES_FULL,
             headers={"Content-Type": "application/ipp"},
         )
 
@@ -68,7 +67,7 @@ async def test_get_jobs(aiohttp_redirector) -> None:
         assert request.path_qs == "/ipp/print"
         server.send_response(
             request,
-            body=RESPONSE_GET_PRINTER_JOBS_FULL,
+            body=RESPONSE_GET_JOBS_FULL,
             headers={"Content-Type": "application/ipp"},
         )
 

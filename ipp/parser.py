@@ -1,6 +1,6 @@
 """Response Parser for IPP."""
 import struct
-from typing import Dict, Union
+from typing import Any, Dict
 
 from .enums import IppDocumentState, IppJobState, IppPrinterState, IppTag
 
@@ -21,7 +21,7 @@ def parse_attribute(data: bytes, offset: int):
     attribute["name-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
 
-    attribute["name"] = data[offset : offset + attribute["name-length"]].decode("utf-8")
+    attribute["name"] = data[offset: offset + attribute["name-length"]].decode("utf-8")
     offset += attribute["name-length"]
 
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
@@ -50,7 +50,7 @@ def parse_attribute(data: bytes, offset: int):
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
         if attribute["value-length"] > 0:
             attribute["value"] = data[
-                offset : offset + attribute["value-length"]
+                offset: offset + attribute["value-length"]
             ].decode("utf-8")
             offset += attribute["value-length"]
         else:
@@ -64,7 +64,7 @@ def parse_attribute(data: bytes, offset: int):
         attribute["value"] = struct.unpack_from(">iib", data, offset)
         offset += attribute["value-length"]
     else:
-        attribute["value"] = data[offset : offset + attribute["value-length"]].decode(
+        attribute["value"] = data[offset: offset + attribute["value-length"]].decode(
             "utf-8"
         )
         offset += attribute["value-length"]
@@ -87,7 +87,7 @@ def parse(raw_data: bytes, contains_data=False):
     1 byte: Attribute End Byte (\0x03)
     """
 
-    data = {}
+    data: Dict[str, Any] = {}
     offset = 0
 
     data["version"] = struct.unpack_from(">bb", raw_data, offset)
@@ -106,7 +106,7 @@ def parse(raw_data: bytes, contains_data=False):
 
     attribute_key = ""
     previous_attribute_name = ""
-    tmp_data: Dict[str, Union[str, list]] = {}
+    tmp_data: Dict[str, Any] = {}
 
     while struct.unpack_from("b", raw_data, offset)[0] != IppTag.END.value:
         # check for operation, job or printer attribute start byte
@@ -152,12 +152,13 @@ def parse(raw_data: bytes, contains_data=False):
 
         offset = new_offset
 
-    data[attribute_key].append(tmp_data)
+    if isinstance(data[attribute_key], list):
+        data[attribute_key].append(tmp_data)
 
-    if data["operation-attributes"]:
+    if isinstance(data["operation-attributes"], list):
         data["operation-attributes"] = data["operation-attributes"][0]
 
     if contains_data:
-        data["data"] = raw_data[offset + 1 :]
+        data["data"] = raw_data[offset + 1:]
 
     return data

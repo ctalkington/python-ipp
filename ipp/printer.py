@@ -73,7 +73,7 @@ class Printer(IPP):
         )
 
         if isinstance(response_data, dict):
-            return next(iter(response_data["printers"] or []), None)
+            return next(iter(response_data["printers"] or []), {})
 
         return None
 

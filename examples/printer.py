@@ -3,11 +3,10 @@
 import asyncio
 
 from ipp import Printer
-from ipp.enums import IppStatus
 
 
 async def main():
-    """Example of connecting to your IPP print server."""
+    """Show example of connecting to your IPP print server."""
     async with Printer("ipps://192.168.1.92:631/ipp/print") as printer:
         # Get Printer Attributes
         attributes = await printer.get_attributes()

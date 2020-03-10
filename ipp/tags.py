@@ -34,7 +34,6 @@ ATTRIBUTE_TAG_MAP = {
     "hold-job-until": IppTag.KEYWORD,
     "job-printer-uri": IppTag.URI,
     "printer-location": IppTag.TEXT,
-    "document-number": IppTag.INTEGER,
     "printer-state": IppTag.ENUM,
     "document-state": IppTag.ENUM,
     "device-uri": IppTag.URI,

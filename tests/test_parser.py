@@ -38,4 +38,3 @@ def test_parse_attribute() -> None:
         },
         37,
     )
-
