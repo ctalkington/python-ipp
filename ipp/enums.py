@@ -3,6 +3,8 @@ from enum import IntEnum
 
 
 class IppStatus(IntEnum):
+    """Represent the ENUMs of a status response."""
+
     CUPS_INVALID = -1
     OK = 0x0000
     OK_IGNORED_OR_SUBSTITUTED = 0x0001
@@ -69,6 +71,8 @@ class IppStatus(IntEnum):
 
 
 class IppOperation(IntEnum):
+    """Represent the ENUMs of an operation."""
+
     CUPS_INVALID = -0x0001
     CUPS_NONE = 0x0000
     PRINT_JOB = 0x0002
@@ -189,6 +193,8 @@ class IppOperation(IntEnum):
 
 
 class IppTag(IntEnum):
+    """Represent the ENUMs of a tag."""
+
     CUPS_INVALID = -1
     ZERO = 0x00
     OPERATION = 0x01
@@ -235,6 +241,8 @@ class IppTag(IntEnum):
 
 
 class IppJobState(IntEnum):
+    """Represent the ENUMs of the state of a print job."""
+
     PENDING = 0x03
     HELD = 0x04
     PROCESSING = 0x05
@@ -245,6 +253,8 @@ class IppJobState(IntEnum):
 
 
 class IppDocumentState(IntEnum):
+    """Represent the ENUMs of the state of a document."""
+
     PENDING = 0x03
     PROCESSING = 0x05
     CANCELED = 0x07
@@ -253,6 +263,8 @@ class IppDocumentState(IntEnum):
 
 
 class IppPrinterState(IntEnum):
+    """Represent the ENUMs of the state of a printer."""
+
     IDLE = 0x0003
     PROCESSING = 0x0004
     STOPPED = 0x0005

@@ -18,6 +18,7 @@ class Printer(IPP):
     """Abstraction for interaction with a printer using Internet Printing Protocol."""
 
     def __init__(self, uri: str, session: ClientSession = None):
+        """Initialize the Printer."""
         self.uri = uri
         self.charset = DEFAULT_CHARSET
         self.language = DEFAULT_CHARSET_LANGUAGE
@@ -34,11 +35,12 @@ class Printer(IPP):
             session=session,
         )
 
-    def _message(self, operation: str, msg: dict):
+    def _message(self, operation: IppOperation, msg: dict):
+        """Build a request message to be sent to the server."""
         base = {
             "version": self.version,
             "operation": operation,
-            "id": None,  # will get added by encoder if one isn't given
+            "request-id": None,  # will get added by serializer if one isn't given
             "operation-attributes-tag": {  # these are required to be in this order
                 "attributes-charset": self.charset,
                 "attributes-natural-language": self.language,
@@ -52,11 +54,13 @@ class Printer(IPP):
 
         return always_merger.merge(base, msg)
 
-    async def execute(self, operation: str, message: dict):
+    async def execute(self, operation: IppOperation, message: dict) -> dict:
+        """Send a request message to the server."""
         message = self._message(operation, message)
         return await self._request(data=message)
 
-    async def get_attributes(self, attributes=None):
+    async def get_attributes(self, attributes=None) -> dict:
+        """Retreive the printer attributes from the server."""
         response_data = await self.execute(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
@@ -68,11 +72,15 @@ class Printer(IPP):
             },
         )
 
-        return next(iter(response_data["printers"] or []), None)
+        if isinstance(response_data, dict):
+            return next(iter(response_data["printers"] or []), None)
+
+        return None
 
     async def get_jobs(
         self, which_jobs: str = "not-completed", my_jobs: bool = False, attributes=None
-    ):
+    ) -> dict:
+        """Retreive the queued print jobs from the server."""
         response_data = await self.execute(
             IppOperation.GET_JOBS,
             {
@@ -86,4 +94,7 @@ class Printer(IPP):
             },
         )
 
-        return {j["job-id"]: j for j in response_data["jobs"]}
+        if isinstance(response_data, dict):
+            return {j["job-id"]: j for j in response_data["jobs"]}
+
+        return None

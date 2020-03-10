@@ -1,8 +1,10 @@
+"""Attribute Tags for IPP."""
 from .enums import IppTag
 
 ATTRIBUTE_TAG_MAP = {
     "attributes-charset": IppTag.CHARSET,
     "attributes-natural-language": IppTag.LANGUAGE,
+    "document-number": IppTag.INTEGER,
     "printer-uri": IppTag.URI,
     "requesting-user-name": IppTag.NAME,
     "job-id": IppTag.INTEGER,
@@ -20,6 +22,7 @@ ATTRIBUTE_TAG_MAP = {
     "job-state-reason": IppTag.KEYWORD,
     "requested-attributes": IppTag.KEYWORD,
     "member-uris": IppTag.URI,
+    "operations-supported": IppTag.ENUM,
     "ppd-name": IppTag.NAME,
     "printer-state-reason": IppTag.KEYWORD,
     "printer-is-shared": IppTag.BOOLEAN,

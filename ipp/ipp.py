@@ -77,7 +77,7 @@ class IPP:
         if data is None:
             data = {}
 
-        if data is dict:
+        if isinstance(data, dict):
             data = encode_dict(data)
 
         try:
@@ -112,12 +112,25 @@ class IPP:
             contents = await response.read()
             contents = parse_response(contents)
 
-            # if contents["status-code"] != 0:
-            # raise IPPError(
-            #     contents["status-code"],
-            #     {"message": contents["operation-attributes"]["status-message"]},
-            # )
+            if contents["status-code"] != 0:
+                raise IPPError(
+                    contents["status-code"],
+                    # {"message": contents["operation-attributes"]["status-message"]},
+                )
 
             return contents
 
         return await response.text()
+
+    async def close(self) -> None:
+        """Close open client session."""
+        if self._session and self._close_session:
+            await self._session.close()
+
+    async def __aenter__(self) -> "IPP":
+        """Async enter."""
+        return self
+
+    async def __aexit__(self, *exc_info) -> None:
+        """Async exit."""
+        await self.close()

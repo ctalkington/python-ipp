@@ -8,12 +8,7 @@ from .enums import IppTag
 from .tags import ATTRIBUTE_TAG_MAP
 
 
-def update_attribute_tag_map(attribute: str, tag: IppTag):
-    """Update the attribute tag mapping."""
-    ATTRIBUTE_TAG_MAP[attribute] = tag
-
-
-def __construct_attibute_values(tag: IppTag, value):
+def __construct_attibute_values(tag: IppTag, value: Any) -> bytes:
     """Serialize the attribute values into IPP format."""
     bs = b""
 
@@ -30,7 +25,7 @@ def __construct_attibute_values(tag: IppTag, value):
     return bs
 
 
-def construct_attribute(name: str, value, tag=None):
+def construct_attribute(name: str, value: Any, tag: IppTag = None) -> bytes:
     """Serialize the attribute into IPP format."""
     bs = b""
 
@@ -63,9 +58,12 @@ def construct_attribute(name: str, value, tag=None):
 
 
 def encode_dict(data: dict) -> Any:
+    """Serialize a dictionary of data into IPP format."""
     version = data["version"] or DEFAULT_PROTO_VERSION
     operation = data["operation"]
-    request_id = data["id"] or "".join(random.sample("0123456789", 5))
+    request_id = data.get("request-id", None)
+    if request_id is None:
+        request_id = random.choice(range(10000, 99999))
 
     encoded = struct.pack(">bb", *version)
     encoded += struct.pack(">h", operation.value)
@@ -73,22 +71,22 @@ def encode_dict(data: dict) -> Any:
 
     encoded += struct.pack(">b", IppTag.OPERATION.value)
 
-    if isinstance(data["operation-attributes-tag"], dict):
+    if isinstance(data.get("operation-attributes-tag", None), dict):
         for attr, value in data["operation-attributes-tag"].items():
-            data += construct_attribute(attr, value)
+            encoded += construct_attribute(attr, value)
 
-    if isinstance(data["job-attributes-tag"], dict):
-        data += struct.pack(">b", IppTag.JOB.value)
+    if isinstance(data.get("job-attributes-tag", None), dict):
+        encoded += struct.pack(">b", IppTag.JOB.value)
 
         for attr, value in data["job-attributes-tag"].items():
-            data += construct_attribute(attr, value)
+            encoded += construct_attribute(attr, value)
 
-    if isinstance(data["printer-attributes-tag"], dict):
-        data += struct.pack(">b", IppTag.PRINTER.value)
+    if isinstance(data.get("printer-attributes-tag", None), dict):
+        encoded += struct.pack(">b", IppTag.PRINTER.value)
 
         for attr, value in data["printer-attributes-tag"].items():
-            data += construct_attribute(attr, value)
+            encoded += construct_attribute(attr, value)
 
-    data += struct.pack(">b", IppTag.END.value)
+    encoded += struct.pack(">b", IppTag.END.value)
 
     return encoded

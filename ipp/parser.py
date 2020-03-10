@@ -1,5 +1,6 @@
 """Response Parser for IPP."""
 import struct
+from typing import Dict, Union
 
 from .enums import IppDocumentState, IppJobState, IppPrinterState, IppTag
 
@@ -20,7 +21,7 @@ def parse_attribute(data: bytes, offset: int):
     attribute["name-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
 
-    attribute["name"] = data[offset: offset + attribute["name-length"]].decode("utf-8")
+    attribute["name"] = data[offset : offset + attribute["name-length"]].decode("utf-8")
     offset += attribute["name-length"]
 
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
@@ -49,7 +50,7 @@ def parse_attribute(data: bytes, offset: int):
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
         if attribute["value-length"] > 0:
             attribute["value"] = data[
-                offset: offset + attribute["value-length"]
+                offset : offset + attribute["value-length"]
             ].decode("utf-8")
             offset += attribute["value-length"]
         else:
@@ -63,7 +64,7 @@ def parse_attribute(data: bytes, offset: int):
         attribute["value"] = struct.unpack_from(">iib", data, offset)
         offset += attribute["value-length"]
     else:
-        attribute["value"] = data[offset: offset + attribute["value-length"]].decode(
+        attribute["value"] = data[offset : offset + attribute["value-length"]].decode(
             "utf-8"
         )
         offset += attribute["value-length"]
@@ -72,11 +73,11 @@ def parse_attribute(data: bytes, offset: int):
 
 
 def parse(raw_data: bytes, contains_data=False):
-    """Parse raw IPP data.
+    r"""Parse raw IPP data.
 
     1 byte: Protocol Major Version - b
     1 byte: Protocol Minor Version - b
-    2 byte: Operation ID - h
+    2 byte: Operation ID/Status Code - h
     4 byte: Request ID - i
 
     1 byte: Operation Attribute Byte (\0x01)
@@ -105,11 +106,12 @@ def parse(raw_data: bytes, contains_data=False):
 
     attribute_key = ""
     previous_attribute_name = ""
-    tmp_data = {}
+    tmp_data: Dict[str, Union[str, list]] = {}
 
     while struct.unpack_from("b", raw_data, offset)[0] != IppTag.END.value:
         # check for operation, job or printer attribute start byte
-        # if tmp data and attribute key is set, a another operation was send -> add it and reset tmp data
+        # if tmp data and attribute key is set, another operation was sent
+        # add it and reset tmp data
         if struct.unpack_from("b", raw_data, offset)[0] == IppTag.OPERATION.value:
             if tmp_data and attribute_key:
                 data[attribute_key].append(tmp_data)
@@ -134,14 +136,14 @@ def parse(raw_data: bytes, contains_data=False):
 
         attribute, new_offset = parse_attribute(raw_data, offset)
 
-        # if attribute have a name -> add it
+        # if attribute has a name -> add it
         # if attribute doesn't have a name -> it is part of an array
         if attribute["name"]:
             tmp_data[attribute["name"]] = attribute["value"]
             previous_attribute_name = attribute["name"]
         elif previous_attribute_name:
             # check if attribute is already an array
-            # else convert is to an array
+            # else convert it to an array
             if isinstance(tmp_data[previous_attribute_name], list):
                 tmp_data[previous_attribute_name].append(attribute["value"])
             else:
@@ -156,6 +158,6 @@ def parse(raw_data: bytes, contains_data=False):
         data["operation-attributes"] = data["operation-attributes"][0]
 
     if contains_data:
-        data["data"] = raw_data[offset + 1:]
+        data["data"] = raw_data[offset + 1 :]
 
     return data
