@@ -54,7 +54,7 @@ class Printer:
         response_data = await self.execute(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
-                "operation-attributes-tag"; {
+                "operation-attributes-tag": {
                     "requested-attributes": attributes
                     if attributes
                     else DEFAULT_PRINTER_ATTRIBUTES,
@@ -70,7 +70,7 @@ class Printer:
         response_data = await self.execute(
             IppOperation.GET_JOBS,
             {
-                "operation-attributes-tag"; {
+                "operation-attributes-tag": {
                     "which-jobs": which_jobs,
                     "my-jobs": my_jobs,
                     "requested-attributes": attributes + ["job-id"]
