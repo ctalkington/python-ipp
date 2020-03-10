@@ -33,4 +33,5 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "printer-is-shared"
 ]
 
+DEFAULT_PORT = 631
 DEFAULT_PROTO_VERSION = (2, 0)

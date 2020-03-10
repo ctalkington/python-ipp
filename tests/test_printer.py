@@ -1,24 +1,27 @@
 """Tests for Printer."""
-import asyncio
+import pytest
 
-from ipp.printer import Printer
+from ipp import IPP, Printer
 from tests import DEFAULT_PRINTER_URI
 
 
 def test_init() -> None:
     instance = Printer(DEFAULT_PRINTER_URI)
-    assert instance == None
+    assert isinstance(instance, Printer)
+    assert isinstance(instance.ipp, IPP)
 
 
-def test_get_attributes() -> None:
+@pytest.mark.asyncio
+async def test_get_attributes() -> None:
     instance = Printer(DEFAULT_PRINTER_URI)
-    attributes = Printer.get_attributes()
+    attributes = await instance.get_attributes()
 
     assert attributes == {}
 
 
-def test_get_jobs() -> None:
+@pytest.mark.asyncio
+async def test_get_jobs() -> None:
     instance = Printer(DEFAULT_PRINTER_URI)
-    jobs = Printer.get_jobs()
+    jobs = await instance.get_jobs()
 
     assert jobs == {}

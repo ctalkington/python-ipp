@@ -3,7 +3,7 @@
 {
 	"name": "Python IPP Dev",
 	"context": "..",
-	"dockerFile": "Dockerfile",
+	"dockerFile": "../Dockerfile.dev",
 
 	// Set *default* container specific settings.json values on container create.
 	"settings": { 
