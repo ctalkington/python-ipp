@@ -49,7 +49,7 @@ class Printer:
         return await self.ipp._request(data=message)
 
     async def get_attributes(self, attributes=None):
-        return await self.execute(
+        response_data = await self.execute(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
                 "printer-uri": self.uri,
@@ -60,10 +60,12 @@ class Printer:
             },
         )
 
+        return next(iter(response_data["printers"] or []), None)
+
     async def get_jobs(
         self, which_jobs: str = "not-completed", my_jobs: bool = False, attributes=None
     ):
-        return await self.execute(
+        response_data = await self.execute(
             IppOperation.GET_JOBS,
             {
                 "printer-uri": self.uri,
@@ -74,4 +76,6 @@ class Printer:
                 else DEFAULT_JOB_ATTRIBUTES,
             },
         )
+
+        return {j["job-id"]: j for j in response_data["jobs"]}
 
