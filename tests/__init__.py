@@ -1,5 +1,4 @@
 """Tests for IPP."""
-import asyncio
 import pathlib
 import socket
 import ssl
@@ -53,10 +52,7 @@ class FakeIPP:
         port = unused_port()
         self.handler = self.app.make_handler()
         self.server = await self.loop.create_server(
-            self.handler,
-            "127.0.0.1",
-            port,
-            ssl=self.ssl_context
+            self.handler, "127.0.0.1", port, ssl=self.ssl_context
         )
         return {"printer.example.com": port}
 
