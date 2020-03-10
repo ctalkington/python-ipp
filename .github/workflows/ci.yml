@@ -29,6 +29,7 @@ jobs:
   test:
     name: Python ${{ matrix.python }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}-latest
+    needs: [linting]
     strategy:
       matrix:
         os: [ubuntu]
