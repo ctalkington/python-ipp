@@ -46,13 +46,15 @@ async def test_get_attributes(aiohttp_redirector) -> None:
         assert request.path_qs == "/ipp/print"
         server.send_response(
             request,
-            text=RESPONSE_GET_PRINTER_ATTRIBUTES_FULL,
+            body=RESPONSE_GET_PRINTER_ATTRIBUTES_FULL,
             headers={"Content-Type": "application/ipp"},
         )
 
         attributes = await task
 
-    assert attributes == {}
+    assert isinstance(attributes, dict)
+    assert attributes["printer-info"] == "EPSON XP-6000 Series"
+    assert attributes["printer-firmware-string-version"] == "20.44.NU11JA"
 
 
 @pytest.mark.asyncio
@@ -73,4 +75,4 @@ async def test_get_jobs(aiohttp_redirector) -> None:
 
         jobs = await task
 
-    assert jobs == {}
+    assert isinstance(jobs, dict)
