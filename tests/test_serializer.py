@@ -36,7 +36,7 @@ def test_encode_dict() -> None:
         {
             "version": DEFAULT_PROTO_VERSION,
             "operation": IppOperation.GET_PRINTER_ATTRIBUTES,
-            "id": 1,
+            "request-id": 1,
             "operation-attributes-tag": {
                 "attributes-charset": DEFAULT_CHARSET,
                 "attributes-natural-language": DEFAULT_CHARSET_LANGUAGE,
