@@ -12,7 +12,6 @@ from .__version__ import __version__
 from .const import (
     DEFAULT_CHARSET,
     DEFAULT_CHARSET_LANGUAGE,
-    DEFAULT_JOB_ATTRIBUTES,
     DEFAULT_PRINTER_ATTRIBUTES,
     DEFAULT_PROTO_VERSION,
 )
