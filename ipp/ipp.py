@@ -128,19 +128,23 @@ class IPP:
 
         content_type = response.headers.get("Content-Type", "")
 
-        if "application/ipp" in content_type:
-            contents = await response.read()
-            contents = parse_response(contents)
+        if "application/ipp" not in content_type:
+            text = await response.text()
+            raise IPPError(
+                "Unexpected response from the IPP device",
+                {"content-type": content_type, "response": text},
+            )
 
-            if contents["status-code"] != 0:
-                raise IPPError(
-                    contents["status-code"],
-                    # {"message": contents["operation-attributes"]["status-message"]},
-                )
+        contents = await response.read()
+        contents = parse_response(contents)
 
-            return contents
+        if contents["status-code"] != 0:
+            raise IPPError(
+                "Unexpected status code from the IPP device",
+                {"status-code": contents["status-code"]},
+            )
 
-        return await response.text()
+        return contents
 
     def _build_printer_uri(self) -> str:
         scheme = "ipps" if self.tls else "ipp"
