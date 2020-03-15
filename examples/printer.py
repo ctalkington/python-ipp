@@ -12,10 +12,6 @@ async def main():
         printer = await ipp.printer()
         print(printer)
 
-        # Get Print Jobs
-        jobs = await ipp.jobs()
-        print(jobs)
-
 
 if __name__ == "__main__":
     loop = asyncio.get_event_loop()

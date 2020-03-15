@@ -18,7 +18,7 @@ from .const import (
 )
 from .enums import IppOperation
 from .exceptions import IPPConnectionError, IPPError
-from .models import PrintJob, Printer
+from .models import Printer
 from .parser import parse as parse_response
 from .serializer import encode_dict
 
@@ -178,23 +178,6 @@ class IPP:
         """Close open client session."""
         if self._session and self._close_session:
             await self._session.close()
-
-    async def jobs(
-        self, which_jobs: str = "not-completed", my_jobs: bool = False
-    ) -> dict:
-        """Retreive the queued print jobs from the server."""
-        response_data = await self.execute(
-            IppOperation.GET_JOBS,
-            {
-                "operation-attributes-tag": {
-                    "which-jobs": which_jobs,
-                    "my-jobs": my_jobs,
-                    "requested-attributes": DEFAULT_JOB_ATTRIBUTES,
-                },
-            },
-        )
-
-        return {j["job-id"]: Job.from_dict(j) for j in response_data["jobs"] or []}
 
     async def printer(self) -> Printer:
         response_data = await self.execute(

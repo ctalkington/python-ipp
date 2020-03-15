@@ -46,7 +46,6 @@ class Printer:
     @staticmethod
     def from_dict(data):
         """Return Printer object from IPP API response."""
-        print(data)
         marker_colors = data.get("marker-colors", [])
         marker_levels = data.get("marker-levels", [])
         marker_high_levels = data.get("marker-high-levels", [])
@@ -68,14 +67,3 @@ class Printer:
 
         return Printer(info=Info.from_dict(data), markers=markers)
 
-
-@dataclass(frozen=True)
-class PrintJob:
-    """Object holding print job information from IPP."""
-
-    job_id: int
-
-    @staticmethod
-    def from_dict(data: dict):
-        """Return PrintJob object from IPP API response."""
-        return PrintJob()
