@@ -12,7 +12,7 @@ DEFAULT_PRINTER_URI = "ipp://printer.example.com:631/ipp/print"
 def load_fixture(filename):
     """Load a fixture."""
     path = os.path.join(os.path.dirname(__file__), "fixtures", filename)
-    with open(path) as fptr:
+    with open(path, "r") as fptr:
         return fptr.read()
 
 
