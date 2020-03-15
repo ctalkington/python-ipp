@@ -54,7 +54,7 @@ repos:
     rev: v1.20.0
     hooks:
       - id: yamllint
-        exclude: '^.github/workflows/*.yml$'
+        exclude: ^\.github/workflows/*\.yml$
   - repo: https://github.com/asottile/pyupgrade
     rev: v2.1.0
     hooks:
