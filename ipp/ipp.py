@@ -72,7 +72,7 @@ class IPP:
         data: Optional[Any] = None,
         params: Optional[Mapping[str, str]] = None,
     ) -> Any:
-        """Handle a request to a IPP device."""
+        """Handle a request to a IPP server."""
         scheme = "https" if self.tls else "http"
 
         method = "POST"
@@ -113,11 +113,11 @@ class IPP:
                 )
         except asyncio.TimeoutError as exception:
             raise IPPConnectionError(
-                "Timeout occurred while connecting to IPP device."
+                "Timeout occurred while connecting to IPP server."
             ) from exception
         except (aiohttp.ClientError, gaierror) as exception:
             raise IPPConnectionError(
-                "Error occurred while communicating with IPP device."
+                "Error occurred while communicating with IPP server."
             ) from exception
 
         if (response.status // 100) in [4, 5]:
@@ -131,7 +131,7 @@ class IPP:
         if "application/ipp" not in content_type:
             text = await response.text()
             raise IPPError(
-                "Unexpected response from the IPP device",
+                "Unexpected response from the IPP server.",
                 {"content-type": content_type, "response": text},
             )
 
@@ -140,7 +140,7 @@ class IPP:
 
         if contents["status-code"] != 0:
             raise IPPError(
-                "Unexpected status code from the IPP device",
+                "Unexpected status code from the IPP server.",
                 {"status-code": contents["status-code"]},
             )
 
