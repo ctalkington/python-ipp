@@ -1,10 +1,5 @@
 """Tests for IPP."""
 import os
-import asyncio
-import socket
-
-from aiohttp import web
-from aiohttp.test_utils import RawTestServer
 
 DEFAULT_PRINTER_URI = "ipp://printer.example.com:631/ipp/print"
 
