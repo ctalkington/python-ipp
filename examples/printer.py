@@ -2,18 +2,18 @@
 """Asynchronous Python client for IPP."""
 import asyncio
 
-from ipp import Printer
+from ipp import IPP
 
 
 async def main():
     """Show example of connecting to your IPP print server."""
-    async with Printer("ipps://192.168.1.92:631/ipp/print") as printer:
-        # Get Printer Attributes
-        attributes = await printer.get_attributes()
-        print(attributes)
+    async with IPP("ipps://192.168.1.92:631/ipp/print") as ipp:
+        # Get Printer Info
+        printer = await ipp.printer()
+        print(printer)
 
-        # Get Printer JObs
-        jobs = await printer.get_jobs()
+        # Get Print Jobs
+        jobs = await ipp.jobs()
         print(jobs)
 
 

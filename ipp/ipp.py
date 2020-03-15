@@ -5,10 +5,20 @@ from typing import Any, Mapping, Optional
 
 import aiohttp
 import async_timeout
+from deepmerge import always_merger
 from yarl import URL
 
 from .__version__ import __version__
+from .const import (
+    DEFAULT_CHARSET,
+    DEFAULT_CHARSET_LANGUAGE,
+    DEFAULT_JOB_ATTRIBUTES,
+    DEFAULT_PRINTER_ATTRIBUTES,
+    DEFAULT_PROTO_VERSION,
+)
+from .enums import IppOperation
 from .exceptions import IPPConnectionError, IPPError
+from .models import PrintJob, Printer
 from .parser import parse as parse_response
 from .serializer import encode_dict
 
@@ -28,6 +38,7 @@ class IPP:
         username: str = None,
         verify_ssl: bool = True,
         user_agent: str = None,
+        printer_uri: str = None,
     ) -> None:
         """Initialize connection with IPP."""
         self._session = session
@@ -42,6 +53,16 @@ class IPP:
         self.username = username
         self.verify_ssl = verify_ssl
         self.user_agent = user_agent
+
+        if host.startswith("ipp://") or host.startswith("ipps://"):
+            self.printer_uri = host
+            printer_uri = URL(host)
+            self.host = printer_uri.host
+            self.port = printer_uri.port
+            self.tls = printer_uri.scheme == "ipps"
+            self.base_path = printer_uri.path
+        else:
+            self.printer_uri = self._build_printer_uri()
 
         if user_agent is None:
             self.user_agent = f"PythonIPP/{__version__}"
@@ -122,10 +143,72 @@ class IPP:
 
         return await response.text()
 
+    def _build_printer_uri(self) -> str:
+        scheme = "ipps" if self.tls else "ipp"
+
+        return URL.build(
+            scheme=scheme, host=self.host, port=self.port, path=self.base_path
+        ).human_repr()
+
+    def _message(self, operation: IppOperation, msg: dict) -> dict:
+        """Build a request message to be sent to the server."""
+        base = {
+            "version": DEFAULT_PROTO_VERSION,
+            "operation": operation,
+            "request-id": None,  # will get added by serializer if one isn't given
+            "operation-attributes-tag": {  # these are required to be in this order
+                "attributes-charset": DEFAULT_CHARSET,
+                "attributes-natural-language": DEFAULT_CHARSET_LANGUAGE,
+                "printer-uri": self.printer_uri,
+                "requesting-user-name": "PythonIPP",
+            },
+        }
+
+        if msg is not dict:
+            msg = {}
+
+        return always_merger.merge(base, msg)
+
+    async def execute(self, operation: IppOperation, message: dict) -> dict:
+        """Send a request message to the server."""
+        message = self._message(operation, message)
+        return await self._request(data=message)
+
     async def close(self) -> None:
         """Close open client session."""
         if self._session and self._close_session:
             await self._session.close()
+
+    async def jobs(
+        self, which_jobs: str = "not-completed", my_jobs: bool = False
+    ) -> dict:
+        """Retreive the queued print jobs from the server."""
+        response_data = await self.execute(
+            IppOperation.GET_JOBS,
+            {
+                "operation-attributes-tag": {
+                    "which-jobs": which_jobs,
+                    "my-jobs": my_jobs,
+                    "requested-attributes": DEFAULT_JOB_ATTRIBUTES,
+                },
+            },
+        )
+
+        return {j["job-id"]: Job.from_dict(j) for j in response_data["jobs"] or []}
+
+    async def printer(self) -> Printer:
+        response_data = await self.execute(
+            IppOperation.GET_PRINTER_ATTRIBUTES,
+            {
+                "operation-attributes-tag": {
+                    "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
+                },
+            },
+        )
+
+        data = next(iter(response_data["printers"] or []), {})
+
+        return Printer.from_dict(data)
 
     async def __aenter__(self) -> "IPP":
         """Async enter."""
