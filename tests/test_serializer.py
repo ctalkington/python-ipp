@@ -3,7 +3,7 @@ from ipp import serializer
 from ipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
 from ipp.enums import IppOperation, IppTag
 
-REQUEST_GET_PRINTER_ATTRIBUTES = b"\x02\x00\x00\x0b\x00\x00\x00\x01\x01G\x00\x12attributes-charset\x00\x05utf-8H\x00\x1battributes-natural-language\x00\x05en-USE\x00\x0bprinter-uri\x00'ipp://printer.example.com:361/ipp/printB\x00\x14requesting-user-name\x00\tPythonIPP\x03"  # noqa
+from . import load_fixture_binary
 
 
 def test_construct_attibute_values() -> None:
@@ -46,4 +46,4 @@ def test_encode_dict() -> None:
         }
     )
 
-    assert result == REQUEST_GET_PRINTER_ATTRIBUTES
+    assert result == load_fixture_binary("get-printer-attributes-request-000.bin")

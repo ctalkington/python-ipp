@@ -3,7 +3,11 @@ from ipp import parser
 from ipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
 from ipp.enums import IppOperation
 
-RESPONSE_GET_PRINTER_ATTRIBUTES = b"\x02\x00\x00\x0b\x00\x00\x00\x01\x01G\x00\x12attributes-charset\x00\x05utf-8H\x00\x1battributes-natural-language\x00\x05en-USE\x00\x0bprinter-uri\x00'ipp://printer.example.com:361/ipp/printB\x00\x14requesting-user-name\x00\tPythonIPP\x03"  # noqa
+from . import load_fixture_binary
+
+RESPONSE_GET_PRINTER_ATTRIBUTES = load_fixture_binary(
+    "get-printer-attributes-response-000.bin"
+)
 
 
 def test_parse() -> None:
