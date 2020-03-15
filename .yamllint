@@ -1,4 +1,6 @@
 ---
+ignore: |
+  .github/workflows/
 rules:
   braces:
     level: error
