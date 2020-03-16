@@ -1,7 +1,7 @@
 """Asynchronous Python client for IPP."""
 import asyncio
 from socket import gaierror
-from typing import Any, Mapping, Optional
+from typing import Any, List, Mapping, Optional
 
 import aiohttp
 import async_timeout
