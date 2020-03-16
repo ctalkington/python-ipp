@@ -15,10 +15,12 @@ class Info:
     @staticmethod
     def from_dict(data: dict):
         """Return Info object from IPP API response."""
+        uuid = data.get("printer-uuid", None)
+
         return Info(
             name=data.get("printer-make-and-model", "IPP Generic Printer"),
             uptime=data.get("printer-up-time", 0),
-            uuid=data.get("printer-uuid", None),
+            uuid=uuid[9:] if uuid else None,
             version=data.get("printer-firmware-string-version", "Unknown"),
         )
 
