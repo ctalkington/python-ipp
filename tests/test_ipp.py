@@ -3,10 +3,10 @@ import asyncio
 
 import pytest
 from aiohttp import ClientSession
-from ipp import IPP
-from ipp.const import DEFAULT_PRINTER_ATTRIBUTES
-from ipp.enums import IppOperation
-from ipp.exceptions import IPPConnectionError, IPPError
+from pyipp import IPP
+from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
+from pyipp.enums import IppOperation
+from pyipp.exceptions import IPPConnectionError, IPPError
 
 from . import DEFAULT_PRINTER_URI, load_fixture_binary
 

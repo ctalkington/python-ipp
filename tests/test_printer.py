@@ -1,7 +1,7 @@
 """Tests for IPP Printer model."""
 import pytest
 from aiohttp import ClientSession
-from ipp import IPP, Printer
+from pyipp import IPP, Printer
 
 from . import DEFAULT_PRINTER_URI, load_fixture_binary
 

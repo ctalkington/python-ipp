@@ -1,7 +1,7 @@
 """Tests for Serializer."""
-from ipp import serializer
-from ipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
-from ipp.enums import IppOperation, IppTag
+from pyipp import serializer
+from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
+from pyipp.enums import IppOperation, IppTag
 
 from . import load_fixture_binary
 

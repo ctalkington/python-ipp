@@ -1,7 +1,7 @@
 """Tests for Parser."""
-from ipp import parser
-from ipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
-from ipp.enums import IppOperation
+from pyipp import parser
+from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
+from pyipp.enums import IppOperation
 
 from . import load_fixture_binary
 
