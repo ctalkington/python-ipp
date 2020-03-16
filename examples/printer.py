@@ -9,9 +9,8 @@ async def main():
     """Show example of connecting to your IPP print server."""
     async with IPP("ipps://192.168.1.92:631/ipp/print") as ipp:
         # Get Printer Info
-        printers = await ipp.printer()
-        for printer in printers:
-            print(printer)
+        printer = await ipp.printer()
+        print(printer)
 
 
 if __name__ == "__main__":
