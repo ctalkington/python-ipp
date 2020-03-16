@@ -1,4 +1,6 @@
 """Tests for IPP Printer model."""
+from typing import List
+
 from aiohttp import ClientSession
 import pytest
 
@@ -23,9 +25,11 @@ async def test_printer(aresponses):
 
     async with ClientSession() as session:
         ipp = IPP(DEFAULT_PRINTER_URI, session=session)
-        printer: Printer = await ipp.printer()
+        printers: List[Printer] = await ipp.printers()
+        
+        assert printers[0]
+        printer = printers[0]
 
-        assert printer
         assert printer.info
         assert printer.info.name == "EPSON XP-6000 Series"
         assert printer.info.uuid == "cfe92100-67c4-11d4-a45f-f8d027761251"
