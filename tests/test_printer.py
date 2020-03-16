@@ -28,7 +28,7 @@ async def test_printer(aresponses):
         assert printer
         assert printer.info
         assert printer.info.name == "EPSON XP-6000 Series"
-        assert printer.info.uuid == "urn:uuid:cfe92100-67c4-11d4-a45f-f8d027761251"
+        assert printer.info.uuid == "cfe92100-67c4-11d4-a45f-f8d027761251"
         assert printer.info.version == "20.44.NU11JA"
         assert printer.info.uptime == 1359212
 
