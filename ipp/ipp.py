@@ -1,7 +1,7 @@
 """Asynchronous Python client for IPP."""
 import asyncio
 from socket import gaierror
-from typing import Any, List, Mapping, Optional
+from typing import Any, Mapping, Optional
 
 import aiohttp
 import async_timeout
@@ -182,7 +182,7 @@ class IPP:
         if self._session and self._close_session:
             await self._session.close()
 
-    async def printers(self) -> List[Printer]:
+    async def printer(self) -> Printer:
         response_data = await self.execute(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
@@ -192,10 +192,8 @@ class IPP:
             },
         )
 
-        return [
-            Printer.from_dict(printer)
-            for printer in response_data["printers"] or []:
-        ]
+        data = next(iter(response_data["printers"] or []), {})
+        return Printer.from_dict(data)
 
     async def __aenter__(self) -> "IPP":
         """Async enter."""
