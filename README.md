@@ -17,7 +17,7 @@ pip install pyipp
 ```python
 import asyncio
 
-from ipp import IPP, Printer
+from pyipp import IPP, Printer
 
 
 async def main():
