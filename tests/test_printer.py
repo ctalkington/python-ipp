@@ -10,7 +10,7 @@ from . import DEFAULT_PRINTER_URI, load_fixture_binary
 
 
 @pytest.mark.asyncio
-async def test_printer(aresponses):
+async def test_printers(aresponses):
     """Test getting IPP printer information."""
     aresponses.add(
         "printer.example.com:631",
