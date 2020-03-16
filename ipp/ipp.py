@@ -23,7 +23,7 @@ from .serializer import encode_dict
 
 
 class IPP:
-    """Main class for handling connections with IPP."""
+    """Main class for handling connections with IPP servers."""
 
     def __init__(
         self,
@@ -37,9 +37,8 @@ class IPP:
         username: str = None,
         verify_ssl: bool = True,
         user_agent: str = None,
-        printer_uri: str = None,
     ) -> None:
-        """Initialize connection with IPP."""
+        """Initialize connection with IPP server."""
         self._session = session
         self._close_session = False
 
@@ -72,7 +71,7 @@ class IPP:
         data: Optional[Any] = None,
         params: Optional[Mapping[str, str]] = None,
     ) -> Any:
-        """Handle a request to a IPP server."""
+        """Handle a request to an IPP server."""
         scheme = "https" if self.tls else "http"
 
         method = "POST"
@@ -131,7 +130,7 @@ class IPP:
         if "application/ipp" not in content_type:
             text = await response.text()
             raise IPPError(
-                "Unexpected response from the IPP server.",
+                "Unexpected response from IPP server.",
                 {"content-type": content_type, "response": text},
             )
 
@@ -140,7 +139,7 @@ class IPP:
 
         if contents["status-code"] != 0:
             raise IPPError(
-                "Unexpected status code from the IPP server.",
+                "Unexpected status code from IPP server.",
                 {"status-code": contents["status-code"]},
             )
 
@@ -183,6 +182,7 @@ class IPP:
             await self._session.close()
 
     async def printer(self) -> Printer:
+        """Get printer information from server."""
         response_data = await self.execute(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
@@ -192,7 +192,7 @@ class IPP:
             },
         )
 
-        data = next(iter(response_data["printers"] or []), {})
+        data: dict = next(iter(response_data["printers"] or []), {})
         return Printer.from_dict(data)
 
     async def __aenter__(self) -> "IPP":

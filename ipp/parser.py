@@ -1,8 +1,27 @@
 """Response Parser for IPP."""
 import struct
-from typing import Any, Dict
+from typing import Any, Dict, Tuple, cast
 
 from .enums import IppDocumentState, IppJobState, IppPrinterState, IppTag
+
+
+def parse_ieee1284_device_id(device_id: str) -> dict:
+    """Parse IEEE 1284 device id for common device info."""
+    device_id = device_id.strip(";")
+    device_info: Dict[str, str] = dict(
+        cast(Tuple[str, str], x.split(":", 2)) for x in device_id.split(";")
+    )
+
+    if not device_info.get("MANUFACTURER") and device_info.get("MFG"):
+        device_info["MANUFACTURER"] = device_info["MFG"]
+
+    if not device_info.get("MODEL") and device_info.get("MDL"):
+        device_info["MODEL"] = device_info["MDL"]
+
+    if not device_info.get("COMMAND SET") and device_info.get("CMD"):
+        device_info["COMMAND SET"] = device_info["CMD"]
+
+    return device_info
 
 
 def parse_attribute(data: bytes, offset: int):

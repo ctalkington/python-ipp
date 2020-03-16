@@ -1,7 +1,6 @@
 """Tests for IPP Printer model."""
-from aiohttp import ClientSession
 import pytest
-
+from aiohttp import ClientSession
 from ipp import IPP, Printer
 
 from . import DEFAULT_PRINTER_URI, load_fixture_binary
@@ -24,14 +23,29 @@ async def test_printer(aresponses):
     async with ClientSession() as session:
         ipp = IPP(DEFAULT_PRINTER_URI, session=session)
         printer: Printer = await ipp.printer()
-        
+
         assert printer
 
         assert printer.info
+        assert printer.info.command_set == "ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF"
+        assert printer.info.location == "Unknown"
         assert printer.info.name == "EPSON XP-6000 Series"
+        assert printer.info.manufacturer == "EPSON"
+        assert printer.info.model == "XP-6000 Series"
+        assert printer.info.printer_info == "EPSON XP-6000 Series"
+        assert printer.info.printer_uri_supported == [
+            "ipps://192.168.1.92:631/ipp/print",
+            "ipp://192.168.1.92:631/ipp/print",
+        ]
+        assert printer.info.serial == "583434593035343012"
         assert printer.info.uuid == "cfe92100-67c4-11d4-a45f-f8d027761251"
         assert printer.info.version == "20.44.NU11JA"
         assert printer.info.uptime == 1359212
+
+        assert printer.state
+        assert printer.state.printer_state == "idle"
+        assert printer.state.reasons is None
+        assert printer.state.message is None
 
         assert printer.markers
         assert printer.markers[0]

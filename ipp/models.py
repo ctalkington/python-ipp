@@ -2,15 +2,23 @@
 from dataclasses import dataclass
 from typing import List
 
+from .parser import parse_ieee1284_device_id
+
 PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
+
 
 @dataclass(frozen=True)
 class Info:
     """Object holding information from IPP."""
 
+    command_set: str
+    location: str
     name: str
     manufacturer: str
     model: str
+    printer_info: str
+    printer_uri_supported: list
+    serial: str
     uptime: int
     uuid: str
     version: str
@@ -19,13 +27,20 @@ class Info:
     def from_dict(data: dict):
         """Return Info object from IPP API response."""
         device_id = data.get("printer-device-id", None)
-        parsed_device_id = {}
+        parsed_device_id = parse_ieee1284_device_id(device_id)
+
+        location = data.get("printer-location", "Unknown")
         uuid = data.get("printer-uuid", None)
 
         return Info(
+            command_set=parsed_device_id.get("CMD", "Unknown"),
+            location=location if location != "" else "Unknown",
             name=data.get("printer-make-and-model", "IPP Generic Printer"),
             manufacturer=parsed_device_id.get("MFG", "Unknown"),
             model=parsed_device_id.get("MDL", "Unknown"),
+            printer_info=data.get("printer-info", ""),
+            printer_uri_supported=data.get("printer-uri-supported", []),
+            serial=parsed_device_id.get("SN", None),
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,
             version=data.get("printer-firmware-string-version", "Unknown"),
@@ -43,6 +58,30 @@ class Marker:
     level: int
     low_level: int
     high_level: int
+
+
+@dataclass(frozen=True)
+class State:
+    """Object holding the IPP printer state."""
+
+    printer_state: str
+    reasons: str
+    message: str
+
+    @staticmethod
+    def from_dict(data):
+        """Return State object from IPP API response."""
+        state = data.get("printer-state", 0)
+        reasons = data.get("printer-state-reasons", None)
+
+        if reasons == "none":
+            reasons = None
+
+        return State(
+            printer_state=PRINTER_STATES.get(state, state),
+            reasons=reasons,
+            message=data.get("printer-state-message", None),
+        )
 
 
 @dataclass(frozen=True)
@@ -76,26 +115,5 @@ class Printer:
         markers.sort(key=lambda x: x.name)
 
         return Printer(
-            info=Info.from_dict(data),
-            markers=markers,
-            state=State.from_dict(data)
-        )
-
-@dataclass(frozen=True)
-class State:
-    """Object holding the IPP printer state."""
-    
-    state: str
-    reasons: List[str]
-    message: str
-
-    @staticmethod
-    def from_dict(data):
-        """Return State object from IPP API response."""
-        state=data.get("printer-state", 0)
-
-        return State(
-            state=PRINTER_STATES.get(state, state),
-            reasons=data.get("printer-state-reasons", []),
-            message=data.get("printer-state-message", None),
+            info=Info.from_dict(data), markers=markers, state=State.from_dict(data)
         )

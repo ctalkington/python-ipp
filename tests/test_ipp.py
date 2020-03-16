@@ -1,10 +1,9 @@
 """Tests for IPP."""
 import asyncio
 
-from aiohttp import ClientSession
 import pytest
-
-from ipp import IPP, Printer
+from aiohttp import ClientSession
+from ipp import IPP
 from ipp.const import DEFAULT_PRINTER_ATTRIBUTES
 from ipp.enums import IppOperation
 from ipp.exceptions import IPPConnectionError, IPPError

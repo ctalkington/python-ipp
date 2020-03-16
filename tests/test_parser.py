@@ -9,6 +9,8 @@ RESPONSE_GET_PRINTER_ATTRIBUTES = load_fixture_binary(
     "get-printer-attributes-response-000.bin"
 )
 
+MOCK_IEEE1284_DEVICE_ID = "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;"  # noqa
+
 
 def test_parse() -> None:
     """Test the parse method."""
@@ -42,3 +44,18 @@ def test_parse_attribute() -> None:
         },
         37,
     )
+
+
+def test_parse_ieee1284_device_id() -> None:
+    """Test the parse_ieee1284_device_id method."""
+    result = parser.parse_ieee1284_device_id(MOCK_IEEE1284_DEVICE_ID)
+
+    assert result
+    assert result["MFG"] == "EPSON"
+    assert result["MDL"] == "XP-6000 Series"
+    assert result["SN"] == "583434593035343012"
+    assert result["CMD"] == "ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF"
+
+    assert result["MANUFACTURER"] == result["MFG"]
+    assert result["MODEL"] == result["MDL"]
+    assert result["COMMAND SET"] == result["CMD"]

@@ -19,7 +19,7 @@ ATTRIBUTE_TAG_MAP = {
     "job-sheets": IppTag.NAME,
     "job-uri": IppTag.URI,
     "job-state": IppTag.ENUM,
-    "job-state-reason": IppTag.KEYWORD,
+    "job-state-reasons": IppTag.KEYWORD,
     "requested-attributes": IppTag.KEYWORD,
     "member-uris": IppTag.URI,
     "operations-supported": IppTag.ENUM,
@@ -35,6 +35,9 @@ ATTRIBUTE_TAG_MAP = {
     "job-printer-uri": IppTag.URI,
     "printer-location": IppTag.TEXT,
     "printer-state": IppTag.ENUM,
+    "printer-state-reasons": IppTag.KEYWORD,
+    "printer-up-time": IppTag.INTEGER,
+    "printer-uri-supported": IppTag.URI,
     "document-state": IppTag.ENUM,
     "device-uri": IppTag.URI,
 }
