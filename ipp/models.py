@@ -2,6 +2,7 @@
 from dataclasses import dataclass
 from typing import List
 
+PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
 
 @dataclass(frozen=True)
 class Info:
@@ -44,6 +45,7 @@ class Printer:
 
     info: Info
     markers: List[Marker]
+    state: State
 
     @staticmethod
     def from_dict(data):
@@ -67,5 +69,32 @@ class Printer:
         ]
         markers.sort(key=lambda x: x.name)
 
-        return Printer(info=Info.from_dict(data), markers=markers)
+        return Printer(
+            info=Info.from_dict(data),
+            markers=markers,
+            state=State.from_dict(data)
+        )
+
+@dataclass(frozen=True)
+class State:
+    ""Object holding the IPP printer state."""
+
+    
+    state: str
+    reasons: List[str]
+    message: str
+
+    @staticmethod
+    def from_dict(data):
+        """Return State object from IPP API response."""
+        state=data.get("printer-state", 0)
+
+        return State(
+            state=PRINTER_STATES.get(state, state),
+            reasons=data.get("printer-state-reasons", []),
+            message=data.get("printer-state-message", None),
+        )
+        
+
+
 
