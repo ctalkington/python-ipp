@@ -182,7 +182,7 @@ class IPP:
         if self._session and self._close_session:
             await self._session.close()
 
-    async def printer(self) -> Printer:
+    async def printers(self) -> List[Printer]:
         response_data = await self.execute(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
@@ -192,9 +192,10 @@ class IPP:
             },
         )
 
-        data = next(iter(response_data["printers"] or []), {})
-
-        return Printer.from_dict(data)
+        return [
+            Printer.from_dict(printer)
+            for printer in response_data["printers"] or []:
+        ]
 
     async def __aenter__(self) -> "IPP":
         """Async enter."""
