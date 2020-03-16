@@ -77,8 +77,7 @@ class Printer:
 
 @dataclass(frozen=True)
 class State:
-    ""Object holding the IPP printer state."""
-
+    """Object holding the IPP printer state."""
     
     state: str
     reasons: List[str]
@@ -94,7 +93,3 @@ class State:
             reasons=data.get("printer-state-reasons", []),
             message=data.get("printer-state-message", None),
         )
-        
-
-
-
