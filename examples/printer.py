@@ -2,7 +2,7 @@
 """Asynchronous Python client for IPP."""
 import asyncio
 
-from ipp import IPP
+from pyipp import IPP
 
 
 async def main():

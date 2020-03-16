@@ -47,7 +47,7 @@ setup(
     long_description_content_type="text/markdown",
     long_description=readme,
     name="pyipp",
-    packages=find_packages(include=["ipp"]),
+    packages=find_packages(include=["pyipp"]),
     test_suite="tests",
     url="https://github.com/ctalkington/python-ipp",
     version=get_version(),
