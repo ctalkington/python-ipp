@@ -23,7 +23,7 @@ from ipp import IPP, Printer
 async def main():
     """Show example of connecting to your IPP print server."""
     async with IPP("ipps://EPSON123456.local:631/ipp/print") as ipp:
-        printer: PRinter = await ipp.printer()
+        printer: Printer = await ipp.printer()
         print(printer)
 
 
