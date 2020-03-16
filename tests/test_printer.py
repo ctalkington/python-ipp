@@ -1,6 +1,4 @@
 """Tests for IPP Printer model."""
-from typing import List
-
 from aiohttp import ClientSession
 import pytest
 
@@ -10,7 +8,7 @@ from . import DEFAULT_PRINTER_URI, load_fixture_binary
 
 
 @pytest.mark.asyncio
-async def test_printers(aresponses):
+async def test_printer(aresponses):
     """Test getting IPP printer information."""
     aresponses.add(
         "printer.example.com:631",
@@ -25,10 +23,9 @@ async def test_printers(aresponses):
 
     async with ClientSession() as session:
         ipp = IPP(DEFAULT_PRINTER_URI, session=session)
-        printers: List[Printer] = await ipp.printers()
+        printer: Printer = await ipp.printer()
         
-        assert printers[0]
-        printer = printers[0]
+        assert printer
 
         assert printer.info
         assert printer.info.name == "EPSON XP-6000 Series"
