@@ -41,7 +41,7 @@ setup(
     ],
     description="Asynchronous Python client for Internet Printing Protocol (IPP).",
     include_package_data=True,
-    install_requires=["aiohttp>=3.0.0", "yarl"],
+    install_requires=list(val.strip() for val in open("requirements.txt")),
     keywords=["ipp", "api", "async", "client", "printer"],
     license="MIT license",
     long_description_content_type="text/markdown",
