@@ -1,6 +1,6 @@
 """Asynchronous Python client for IPP."""
 import asyncio
-from socket import gaierror
+from socket import gaierror as SocketGIAEroor
 from struct import error as StructError
 from typing import Any, Mapping, Optional
 
@@ -17,7 +17,13 @@ from .const import (
     DEFAULT_PROTO_VERSION,
 )
 from .enums import IppOperation
-from .exceptions import IPPConnectionError, IPPConnectionUpgradeRequired, IPPError
+from .exceptions import (
+    IPPConnectionError,
+    IPPConnectionUpgradeRequired,
+    IPPError,
+    IPPParseError,
+    IPPResponseError,
+)
 from .models import Printer
 from .parser import parse as parse_response
 from .serializer import encode_dict
@@ -115,7 +121,7 @@ class IPP:
             raise IPPConnectionError(
                 "Timeout occurred while connecting to IPP server."
             ) from exception
-        except (aiohttp.ClientError, gaierror) as exception:
+        except (aiohttp.ClientError, SocketGIAEroor) as exception:
             raise IPPConnectionError(
                 "Error occurred while communicating with IPP server."
             ) from exception
@@ -130,7 +136,10 @@ class IPP:
             content = await response.read()
             response.close()
 
-            raise IPPError(f"HTTP {response.status}", {"message": content.decode("utf8")})
+            raise IPPResponseError(
+                f"HTTP {response.status}",
+                {"content-type": response.headers.get("Content-Type"), "message": content.decode("utf8")},
+            )
 
         try:
             content = await response.read()
@@ -143,10 +152,12 @@ class IPP:
                 )
 
             return parsed_content
-        except (StructError, IPPError) as exception:
+        except StructError as exception:
+            raise IPPParseError from exception
+        except IPPError as exception:
             raise IPPError from exception
 
-        raise IPPError(
+        raise IPPResponseError(
             "Unexpected response from server",
             {
                 "content-type": response.headers.get("Content-Type"),
