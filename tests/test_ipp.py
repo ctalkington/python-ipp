@@ -12,6 +12,7 @@ from pyipp.exceptions import (
     IPPError,
     IPPParseError,
 )
+
 from . import DEFAULT_PRINTER_URI, load_fixture_binary
 
 
