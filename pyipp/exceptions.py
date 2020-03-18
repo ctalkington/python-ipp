@@ -12,7 +12,7 @@ class IPPConnectionError(IPPError):
 
     pass
 
-class IPPConnectionUpgrade(IPPError):
+class IPPConnectionUpgradeRequired(IPPError):
     """IPP connection upgrade requested."""
 
     pass
