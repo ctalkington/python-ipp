@@ -125,6 +125,22 @@ async def test_timeout(aresponses):
 
 
 @pytest.mark.asyncio
+async def test_client_error(aresponses):
+    """Test http client error from the IPP server."""
+    async with ClientSession() as session:
+        ipp = IPP("-", session=session)
+        with pytest.raises(IPPConnectionError):
+            assert await ipp.execute(
+                IppOperation.GET_PRINTER_ATTRIBUTES,
+                {
+                    "operation-attributes-tag": {
+                        "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
+                    },
+                },
+            )
+
+
+@pytest.mark.asyncio
 async def test_http_error404(aresponses):
     """Test HTTP 404 response handling."""
     aresponses.add(
