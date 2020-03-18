@@ -1,8 +1,13 @@
 ---
 name: Continuous Integration
 
-# yamllint disable-line rule:truthy
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
 
 jobs:
   linting:
