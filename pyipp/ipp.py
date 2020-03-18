@@ -141,33 +141,24 @@ class IPP:
                 {
                     "content-type": response.headers.get("Content-Type"),
                     "message": content.decode("utf8"),
+                    "status-code": response.status,
                 },
             )
 
-        try:
-            content = await response.read()
+        content = await response.read()
+
+        try:     
             parsed_content = parse_response(content)
-
-            if parsed_content["status-code"] != 0:
-                raise IPPError(
-                    "Unexpected printer status code",
-                    {"status-code": parsed_content["status-code"]},
-                )
-
-            return parsed_content
-        except StructError as exception:
+        except (StructError, Exception) as exception:  # disable=broad-except
             raise IPPParseError from exception
-        except IPPError as exception:
-            raise IPPError from exception
 
-        raise IPPResponseError(
-            "Unexpected response from server",
-            {
-                "content-type": response.headers.get("Content-Type"),
-                "content": content.decode("utf8"),
-                "status": response.status,
-            },
-        )
+        if parsed_content["status-code"] != 0:
+            raise IPPError(
+                "Unexpected printer status code",
+                {"status-code": parsed_content["status-code"]},
+            )
+
+        return parsed_content
 
     def _build_printer_uri(self) -> str:
         scheme = "ipps" if self.tls else "ipp"
