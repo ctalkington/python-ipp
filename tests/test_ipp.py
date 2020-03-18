@@ -6,8 +6,12 @@ from aiohttp import ClientSession
 from pyipp import IPP
 from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
 from pyipp.enums import IppOperation
-from pyipp.exceptions import IPPConnectionError, IPPConnectionUpgradeRequired, IPPError
-
+from pyipp.exceptions import (
+    IPPConnectionError,
+    IPPConnectionUpgradeRequired,
+    IPPError,
+    IPPParseError,
+)
 from . import DEFAULT_PRINTER_URI, load_fixture_binary
 
 
@@ -179,7 +183,7 @@ async def test_unexpected_response(aresponses):
 
     async with ClientSession() as session:
         ipp = IPP(DEFAULT_PRINTER_URI, session=session)
-        with pytest.raises(IPPError):
+        with pytest.raises(IPPParseError):
             assert await ipp.execute(
                 IppOperation.GET_PRINTER_ATTRIBUTES,
                 {
