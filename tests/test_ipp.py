@@ -150,7 +150,7 @@ async def test_http_error426(aresponses):
         "/ipp/print",
         "POST",
         aresponses.Response(
-            text="Upgrade Required", headers={"Upgrade": "TLS 1.2"}, status=426,
+            text="Upgrade Required", headers={"Upgrade": "TLS/1.2"}, status=426,
         ),
     )
 
