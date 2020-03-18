@@ -140,7 +140,7 @@ class IPP:
                 f"HTTP {response.status}",
                 {
                     "content-type": response.headers.get("Content-Type"),
-                    "message": content.decode("utf8")
+                    "message": content.decode("utf8"),
                 },
             )
 
