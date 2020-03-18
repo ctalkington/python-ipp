@@ -5,10 +5,10 @@ from typing import Any, Dict, Tuple, cast
 from .enums import IppDocumentState, IppJobState, IppPrinterState, IppTag
 
 
-def parse_ieee1284_device_id(device_id: str) -> dict:
+def parse_ieee1284_device_id(device_id: str) -> Dict[str, Any]:
     """Parse IEEE 1284 device id for common device info."""
     device_id = device_id.strip(";")
-    device_info: Dict[str, str] = dict(
+    device_info: Dict[str, Any] = dict(
         cast(Tuple[str, str], x.split(":", 2)) for x in device_id.split(";")
     )
 

@@ -7,7 +7,12 @@ from pyipp import IPP
 
 async def main():
     """Show example of connecting to your IPP print server."""
-    async with IPP("ipps://192.168.1.92:631/ipp/print") as ipp:
+    async with IPP("ipps://EPSON761251.local:631/ipp/print") as ipp:
+        # Get Printer Info
+        printer = await ipp.printer()
+        print(printer)
+
+    async with IPP("ipp://hp6830.local:631/ipp/print") as ipp:
         # Get Printer Info
         printer = await ipp.printer()
         print(printer)

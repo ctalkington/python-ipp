@@ -16,6 +16,7 @@ class Info:
     name: str
     manufacturer: str
     model: str
+    printer_name: str
     printer_info: str
     printer_uri_supported: list
     serial: str
@@ -25,25 +26,25 @@ class Info:
 
     @staticmethod
     def from_dict(data: dict):
-        """Return Info object from IPP API response."""
-        device_id = data.get("printer-device-id", None)
+        """Return Info object from IPP response."""
+        make_model = data.get("printer-make-and-model", "Generic Printer")
+        device_id = data.get("printer-device-id", "")
         parsed_device_id = parse_ieee1284_device_id(device_id)
-
-        location = data.get("printer-location", "Unknown")
-        uuid = data.get("printer-uuid", None)
+        uuid = data.get("printer-uuid")
 
         return Info(
             command_set=parsed_device_id.get("CMD", "Unknown"),
-            location=location if location != "" else "Unknown",
-            name=data.get("printer-make-and-model", "IPP Generic Printer"),
+            location=data.get("printer-location", ""),
+            name=make_model,
             manufacturer=parsed_device_id.get("MFG", "Unknown"),
             model=parsed_device_id.get("MDL", "Unknown"),
-            printer_info=data.get("printer-info", ""),
+            printer_name=data.get("printer-name", None),
+            printer_info=data.get("printer-info", None),
             printer_uri_supported=data.get("printer-uri-supported", []),
             serial=parsed_device_id.get("SN", None),
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,
-            version=data.get("printer-firmware-string-version", "Unknown"),
+            version=data.get("printer-firmware-string-version", None),
         )
 
 
@@ -70,7 +71,7 @@ class State:
 
     @staticmethod
     def from_dict(data):
-        """Return State object from IPP API response."""
+        """Return State object from IPP response."""
         state = data.get("printer-state", 0)
         reasons = data.get("printer-state-reasons", None)
 
@@ -94,7 +95,7 @@ class Printer:
 
     @staticmethod
     def from_dict(data):
-        """Return Printer object from IPP API response."""
+        """Return Printer object from IPP response."""
         marker_colors = data.get("marker-colors", [])
         marker_levels = data.get("marker-levels", [])
         marker_high_levels = data.get("marker-high-levels", [])

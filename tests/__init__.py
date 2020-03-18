@@ -1,7 +1,12 @@
 """Tests for IPP."""
 import os
 
-DEFAULT_PRINTER_URI = "ipp://printer.example.com:631/ipp/print"
+DEFAULT_PRINTER_HOST = "epson761251.local"
+DEFAULT_PRINTER_PORT = 631
+DEFAULT_PRINTER_PATH = "/ipp/print"
+DEFAULT_PRINTER_URI = (
+    f"ipp://{DEFAULT_PRINTER_HOST}:{DEFAULT_PRINTER_PORT}{DEFAULT_PRINTER_PATH}"
+)
 
 
 def load_fixture(filename):
