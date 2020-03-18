@@ -42,7 +42,7 @@ class IPP:
         session: aiohttp.client.ClientSession = None,
         tls: bool = False,
         username: str = None,
-        verify_ssl: bool = True,
+        verify_ssl: bool = False,
         user_agent: str = None,
     ) -> None:
         """Initialize connection with IPP server."""

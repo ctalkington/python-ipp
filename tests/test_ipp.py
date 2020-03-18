@@ -215,7 +215,9 @@ async def test_http_error426(aresponses):
         DEFAULT_PRINTER_PATH,
         "POST",
         aresponses.Response(
-            text="Upgrade Required", headers={"Upgrade": "TLS/1.2"}, status=426,
+            text="Upgrade Required",
+            headers={"Upgrade": "TLS/1.0, HTTP/1.1"},
+            status=426,
         ),
     )
 
