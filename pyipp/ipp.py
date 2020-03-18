@@ -1,6 +1,7 @@
 """Asynchronous Python client for IPP."""
 import asyncio
 from socket import gaierror
+from struct import error as StructError
 from typing import Any, Mapping, Optional
 
 import aiohttp
@@ -126,30 +127,33 @@ class IPP:
             )
 
         if (response.status // 100) in [4, 5]:
-            contents = await response.read()
+            content = await response.read()
             response.close()
 
-            raise IPPError(response.status, {"message": contents.decode("utf8")})
+            raise IPPError(f"HTTP {response.status}", {"message": content.decode("utf8")})
 
-        content_type = response.headers.get("Content-Type", "")
+        try:
+            content = await response.read()
+            parsed_content = parse_response(content)
 
-        if "application/ipp" not in content_type:
-            text = await response.text()
-            raise IPPError(
-                "Unexpected response from IPP server.",
-                {"content-type": content_type, "response": text},
-            )
+            if parsed_content["status-code"] != 0:
+                raise IPPError(
+                    "Unexpected printer status code",
+                    {"status-code": parsed_content["status-code"]},
+                )
 
-        contents = await response.read()
-        contents = parse_response(contents)
+            return parsed_content
+        except (StructError, IPPError) as exception:
+            raise IPPError from exception
 
-        if contents["status-code"] != 0:
-            raise IPPError(
-                "Unexpected status code from IPP server.",
-                {"status-code": contents["status-code"]},
-            )
-
-        return contents
+        raise IPPError(
+            "Unexpected response from server",
+            {
+                "content-type": response.headers.get("Content-Type"),
+                "content": content.decode("utf8"),
+                "status": response.status,
+            }
+        )
 
     def _build_printer_uri(self) -> str:
         scheme = "ipps" if self.tls else "ipp"
