@@ -138,7 +138,10 @@ class IPP:
 
             raise IPPResponseError(
                 f"HTTP {response.status}",
-                {"content-type": response.headers.get("Content-Type"), "message": content.decode("utf8")},
+                {
+                    "content-type": response.headers.get("Content-Type"),
+                    "message": content.decode("utf8")
+                },
             )
 
         try:
@@ -163,7 +166,7 @@ class IPP:
                 "content-type": response.headers.get("Content-Type"),
                 "content": content.decode("utf8"),
                 "status": response.status,
-            }
+            },
         )
 
     def _build_printer_uri(self) -> str:
