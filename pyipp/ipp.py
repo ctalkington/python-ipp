@@ -147,7 +147,7 @@ class IPP:
 
         content = await response.read()
 
-        try:     
+        try:
             parsed_content = parse_response(content)
         except (StructError, Exception) as exception:  # disable=broad-except
             raise IPPParseError from exception
