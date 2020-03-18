@@ -16,7 +16,7 @@ from .const import (
     DEFAULT_PROTO_VERSION,
 )
 from .enums import IppOperation
-from .exceptions import IPPConnectionError, IPPError
+from .exceptions import IPPConnectionError, IPPConnectionUpgradeRequired, IPPError
 from .models import Printer
 from .parser import parse as parse_response
 from .serializer import encode_dict
@@ -118,6 +118,12 @@ class IPP:
             raise IPPConnectionError(
                 "Error occurred while communicating with IPP server."
             ) from exception
+
+        if response.status == 426:
+            raise IPPConnectionUpgradeRequired(
+                "Connection upgrade required while communicating with IPP server.",
+                {"upgrade": response.headers.get("Upgrade")}
+            )
 
         if (response.status // 100) in [4, 5]:
             contents = await response.read()
