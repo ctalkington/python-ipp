@@ -35,7 +35,7 @@ class IPP:
     def __init__(
         self,
         host: str,
-        base_path: str = "/ipp/printer",
+        base_path: str = "/ipp/print",
         password: str = None,
         port: int = 631,
         request_timeout: int = 8,
