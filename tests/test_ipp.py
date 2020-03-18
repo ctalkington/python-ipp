@@ -125,10 +125,10 @@ async def test_timeout(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_client_error(aresponses):
+async def test_client_error():
     """Test http client error from the IPP server."""
     async with ClientSession() as session:
-        ipp = IPP("-", session=session)
+        ipp = IPP("#", session=session)
         with pytest.raises(IPPConnectionError):
             assert await ipp.execute(
                 IppOperation.GET_PRINTER_ATTRIBUTES,
