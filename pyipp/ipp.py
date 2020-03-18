@@ -122,7 +122,7 @@ class IPP:
         if response.status == 426:
             raise IPPConnectionUpgradeRequired(
                 "Connection upgrade required while communicating with IPP server.",
-                {"upgrade": response.headers.get("Upgrade")}
+                {"upgrade": response.headers.get("Upgrade")},
             )
 
         if (response.status // 100) in [4, 5]:
