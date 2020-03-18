@@ -150,15 +150,13 @@ async def test_http_error426(aresponses):
         "/ipp/print",
         "POST",
         aresponses.Response(
-            text="Upgrade Required",
-            headers={"Upgrade": "TLS 1.2"},
-            status=426,
+            text="Upgrade Required", headers={"Upgrade": "TLS 1.2"}, status=426,
         ),
     )
 
     async with ClientSession() as session:
         ipp = IPP(DEFAULT_PRINTER_URI, session=session)
-        with pytest.raises(IPPConnectionUpgradeRequiredError):
+        with pytest.raises(IPPConnectionUpgradeRequired):
             assert await ipp.execute(
                 IppOperation.GET_PRINTER_ATTRIBUTES,
                 {
