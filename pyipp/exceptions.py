@@ -17,3 +17,15 @@ class IPPConnectionUpgradeRequired(IPPError):
     """IPP connection upgrade requested."""
 
     pass
+
+
+class IPPParseError(IPPError):
+    """IPP parse exception."""
+
+    pass
+
+
+class IPPResponseError(IPPError):
+    """IPP response exception."""
+
+    pass

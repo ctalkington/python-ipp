@@ -1,6 +1,7 @@
 """Asynchronous Python client for IPP."""
 import asyncio
-from socket import gaierror
+from socket import gaierror as SocketGIAEroor
+from struct import error as StructError
 from typing import Any, Mapping, Optional
 
 import aiohttp
@@ -16,7 +17,13 @@ from .const import (
     DEFAULT_PROTO_VERSION,
 )
 from .enums import IppOperation
-from .exceptions import IPPConnectionError, IPPConnectionUpgradeRequired, IPPError
+from .exceptions import (
+    IPPConnectionError,
+    IPPConnectionUpgradeRequired,
+    IPPError,
+    IPPParseError,
+    IPPResponseError,
+)
 from .models import Printer
 from .parser import parse as parse_response
 from .serializer import encode_dict
@@ -114,7 +121,7 @@ class IPP:
             raise IPPConnectionError(
                 "Timeout occurred while connecting to IPP server."
             ) from exception
-        except (aiohttp.ClientError, gaierror) as exception:
+        except (aiohttp.ClientError, SocketGIAEroor) as exception:
             raise IPPConnectionError(
                 "Error occurred while communicating with IPP server."
             ) from exception
@@ -126,30 +133,32 @@ class IPP:
             )
 
         if (response.status // 100) in [4, 5]:
-            contents = await response.read()
+            content = await response.read()
             response.close()
 
-            raise IPPError(response.status, {"message": contents.decode("utf8")})
-
-        content_type = response.headers.get("Content-Type", "")
-
-        if "application/ipp" not in content_type:
-            text = await response.text()
-            raise IPPError(
-                "Unexpected response from IPP server.",
-                {"content-type": content_type, "response": text},
+            raise IPPResponseError(
+                f"HTTP {response.status}",
+                {
+                    "content-type": response.headers.get("Content-Type"),
+                    "message": content.decode("utf8"),
+                    "status-code": response.status,
+                },
             )
 
-        contents = await response.read()
-        contents = parse_response(contents)
+        content = await response.read()
 
-        if contents["status-code"] != 0:
+        try:
+            parsed_content = parse_response(content)
+        except (StructError, Exception) as exception:  # disable=broad-except
+            raise IPPParseError from exception
+
+        if parsed_content["status-code"] != 0:
             raise IPPError(
-                "Unexpected status code from IPP server.",
-                {"status-code": contents["status-code"]},
+                "Unexpected printer status code",
+                {"status-code": parsed_content["status-code"]},
             )
 
-        return contents
+        return parsed_content
 
     def _build_printer_uri(self) -> str:
         scheme = "ipps" if self.tls else "ipp"

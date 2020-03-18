@@ -6,7 +6,12 @@ from aiohttp import ClientSession
 from pyipp import IPP
 from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
 from pyipp.enums import IppOperation
-from pyipp.exceptions import IPPConnectionError, IPPConnectionUpgradeRequired, IPPError
+from pyipp.exceptions import (
+    IPPConnectionError,
+    IPPConnectionUpgradeRequired,
+    IPPError,
+    IPPParseError,
+)
 
 from . import DEFAULT_PRINTER_URI, load_fixture_binary
 
@@ -120,6 +125,22 @@ async def test_timeout(aresponses):
 
 
 @pytest.mark.asyncio
+async def test_client_error():
+    """Test http client error."""
+    async with ClientSession() as session:
+        ipp = IPP("#", session=session)
+        with pytest.raises(IPPConnectionError):
+            assert await ipp.execute(
+                IppOperation.GET_PRINTER_ATTRIBUTES,
+                {
+                    "operation-attributes-tag": {
+                        "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
+                    },
+                },
+            )
+
+
+@pytest.mark.asyncio
 async def test_http_error404(aresponses):
     """Test HTTP 404 response handling."""
     aresponses.add(
@@ -179,7 +200,7 @@ async def test_unexpected_response(aresponses):
 
     async with ClientSession() as session:
         ipp = IPP(DEFAULT_PRINTER_URI, session=session)
-        with pytest.raises(IPPError):
+        with pytest.raises(IPPParseError):
             assert await ipp.execute(
                 IppOperation.GET_PRINTER_ATTRIBUTES,
                 {
