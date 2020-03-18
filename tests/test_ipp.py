@@ -6,7 +6,7 @@ from aiohttp import ClientSession
 from pyipp import IPP
 from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
 from pyipp.enums import IppOperation
-from pyipp.exceptions import IPPConnectionError, IPPError
+from pyipp.exceptions import IPPConnectionError, IPPConnectionUpgradeRequired, IPPError
 
 from . import DEFAULT_PRINTER_URI, load_fixture_binary
 
@@ -120,7 +120,7 @@ async def test_timeout(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_http_error400(aresponses):
+async def test_http_error404(aresponses):
     """Test HTTP 404 response handling."""
     aresponses.add(
         "printer.example.com:631",
@@ -132,6 +132,31 @@ async def test_http_error400(aresponses):
     async with ClientSession() as session:
         ipp = IPP(DEFAULT_PRINTER_URI, session=session)
         with pytest.raises(IPPError):
+            assert await ipp.execute(
+                IppOperation.GET_PRINTER_ATTRIBUTES,
+                {
+                    "operation-attributes-tag": {
+                        "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
+                    },
+                },
+            )
+
+
+@pytest.mark.asyncio
+async def test_http_error426(aresponses):
+    """Test HTTP 426 response handling."""
+    aresponses.add(
+        "printer.example.com:631",
+        "/ipp/print",
+        "POST",
+        aresponses.Response(
+            text="Upgrade Required", headers={"Upgrade": "TLS/1.2"}, status=426,
+        ),
+    )
+
+    async with ClientSession() as session:
+        ipp = IPP(DEFAULT_PRINTER_URI, session=session)
+        with pytest.raises(IPPConnectionUpgradeRequired):
             assert await ipp.execute(
                 IppOperation.GET_PRINTER_ATTRIBUTES,
                 {
