@@ -1,6 +1,6 @@
 """Models for IPP."""
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 from .parser import parse_ieee1284_device_id, parse_make_and_model
 
@@ -19,7 +19,7 @@ class Info:
     printer_name: str
     printer_info: str
     printer_uri_supported: list
-    serial: str
+    serial: Optional[str]
     uptime: int
     uuid: str
     version: str
