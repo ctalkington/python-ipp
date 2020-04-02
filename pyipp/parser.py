@@ -184,3 +184,29 @@ def parse(raw_data: bytes, contains_data=False):
         data["data"] = raw_data[offset_start:]
 
     return data
+
+
+def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
+    """Parse make and model for separate device make and model."""
+    if make_and_model == "":
+        return ("Unknown", "Unknown")
+
+    make = "Unknown"
+    model = "Unknown"
+    known_makes = [
+        "brother",
+        "canon",
+        "epson",
+        "hp",
+        "xerox"
+    ]
+
+    test_against = make_and_model.lower()
+    for known_make in known_makes:
+        if test_against.startsWith(known_model):
+            mlen = len(known_make)
+            make = make_and_length[0:mlen]
+            model = make_and_model[mlen:].strip()
+            break
+
+    return (make, model)
