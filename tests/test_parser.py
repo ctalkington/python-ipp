@@ -61,15 +61,8 @@ def test_parse_ieee1284_device_id() -> None:
     assert result["COMMAND SET"] == result["CMD"]
 
 
-def test_parse_ieee1284_device_id_missing_values() -> None:
-    """Test the parse_ieee1284_device_id method."""
-    result = parser.parse_ieee1284_device_id("MFG:HP;CMD:;MDL:Photosmart D110 series;")
+def test_parse_ieee1284_device_id_empty() -> None:
+    """Test the parse_ieee1284_device_id method with empty string."""
+    result = parser.parse_ieee1284_device_id("")
 
     assert result
-    assert result["MFG"] == "HP"
-    assert result["MDL"] == "Photosmart D110 series"
-    assert result["CMD"] is None
-
-    assert result["MANUFACTURER"] == result["MFG"]
-    assert result["MODEL"] == result["MDL"]
-    assert result["COMMAND SET"] == result["CMD"]
