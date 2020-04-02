@@ -77,6 +77,9 @@ def test_parse_make_and_model() -> None:
     result = parser.parse_make_and_model("IPP")
     assert result == ("IPP", "Unknown")
 
+    result = parser.parse_make_and_model("IPP ")
+    assert result == ("IPP", "Unknown")
+
     result = parser.parse_make_and_model("IPP Printer")
     assert result == ("IPP", "Printer")
 
