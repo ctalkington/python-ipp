@@ -210,7 +210,7 @@ def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
     if not found_make:
         split = make_and_model.split(None, 1)
         make = split[0]
-        
+
         if len(split) == 2:
             model = split[1].strip()
 
