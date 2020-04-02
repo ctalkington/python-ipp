@@ -203,9 +203,7 @@ def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
         if test_against.startswith(known_make):
             found_make = True
             mlen = len(known_make)
-            mlen -= 1
             make = make_and_model[:mlen]
-            mlen += 1
             model = make_and_model[mlen:].strip()
             break
 
