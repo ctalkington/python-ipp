@@ -188,6 +188,8 @@ def parse(raw_data: bytes, contains_data=False):
 
 def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
     """Parse make and model for separate device make and model."""
+    make_and_model = make_and_model.strip()
+
     if make_and_model == "":
         return ("Unknown", "Unknown")
 
@@ -201,7 +203,7 @@ def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
         if test_against.startswith(known_make):
             found_make = True
             mlen = len(known_make)
-            make = make_and_model[0:mlen]
+            make = make_and_model[0:mlen - 1]
             model = make_and_model[mlen:].strip()
             break
 
