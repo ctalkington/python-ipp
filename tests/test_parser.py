@@ -79,5 +79,8 @@ def test_parse_make_and_model() -> None:
     result = parser.parse_make_and_model("EPSON XP-6000 Series")
     assert result == ("EPSON", "XP-6000 Series")
 
+    result = parser.parse_make_and_model("HP Officejet Pro 6830")
+    assert result == ("HP", "Officejet Pro 6830")
+
     result = parser.parse_make_and_model("HP Photosmart D110 Series")
     assert result == ("HP", "Photosmart D110 Series")
