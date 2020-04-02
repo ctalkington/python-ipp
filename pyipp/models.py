@@ -51,7 +51,7 @@ class Info:
             printer_name=data.get("printer-name", None),
             printer_info=data.get("printer-info", None),
             printer_uri_supported=data.get("printer-uri-supported", []),
-            serial=,
+            serial=serial,
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,
             version=data.get("printer-firmware-string-version", None),
