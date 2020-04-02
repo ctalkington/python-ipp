@@ -214,7 +214,4 @@ def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
         if len(split) == 2:
             model = split[1].strip()
 
-    if model == "":
-        model = "Unknown"
-
     return (make, model)
