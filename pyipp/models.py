@@ -2,7 +2,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from .parser import parse_ieee1284_device_id
+from .parser import parse_ieee1284_device_id, parse_make_and_model
 
 PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
 
@@ -27,21 +27,31 @@ class Info:
     @staticmethod
     def from_dict(data: dict):
         """Return Info object from IPP response."""
-        make_model = data.get("printer-make-and-model", "Generic Printer")
+        make_model = data.get("printer-make-and-model", "IPP Printer")
         device_id = data.get("printer-device-id", "")
-        parsed_device_id = parse_ieee1284_device_id(device_id)
         uuid = data.get("printer-uuid")
 
+        if device_id == "":
+            make, model = parse_make_and_model(make_model)
+            cmd = None
+            serial = None
+        else:
+            parsed_device_id = parse_ieee1284_device_id(device_id)
+            make = parsed_device_id.get("MFG", "Unknown")
+            model = parsed_device_id.get("MDL", "Unknown")
+            cmd = parsed_device_id.get("CMD", None)
+            serial = parsed_device_id.get("SN", None)
+
         return Info(
-            command_set=parsed_device_id.get("CMD", "Unknown"),
+            command_set=cmd,
             location=data.get("printer-location", ""),
             name=make_model,
-            manufacturer=parsed_device_id.get("MFG", "Unknown"),
-            model=parsed_device_id.get("MDL", "Unknown"),
+            manufacturer=make,
+            model=model,
             printer_name=data.get("printer-name", None),
             printer_info=data.get("printer-info", None),
             printer_uri_supported=data.get("printer-uri-supported", []),
-            serial=parsed_device_id.get("SN", None),
+            serial=,
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,
             version=data.get("printer-firmware-string-version", None),
