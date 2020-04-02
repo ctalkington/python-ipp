@@ -31,16 +31,23 @@ class Info:
         device_id = data.get("printer-device-id", "")
         uuid = data.get("printer-uuid")
 
-        if device_id == "":
-            make, model = parse_make_and_model(make_model)
-            cmd = "Unknown"
-            serial = None
-        else:
-            parsed_device_id = parse_ieee1284_device_id(device_id)
-            make = parsed_device_id.get("MFG", "Unknown")
-            model = parsed_device_id.get("MDL", "Unknown")
-            cmd = parsed_device_id.get("CMD", "Unknown")
-            serial = parsed_device_id.get("SN", None)
+        make, model = parse_make_and_model(make_model)
+        cmd = "Unknown"
+        serial = None
+
+        parsed_device_id = parse_ieee1284_device_id(device_id)
+
+        if parsed_device_id.get("MFG") is not None:
+            make = parsed_device_id["MFG"]
+
+        if parsed_device_id.get("MDL") is not None:
+            model = parsed_device_id["MDL"]
+
+        if parsed_device_id.get("CMD") is not None:
+            cmd = parsed_device_id["CMD"]
+
+        if parsed_device_id.get("SN") is not None:
+            serial = parsed_device_id["SN"]
 
         return Info(
             command_set=cmd,
