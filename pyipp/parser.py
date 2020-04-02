@@ -193,13 +193,7 @@ def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
 
     make = "Unknown"
     model = "Unknown"
-    known_makes = [
-        "brother",
-        "canon",
-        "epson",
-        "hp",
-        "xerox"
-    ]
+    known_makes = ["brother", "canon", "epson", "hp", "xerox"]
 
     test_against = make_and_model.lower()
     for known_make in known_makes:
