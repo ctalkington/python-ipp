@@ -66,3 +66,18 @@ def test_parse_ieee1284_device_id_empty() -> None:
     result = parser.parse_ieee1284_device_id("")
 
     assert isinstance(result, dict)
+
+
+def test_parse_make_and_model() -> None:
+    """Test the parse_make_and_model method."""
+    result = parser.parse_make_and_model("")
+    assert result == ("Unknown", "Unknown")
+
+    result = parser.parse_make_and_model("EPSON")
+    assert result == ("EPSON", "Unknown")
+
+    result = parser.parse_make_and_model("EPSON XP-6000 Series")
+    assert result == ("EPSON", "XP-6000 Series")
+
+    result = parser.parse_make_and_model("HP Photosmart D110 Series")
+    assert result == ("HP", "Photosmart D110 Series")
