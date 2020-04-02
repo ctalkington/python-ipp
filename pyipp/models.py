@@ -33,14 +33,14 @@ class Info:
 
         if device_id == "":
             make, model = parse_make_and_model(make_model)
-            cmd = ""
-            serial = ""
+            cmd = "Unknown"
+            serial = None
         else:
             parsed_device_id = parse_ieee1284_device_id(device_id)
             make = parsed_device_id.get("MFG", "Unknown")
             model = parsed_device_id.get("MDL", "Unknown")
-            cmd = parsed_device_id.get("CMD", None)
-            serial = parsed_device_id.get("SN", "")
+            cmd = parsed_device_id.get("CMD", "Unknown")
+            serial = parsed_device_id.get("SN", None)
 
         return Info(
             command_set=cmd,
