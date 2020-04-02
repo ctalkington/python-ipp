@@ -59,3 +59,10 @@ def test_parse_ieee1284_device_id() -> None:
     assert result["MANUFACTURER"] == result["MFG"]
     assert result["MODEL"] == result["MDL"]
     assert result["COMMAND SET"] == result["CMD"]
+
+
+def test_parse_ieee1284_device_id_empty() -> None:
+    """Test the parse_ieee1284_device_id method with empty string."""
+    result = parser.parse_ieee1284_device_id("")
+
+    assert isinstance(result, dict)
