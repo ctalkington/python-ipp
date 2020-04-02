@@ -73,9 +73,14 @@ def test_parse_make_and_model() -> None:
     result = parser.parse_make_and_model("")
     assert result == ("Unknown", "Unknown")
 
-    result = parser.parse_make_and_model("EPSON")
-    assert result == ("EPSON", "Unknown")
+    # generic fallback for unknown brands
+    result = parser.parse_make_and_model("IPP")
+    assert result == ("IPP", "Unknown")
 
+    result = parser.parse_make_and_model("IPP Printer")
+    assert result == ("IPP", "Printer")
+
+    # known brands
     result = parser.parse_make_and_model("EPSON XP-6000 Series")
     assert result == ("EPSON", "XP-6000 Series")
 
