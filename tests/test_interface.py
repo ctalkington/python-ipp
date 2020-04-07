@@ -2,6 +2,8 @@
 import pytest
 from aiohttp import ClientSession
 from pyipp import IPP, Printer
+from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
+from pyipp.enums import IppOperation
 
 from . import (
     DEFAULT_PRINTER_HOST,
@@ -100,6 +102,7 @@ async def test_printer(aresponses):
         assert printer.markers[4].level == 92
         assert printer.markers[4].low_level == 15
         assert printer.markers[4].high_level == 100
+
 
 @pytest.mark.asyncio
 async def test_raw(aresponses):
