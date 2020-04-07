@@ -1,6 +1,6 @@
 """Asynchronous Python client for IPP."""
 import asyncio
-from socket import gaierror as SocketGIAEroor
+from socket import gaierror as SocketGIAError
 from struct import error as StructError
 from typing import Any, Mapping, Optional
 
@@ -121,7 +121,7 @@ class IPP:
             raise IPPConnectionError(
                 "Timeout occurred while connecting to IPP server."
             ) from exception
-        except (aiohttp.ClientError, SocketGIAEroor) as exception:
+        except (aiohttp.ClientError, SocketGIAError) as exception:
             raise IPPConnectionError(
                 "Error occurred while communicating with IPP server."
             ) from exception
