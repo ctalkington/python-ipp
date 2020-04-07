@@ -103,7 +103,7 @@ def parse_attribute(data: bytes, offset: int):
         offset_length = offset + attribute["value-length"]
         attribute["value"] = data[offset:offset_length]
         _LOGGER.debug("Attribute Bytes: %s", attribute["value"])
-        attribute["value"] = attribute["value"].decode("utf-8")
+        attribute["value"] = attribute["value"].decode("utf-8", 'ignore')
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += attribute["value-length"]
 
