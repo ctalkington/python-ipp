@@ -1,8 +1,11 @@
 """Response Parser for IPP."""
+import logging
 import struct
 from typing import Any, Dict, Tuple, cast
 
 from .enums import IppDocumentState, IppJobState, IppPrinterState, IppTag
+
+_LOGGER = logging.getLogger(__name__)
 
 
 def parse_ieee1284_device_id(device_id: str) -> Dict[str, Any]:
@@ -49,6 +52,8 @@ def parse_attribute(data: bytes, offset: int):
 
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
+    
+    _LOGGER.debug("Parsing Attribute: %s", attribute["tag"], extra=attribute)
 
     if attribute["tag"] in (IppTag.ENUM.value, IppTag.INTEGER.value):
         attribute["value"] = struct.unpack_from(">i", data, offset)[0]
