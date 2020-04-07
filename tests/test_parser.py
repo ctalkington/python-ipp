@@ -93,23 +93,12 @@ def test_parse_make_and_model() -> None:
 
 def test_parse_brother_mfcj5320dw() -> None:
     """Test the parse method against response from Brother MFC-J5320DW."""
-    response = load_fixture_binary(
-        "get-printer-attributes-brother-mfcj5320dw.bin"
-    )
-    
+    response = load_fixture_binary("get-printer-attributes-brother-mfcj5320dw.bin")
+
     result = parser.parse(response)
-    assert result == {
-        "data": b"",
-        "jobs": [],
-        "operation-attributes": {
-            "attributes-charset": DEFAULT_CHARSET,
-            "attributes-natural-language": DEFAULT_CHARSET_LANGUAGE,
-            "printer-uri": "ipp://printer.example.com:361/ipp/print",
-            "requesting-user-name": "PythonIPP",
-        },
-        "printers": [],
-        "request-id": 1,
-        "status-code": IppOperation.GET_PRINTER_ATTRIBUTES,
-        "version": DEFAULT_PROTO_VERSION,
-    }
-    
+    assert result
+
+    assert result["version"] == DEFAULT_PROTO_VERSION
+    assert result["printers"]
+    assert result["printers"][0]
+    assert result["printers"][0] == {}
