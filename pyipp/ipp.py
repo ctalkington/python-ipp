@@ -77,7 +77,6 @@ class IPP:
         uri: str = "",
         data: Optional[Any] = None,
         params: Optional[Mapping[str, str]] = None,
-        : bool = True,
     ) -> Any:
         """Handle a request to an IPP server."""
         scheme = "https" if self.tls else "http"
