@@ -52,7 +52,7 @@ def parse_attribute(data: bytes, offset: int):
 
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
-    
+
     _LOGGER.debug("Parsing Attribute: %s", attribute["tag"], extra=attribute)
 
     if attribute["tag"] in (IppTag.ENUM.value, IppTag.INTEGER.value):
