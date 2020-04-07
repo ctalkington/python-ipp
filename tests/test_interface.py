@@ -100,3 +100,30 @@ async def test_printer(aresponses):
         assert printer.markers[4].level == 92
         assert printer.markers[4].low_level == 15
         assert printer.markers[4].high_level == 100
+
+@pytest.mark.asyncio
+async def test_raw(aresponses):
+    """Test raw method is handled correctly."""
+    aresponses.add(
+        MATCH_DEFAULT_HOST,
+        DEFAULT_PRINTER_PATH,
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/ipp"},
+            body=load_fixture_binary("get-printer-attributes-epsonxp6000.bin"),
+        ),
+    )
+
+    async with ClientSession() as session:
+        ipp = IPP(DEFAULT_PRINTER_URI, session=session)
+        response = await ipp.raw(
+            IppOperation.GET_PRINTER_ATTRIBUTES,
+            {
+                "operation-attributes-tag": {
+                    "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
+                },
+            },
+        )
+
+        assert isinstance(response, bytes)
