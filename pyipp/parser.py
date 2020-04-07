@@ -56,6 +56,8 @@ def parse_attribute(data: bytes, offset: int):
     offset += 2
 
     _LOGGER.debug("Attribute Name: %s", attribute["name"])
+    _LOGGER.debug("Attribute Value Offset: %s", offset)
+    _LOGGER.debug("Attribute Value Length: %s", attribute["value-length"])
 
     if attribute["tag"] in (IppTag.ENUM.value, IppTag.INTEGER.value):
         attribute["value"] = struct.unpack_from(">i", data, offset)[0]
