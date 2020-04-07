@@ -8,7 +8,7 @@ from pyipp import IPP
 async def main():
     """Show example of connecting to your IPP print server."""
     async with IPP("ipps://EPSON761251.local:631/ipp/print") as ipp:
-        response = await ipp.execute(
+        response = await ipp.raw(
             0x000B,
             {
                 "operation-attributes-tag": {
@@ -27,7 +27,6 @@ async def main():
                     ],
                 },
             },
-            raw=True,
         )
 
         with open("printer-attributes.bin", "wb") as f:
