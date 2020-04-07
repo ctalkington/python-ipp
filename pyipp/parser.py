@@ -99,7 +99,7 @@ def parse_attribute(data: bytes, offset: int):
     elif attribute["tag"] == IppTag.RESOLUTION.value:
         attribute["value"] = struct.unpack_from(">iib", data, offset)
         offset += attribute["value-length"]
-    elif attribute["tag"] in (IppTag.TEXT_LANG, IppTag.NAME_LANG):
+    elif attribute["tag"] in (IppTag.TEXT_LANG.value, IppTag.NAME_LANG.value):
         offset_length = offset + attribute["value-length"]
         attribute["value"] = data[offset:offset_length][6:].decode("utf-8", "ignore")
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
