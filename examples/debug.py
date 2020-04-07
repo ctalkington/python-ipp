@@ -5,6 +5,7 @@ import asyncio
 from pyipp import IPP
 from pyipp.enums import IppOperation
 
+
 async def main():
     """Show example of connecting to your IPP print server."""
     async with IPP("ipps://EPSON761251.local:631/ipp/print") as ipp:
