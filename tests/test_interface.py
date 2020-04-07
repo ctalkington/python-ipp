@@ -1,4 +1,4 @@
-"""Tests for IPP Printer model."""
+"""Tests for IPP public interface."""
 import pytest
 from aiohttp import ClientSession
 from pyipp import IPP, Printer
