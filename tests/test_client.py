@@ -1,4 +1,4 @@
-"""Tests for IPP."""
+"""Tests for IPP Client."""
 import asyncio
 
 import pytest

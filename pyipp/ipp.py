@@ -1,6 +1,6 @@
 """Asynchronous Python client for IPP."""
 import asyncio
-from socket import gaierror as SocketGIAEroor
+from socket import gaierror as SocketGIAError
 from struct import error as StructError
 from typing import Any, Mapping, Optional
 
@@ -121,7 +121,7 @@ class IPP:
             raise IPPConnectionError(
                 "Timeout occurred while connecting to IPP server."
             ) from exception
-        except (aiohttp.ClientError, SocketGIAEroor) as exception:
+        except (aiohttp.ClientError, SocketGIAError) as exception:
             raise IPPConnectionError(
                 "Error occurred while communicating with IPP server."
             ) from exception
@@ -145,20 +145,7 @@ class IPP:
                 },
             )
 
-        content = await response.read()
-
-        try:
-            parsed_content = parse_response(content)
-        except (StructError, Exception) as exception:  # disable=broad-except
-            raise IPPParseError from exception
-
-        if parsed_content["status-code"] != 0:
-            raise IPPError(
-                "Unexpected printer status code",
-                {"status-code": parsed_content["status-code"]},
-            )
-
-        return parsed_content
+        return await response.read()
 
     def _build_printer_uri(self) -> str:
         scheme = "ipps" if self.tls else "ipp"
@@ -189,6 +176,25 @@ class IPP:
     async def execute(self, operation: IppOperation, message: dict) -> dict:
         """Send a request message to the server."""
         message = self._message(operation, message)
+        response = await self._request(data=message)
+
+        try:
+            parsed = parse_response(response)
+        except (StructError, Exception) as exception:  # disable=broad-except
+            raise IPPParseError from exception
+
+        if parsed["status-code"] != 0:
+            raise IPPError(
+                "Unexpected printer status code",
+                {"status-code": parsed["status-code"]},
+            )
+
+        return parsed
+
+    async def raw(self, operation: IppOperation, message: dict) -> bytes:
+        """Send a request message to the server and return raw response."""
+        message = self._message(operation, message)
+
         return await self._request(data=message)
 
     async def close(self) -> None:
