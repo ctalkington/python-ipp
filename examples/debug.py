@@ -3,13 +3,13 @@
 import asyncio
 
 from pyipp import IPP
-
+from pyipp.enums import IppOperation
 
 async def main():
     """Show example of connecting to your IPP print server."""
     async with IPP("ipps://EPSON761251.local:631/ipp/print") as ipp:
         response = await ipp.raw(
-            0x000B,
+            IppOperation.GET_PRINTER_ATTRIBUTES,
             {
                 "operation-attributes-tag": {
                     "requested-attributes": [
