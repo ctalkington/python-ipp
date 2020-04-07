@@ -100,5 +100,6 @@ def test_parse_brother_mfcj5320dw() -> None:
 
     assert result["version"] == DEFAULT_PROTO_VERSION
     assert result["printers"]
+
     assert result["printers"][0]
     assert result["printers"][0] == {}
