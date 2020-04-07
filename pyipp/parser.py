@@ -105,7 +105,7 @@ def parse_attribute(data: bytes, offset: int):
         _LOGGER.debug("Attribute Bytes: %s", attribute["value"])
 
         if attribute["value"].startswith(b"\x00\x02"):
-            attribute["value"] = attribute["value"][10:]
+            attribute["value"] = attribute["value"][6:]
 
         attribute["value"] = attribute["value"].decode("utf-8", "ignore")
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
