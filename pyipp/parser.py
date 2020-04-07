@@ -117,11 +117,17 @@ def parse(raw_data: bytes, contains_data=False):
     data: Dict[str, Any] = {}
     offset = 0
 
+    _LOGGER.debug("Parsing IPP Data")
+
     data["version"] = struct.unpack_from(">bb", raw_data, offset)
     offset += 2
 
+    _LOGGER.debug("IPP Version: %s", data["version"])
+
     data["status-code"] = struct.unpack_from(">h", raw_data, offset)[0]
     offset += 2
+
+    _LOGGER.debug("IPP Status Code: %s", data["status-code"])
 
     data["request-id"] = struct.unpack_from(">i", raw_data, offset)[0]
     offset += 4
