@@ -178,6 +178,8 @@ class IPP:
         message = self._message(operation, message)
         response = await self._request(data=message)
 
+        if raw:
+            return 
         try:
             parsed = parse_response(response)
         except (StructError, Exception) as exception:  # disable=broad-except
@@ -190,6 +192,12 @@ class IPP:
             )
 
         return parsed
+
+    async def raw(self, operation: IppOperation, message: dict) -> bytes:
+        """Send a request message to the server and return raw response."""
+        message = self._message(operation, message)
+
+        return await self._request(data=message)
 
     async def close(self) -> None:
         """Close open client session."""
