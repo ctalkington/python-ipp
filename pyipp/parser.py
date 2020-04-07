@@ -40,6 +40,8 @@ def parse_attribute(data: bytes, offset: int):
     N bytes: Value - direct access
     """
 
+    _LOGGER.debug("Parsing Attribute at offset %s", offset)
+
     attribute = {"tag": struct.unpack_from(">b", data, offset)[0]}
     offset += 1
 
@@ -53,7 +55,7 @@ def parse_attribute(data: bytes, offset: int):
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
 
-    _LOGGER.debug("Parsing Attribute: %s", attribute["name"])
+    _LOGGER.debug("Attribute Name: %s", attribute["name"])
 
     if attribute["tag"] in (IppTag.ENUM.value, IppTag.INTEGER.value):
         attribute["value"] = struct.unpack_from(">i", data, offset)[0]
@@ -92,7 +94,7 @@ def parse_attribute(data: bytes, offset: int):
         offset += attribute["value-length"]
     else:
         offset_length = offset + attribute["value-length"]
-        _LOGGER.debug("Parsing Attribute Value: %s", data[offset:offset_length])
+        _LOGGER.debug("Attribute Value: %s", data[offset:offset_length])
         attribute["value"] = data[offset:offset_length].decode("utf-8")
         offset += attribute["value-length"]
 
