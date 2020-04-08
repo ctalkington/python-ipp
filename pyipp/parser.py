@@ -1,8 +1,11 @@
 """Response Parser for IPP."""
+import logging
 import struct
 from typing import Any, Dict, Tuple, cast
 
 from .enums import IppDocumentState, IppJobState, IppPrinterState, IppTag
+
+_LOGGER = logging.getLogger(__name__)
 
 
 def parse_ieee1284_device_id(device_id: str) -> Dict[str, Any]:
@@ -37,6 +40,8 @@ def parse_attribute(data: bytes, offset: int):
     N bytes: Value - direct access
     """
 
+    _LOGGER.debug("Parsing Attribute at offset %s", offset)
+
     attribute = {"tag": struct.unpack_from(">b", data, offset)[0]}
     offset += 1
 
@@ -50,6 +55,10 @@ def parse_attribute(data: bytes, offset: int):
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
 
+    _LOGGER.debug("Attribute Name: %s", attribute["name"])
+    _LOGGER.debug("Attribute Value Offset: %s", offset)
+    _LOGGER.debug("Attribute Value Length: %s", attribute["value-length"])
+
     if attribute["tag"] in (IppTag.ENUM.value, IppTag.INTEGER.value):
         attribute["value"] = struct.unpack_from(">i", data, offset)[0]
 
@@ -61,14 +70,17 @@ def parse_attribute(data: bytes, offset: int):
             elif attribute["name"] == "document-state":
                 attribute["value"] = IppDocumentState(attribute["value"])
 
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += 4
     elif attribute["tag"] == IppTag.BOOLEAN.value:
         attribute["value"] = struct.unpack_from(">?", data, offset)[0]
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += 1
     elif attribute["tag"] == IppTag.DATE.value:
         attribute["value"] = struct.unpack_from(
             ">" + "b" * attribute["value-length"], data, offset
         )[0]
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += attribute["value-length"]
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
         if attribute["value-length"] > 0:
@@ -77,6 +89,8 @@ def parse_attribute(data: bytes, offset: int):
             offset += attribute["value-length"]
         else:
             attribute["value"] = None
+
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.RANGE.value:
         attribute["value"] = []
         for i in range(int(attribute["value-length"] / 4)):
@@ -85,9 +99,17 @@ def parse_attribute(data: bytes, offset: int):
     elif attribute["tag"] == IppTag.RESOLUTION.value:
         attribute["value"] = struct.unpack_from(">iib", data, offset)
         offset += attribute["value-length"]
+    elif attribute["tag"] in (IppTag.TEXT_LANG.value, IppTag.NAME_LANG.value):
+        offset_length = offset + attribute["value-length"]
+        attribute["value"] = data[offset:offset_length][6:].decode("utf-8", "ignore")
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
+        offset += attribute["value-length"]
     else:
         offset_length = offset + attribute["value-length"]
-        attribute["value"] = data[offset:offset_length].decode("utf-8")
+        attribute["value"] = data[offset:offset_length]
+        _LOGGER.debug("Attribute Bytes: %s", attribute["value"])
+        attribute["value"] = attribute["value"].decode("utf-8", "ignore")
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += attribute["value-length"]
 
     return attribute, offset
@@ -111,11 +133,17 @@ def parse(raw_data: bytes, contains_data=False):
     data: Dict[str, Any] = {}
     offset = 0
 
+    _LOGGER.debug("Parsing IPP Data")
+
     data["version"] = struct.unpack_from(">bb", raw_data, offset)
     offset += 2
 
+    _LOGGER.debug("IPP Version: %s", data["version"])
+
     data["status-code"] = struct.unpack_from(">h", raw_data, offset)[0]
     offset += 2
+
+    _LOGGER.debug("IPP Status Code: %s", data["status-code"])
 
     data["request-id"] = struct.unpack_from(">i", raw_data, offset)[0]
     offset += 4

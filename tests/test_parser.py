@@ -89,3 +89,20 @@ def test_parse_make_and_model() -> None:
 
     result = parser.parse_make_and_model("HP Photosmart D110 Series")
     assert result == ("HP", "Photosmart D110 Series")
+
+
+def test_parse_brother_mfcj5320dw() -> None:
+    """Test the parse method against response from Brother MFC-J5320DW."""
+    response = load_fixture_binary("get-printer-attributes-brother-mfcj5320dw.bin")
+
+    result = parser.parse(response)
+    assert result
+
+    assert result["version"] == DEFAULT_PROTO_VERSION
+    assert result["printers"]
+
+    assert result["printers"][0]
+
+    printer = result["printers"][0]
+    assert printer["printer-make-and-model"] == "Brother MFC-J5320DW"
+    assert printer["printer-uuid"] == "urn:uuid:e3248000-80ce-11db-8000-30055ce13be2"
