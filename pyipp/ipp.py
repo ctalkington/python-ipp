@@ -117,14 +117,14 @@ class IPP:
                     headers=headers,
                     ssl=self.verify_ssl,
                 )
-        except asyncio.TimeoutError as exception:
+        except asyncio.TimeoutError as exc:
             raise IPPConnectionError(
                 "Timeout occurred while connecting to IPP server."
-            ) from exception
-        except (aiohttp.ClientError, SocketGIAError) as exception:
+            ) from exc
+        except (aiohttp.ClientError, SocketGIAError) as exc:
             raise IPPConnectionError(
                 "Error occurred while communicating with IPP server."
-            ) from exception
+            ) from exc
 
         if response.status == 426:
             raise IPPConnectionUpgradeRequired(
@@ -180,8 +180,8 @@ class IPP:
 
         try:
             parsed = parse_response(response)
-        except (StructError, Exception) as exception:  # disable=broad-except
-            raise IPPParseError from exception
+        except (StructError, Exception) as exc:  # disable=broad-except
+            raise IPPParseError from exc
 
         if parsed["status-code"] != 0:
             raise IPPError(
@@ -213,8 +213,14 @@ class IPP:
             },
         )
 
-        data: dict = next(iter(response_data["printers"] or []), {})
-        return Printer.from_dict(data)
+        parsed: dict = next(iter(response_data["printers"] or []), {})
+
+        try:
+            printer = Printer.from_dict(parsed)
+        except Exception as exc:  # disable=broad-except
+            raise IPPParseError from exc
+
+        return printer
 
     async def __aenter__(self) -> "IPP":
         """Async enter."""
