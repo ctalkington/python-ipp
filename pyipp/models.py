@@ -148,7 +148,7 @@ class Printer:
                     color=marker_colors[marker_id],
                     level=marker_levels[marker_id],
                     high_level=marker_highs[marker_id],
-                    low_level=markers[marker_id],
+                    low_level=marker_lows[marker_id],
                 )
                 for marker_id, marker in enumerate(marker_names)
             ]
