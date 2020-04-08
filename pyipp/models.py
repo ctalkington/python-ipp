@@ -152,7 +152,7 @@ class Printer:
                 )
                 for marker_id in range(len(marker_names))
             ]
-            markers.sort(key=lambda x: x.name)    
+            markers.sort(key=lambda x: x.name)
 
         return Printer(
             info=Info.from_dict(data), markers=markers, state=State.from_dict(data)
