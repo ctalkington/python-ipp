@@ -90,7 +90,7 @@ async def test_printer_with_invalid_marker_data():
     printer = models.Printer.from_dict(
         {
             "marker-names": 1,
-            "marker-colors": 
+            "marker-colors": 1
         }
     )
 
