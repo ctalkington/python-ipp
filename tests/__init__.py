@@ -8,6 +8,16 @@ DEFAULT_PRINTER_URI = (
     f"ipp://{DEFAULT_PRINTER_HOST}:{DEFAULT_PRINTER_PORT}{DEFAULT_PRINTER_PATH}"
 )
 
+# COMMON (NOT DOCUMENTED)
+COMMON_PRINTER_ATTRS = {
+    "marker-colors": "",
+    "marker-high-levels": "",
+    "marker-levels": "",
+    "marker-low-levels": "",
+    "marker-names": "",
+    "marker-types": "",
+}
+
 # RFC 2911 - IPP 1.1
 RFC2911_PRINTER_ATTRS = {
     "attributes-charset": "",
@@ -170,18 +180,8 @@ PWG510013_PRINTER_ATTRS = {
     "which-jobs-supported": "",
 }
 
-# COMMON (NOT DOCUMENTED)
-COMMON_PRINTER_ATTRS = {
-    "marker-colors": "",
-    "marker-high-levels": "",
-    "marker-levels": "",
-    "marker-low-levels": "",
-    "marker-names": "",
-    "marker-types": "",
-}
-
-# PWG 5100.14
-PWG510014_PRINTER_ATTRS = {
+# PWG 5100.14 - IPP Everywhere v1
+IPPAW10_PRINTER_ATTRS = {
     **RFC2911_PRINTER_ATTRS,
     **RFC3995_PRINTER_ATTRS,
     **PWG51002_PRINTER_ATTRS,
@@ -195,6 +195,19 @@ PWG510014_PRINTER_ATTRS = {
     **COMMON_PRINTER_ATTRS,
 }
 
+# PWG 5100.12 - IPP 2.0/2.1/2.2
+IPP20_PRINTER_ATTRS = {
+    **RFC2911_PRINTER_ATTRS,
+    **RFC3995_PRINTER_ATTRS,
+    **PWG51002_PRINTER_ATTRS,
+    **PWG51003_PRINTER_ATTRS,
+    **PWG51004_PRINTER_ATTRS,
+    **PWG51006_PRINTER_ATTRS,
+    **PWG51007_PRINTER_ATTRS,
+    **PWG51009_PRINTER_ATTRS,
+    **PWG510011_PRINTER_ATTRS,
+    **COMMON_PRINTER_ATTRS,
+}
 
 def load_fixture(filename):
     """Load a fixture."""
