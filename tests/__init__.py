@@ -67,6 +67,12 @@ RFC2911_PRINTER_ATTRS = {
 
 # RFC 3995
 RFC3995_PRINTER_ATTRS = {
+    "notify-events-default": "",
+    "notify-events-supported": "",
+    "notify-lease-duration-default": "",
+    "notify-lease-duration-supported": "",
+    "notify-max-events-supported ": "",
+    "notify-pull-method-supported": "",
     "printer-state-change-date-time": "",
     "printer-state-change-time": "",
 }
@@ -171,6 +177,7 @@ COMMON_PRINTER_ATTRS = {
     "marker-levels": "",
     "marker-low-levels": "",
     "marker-names": "",
+    "marker-types": "",
 }
 
 # PWG 5100.14
