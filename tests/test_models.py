@@ -3,7 +3,7 @@ import pyipp.models as models
 import pyipp.parser as parser
 import pytest
 
-from . import load_fixture_binary, IPPAW10_PRINTER_ATTRS
+from . import load_fixture_binary, IPPE10_PRINTER_ATTRS
 
 
 @pytest.mark.asyncio
@@ -85,7 +85,7 @@ async def test_printer():
 @pytest.mark.asyncio
 async def test_printer_with_marker_data():
     """Test Printer model."""
-    data = IPPAW10_PRINTER_ATTRS.copy()
+    data = IPPE10_PRINTER_ATTRS.copy()
     data["marker-names"] = []
     data["marker-levels"] = []
     data["marker-colors"] = []
