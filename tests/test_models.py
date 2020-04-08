@@ -1,6 +1,6 @@
 """Tests for IPP public interface."""
 import pyipp.models as models
-import pyipp.parser
+import pyipp.parser as parser
 import pytest
 
 from . import load_fixture_binary
