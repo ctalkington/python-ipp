@@ -146,7 +146,7 @@ class Printer:
         if isinstance(data.get("marker-types"), List):
             marker_types = data["marker-types"]
 
-        if isinstance(marker_names, List):
+        if len(marker_names):
             markers = [
                 Marker(
                     marker_id=marker_id,
