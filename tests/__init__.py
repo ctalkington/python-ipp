@@ -75,7 +75,7 @@ RFC2911_PRINTER_ATTRS = {
     "version-number": "",
 }
 
-# RFC 3995
+# RFC 3995 - Notifications
 RFC3995_PRINTER_ATTRS = {
     "notify-events-default": "",
     "notify-events-supported": "",
@@ -87,7 +87,7 @@ RFC3995_PRINTER_ATTRS = {
     "printer-state-change-time": "",
 }
 
-# PWG 5100.2
+# PWG 5100.2 - Output Bins
 PWG51002_PRINTER_ATTRS = {
     "output-bin-default": "",
     "output-bin-supported": "",
@@ -112,7 +112,7 @@ PWG51004_PRINTER_ATTRS = {
     "pwg-raster-document-type-supported": "",
 }
 
-# PWG 5100.6
+# PWG 5100.6 - Page Overrides
 PWG51006_PRINTER_ATTRS = {
     "overrides-supported": "",
 }
@@ -123,13 +123,13 @@ PWG51007_PRINTER_ATTRS = {
     "print-content-optimize-supported": "",
 }
 
-# PWG 5100.9
+# PWG 5100.9 - Alerts
 PWG51009_PRINTER_ATTRS = {
     "printer-alert": "",
     "printer-alert-description": "",
 }
 
-# PWG 5100.11
+# PWG 5100.11 - Extended Options Set 2
 PWG510011_PRINTER_ATTRS = {
     "feed-orientation-default": "",
     "feed-orientation-supported": "",
@@ -141,7 +141,7 @@ PWG510011_PRINTER_ATTRS = {
     "which-jobs-supported": "",
 }
 
-# PWG 5100.13
+# PWG 5100.13 - Extended Options Sst 3
 PWG510013_PRINTER_ATTRS = {
     "document-password-supported": "",
     "identify-actions-default": "",
