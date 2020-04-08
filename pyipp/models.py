@@ -123,7 +123,7 @@ class Printer:
         if isinstance(data.get("marker-colors"), List):
             marker_colors = data["marker-colors"]
 
-        marker_levels = [0 for marker in marker_names]
+        marker_levels = [None for marker in marker_names]
         if isinstance(data.get("marker-levels"), List):
             marker_levels = data["marker-levels"]
 
