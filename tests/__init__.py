@@ -81,7 +81,7 @@ RFC3995_PRINTER_ATTRS = {
     "notify-events-supported": "",
     "notify-lease-duration-default": "",
     "notify-lease-duration-supported": "",
-    "notify-max-events-supported ": "",
+    "notify-max-events-supported": "",
     "notify-pull-method-supported": "",
     "printer-state-change-date-time": "",
     "printer-state-change-time": "",
