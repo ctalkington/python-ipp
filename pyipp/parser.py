@@ -103,7 +103,7 @@ def parse_attribute(data: bytes, offset: int):
         attribute["language-length"] = struct.unpack_from(">h", data, offset)[0]
         offset += 2
 
-        offset_length = offset + attribute["name-length"]
+        offset_length = offset + attribute["language-length"]
         attribute["language"] = data[offset:offset_length].decode("utf-8")
         offset += attribute["language-length"]
         _LOGGER.debug("Attribute Language: %s", attribute["language"])
