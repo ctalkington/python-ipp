@@ -70,18 +70,18 @@ def parse_attribute(data: bytes, offset: int):
             elif attribute["name"] == "document-state":
                 attribute["value"] = IppDocumentState(attribute["value"])
 
-        _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += 4
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.BOOLEAN.value:
         attribute["value"] = struct.unpack_from(">?", data, offset)[0]
-        _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += 1
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.DATE.value:
         attribute["value"] = struct.unpack_from(
             ">" + "b" * attribute["value-length"], data, offset
         )[0]
-        _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += attribute["value-length"]
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
         if attribute["value-length"] > 0:
             offset_length = offset + attribute["value-length"]
@@ -100,17 +100,30 @@ def parse_attribute(data: bytes, offset: int):
         attribute["value"] = struct.unpack_from(">iib", data, offset)
         offset += attribute["value-length"]
     elif attribute["tag"] in (IppTag.TEXT_LANG.value, IppTag.NAME_LANG.value):
-        offset_length = offset + attribute["value-length"]
-        attribute["value"] = data[offset:offset_length][6:].decode("utf-8", "ignore")
+        attribute["language-length"] = struct.unpack_from(">h", data, offset)[0]
+        offset += 2
+
+        offset_length = offset + attribute["language-length"]
+        attribute["language"] = data[offset:offset_length].decode("utf-8")
+        offset += attribute["language-length"]
+        _LOGGER.debug("Attribute Language: %s", attribute["language"])
+
+        attribute["text-length"] = struct.unpack_from(">h", data, offset)[0]
+        offset += 2
+        _LOGGER.debug("Attribute Text Length: %s", attribute["text-length"])
+
+        offset_length = offset + attribute["text-length"]
+        attribute["value"] = data[offset:offset_length].decode("utf-8")
+        offset += attribute["text-length"]
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
-        offset += attribute["value-length"]
     else:
         offset_length = offset + attribute["value-length"]
         attribute["value"] = data[offset:offset_length]
         _LOGGER.debug("Attribute Bytes: %s", attribute["value"])
+
         attribute["value"] = attribute["value"].decode("utf-8", "ignore")
-        _LOGGER.debug("Attribute Value: %s", attribute["value"])
         offset += attribute["value-length"]
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
 
     return attribute, offset
 
