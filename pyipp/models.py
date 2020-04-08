@@ -113,24 +113,28 @@ class Printer:
     @staticmethod
     def from_dict(data):
         """Return Printer object from IPP response."""
+        markers = []
+        marker_names = data.get("marker-names", [])
         marker_colors = data.get("marker-colors", [])
         marker_levels = data.get("marker-levels", [])
         marker_high_levels = data.get("marker-high-levels", [])
         marker_low_levels = data.get("marker-low-levels", [])
         marker_types = data.get("marker-types", [])
-        markers = [
-            Marker(
-                marker_id=marker_id,
-                marker_type=marker_types[marker_id],
-                name=marker,
-                color=marker_colors[marker_id],
-                level=marker_levels[marker_id],
-                high_level=marker_high_levels[marker_id],
-                low_level=marker_low_levels[marker_id],
-            )
-            for marker_id, marker in enumerate(data.get("marker-names", {}))
-        ]
-        markers.sort(key=lambda x: x.name)
+
+        if isinstance(marker_names, List):
+            markers = [
+                Marker(
+                    marker_id=marker_id,
+                    marker_type=marker_types[marker_id],
+                    name=marker,
+                    color=marker_colors[marker_id],
+                    level=marker_levels[marker_id],
+                    high_level=marker_high_levels[marker_id],
+                    low_level=marker_low_levels[marker_id],
+                )
+                for marker_id, marker in enumerate(marker_names)
+            ]
+            markers.sort(key=lambda x: x.name)
 
         return Printer(
             info=Info.from_dict(data), markers=markers, state=State.from_dict(data)
