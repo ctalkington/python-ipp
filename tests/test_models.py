@@ -3,7 +3,7 @@ import pyipp.models as models
 import pyipp.parser as parser
 import pytest
 
-from . import IPP20_PRINTER_ATTRIBUTES, load_fixture_binary
+from . import load_fixture_binary, PWG510014_PRINTER_ATTRS
 
 
 @pytest.mark.asyncio
@@ -83,15 +83,19 @@ async def test_printer():
 
 
 @pytest.mark.asyncio
-async def test_printer_with_invalid_marker_data():
+async def test_printer_with_marker_data():
     """Test Printer model."""
-    data = IPP20_PRINTER_ATTRIBUTES.copy()
-    data["marker-names"] = 1
+    data = PWG510014_PRINTER_ATTRS.copy()
+    data["marker-names"] = []
+    data["marker-levels"] = []
+    data["marker-colors"] = []
+    data["marker-high-levels"] = []
+    data["marker-low-levels"] = []
 
     printer = models.Printer.from_dict(data)
     assert printer
 
-    data["marker-names"] = []
+    data["marker-levels"] = 1
 
     printer = models.Printer.from_dict(data)
     assert printer
