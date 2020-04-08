@@ -119,23 +119,23 @@ class Printer:
         if isinstance(data.get("marker-names"), List):
             marker_names = data["marker-names"]
 
-        marker_colors = []
+        marker_colors = [None for marker in marker_names]
         if isinstance(data.get("marker-colors"), List):
             marker_colors = data["marker-colors"]
 
-        marker_levels = []
+        marker_levels = [0 for marker in marker_names]
         if isinstance(data.get("marker-levels"), List):
             marker_levels = data["marker-levels"]
 
-        marker_highs = []
+        marker_highs = [100 for marker in marker_names]
         if isinstance(data.get("marker-high-levels"), List):
             marker_highs = data["marker-high-levels"]
 
-        marker_lows = []
+        marker_lows = [0 for marker in marker_names]
         if isinstance(data.get("marker-low-levels"), List):
             marker_lows = data["marker-low-levels"]
 
-        marker_types = []
+        marker_types = ["unknown" for marker in marker_names]
         if isinstance(data.get("marker-types"), List):
             marker_types = data["marker-types"]
 
