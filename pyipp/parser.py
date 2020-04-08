@@ -71,7 +71,7 @@ def parse_attribute(data: bytes, offset: int):
                 attribute["value"] = IppDocumentState(attribute["value"])
 
         offset += 4
-        _LOGGER.debug("Attribute Value: %s", attribute["value"])      
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.BOOLEAN.value:
         attribute["value"] = struct.unpack_from(">?", data, offset)[0]
         offset += 1
