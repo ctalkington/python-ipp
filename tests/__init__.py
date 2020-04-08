@@ -38,16 +38,52 @@ IPP11_PRINTER_ATTRS = {
     "version-number": "",
 }
 
+# RFC 3995
+RFC3995_PRINTER_ATTRS = {
+    "printer-state-change-date-time": "",
+    "printer-state-change-time": "",
+}
+
+# PWG 5100.2
+PWG51002_PRINTER_ATTRS = {
+    "output-bin-default": "",
+    "output-bin-supported": "",
+}
+
+# PWG 5100.3
+PWG51003_PRINTER_ATTRS = {
+    "job-account-id-default": "",
+    "job-account-id-supported": "",
+    "job-accounting-user-id-default": "",
+    "job-accounting-user-id-supported": "",
+    "media-col-default": "",
+    "media-col-ready": "",
+    "media-col-supported": "",
+    "media-type-supported": "",
+}
+
+# PWG 5100.4
+PWG51004_PRINTER_ATTRS = {
+    "pwg-raster-document-resolution-supported": "",
+    "pwg-raster-document-sheet-back": "",
+    "pwg-raster-document-type-supported": "",
+}
+
+# PWG 5100.6
+PWG51006_PRINTER_ATTRS = {
+    "overrides-supported": "",
+}
+
+# PWG 5100.7
+PWG51007_PRINTER_ATTRS = {
+    "print-content-optimize-default": "",
+    "print-content-optimize-supported": "",
+}
+
 # PWG 5100.9
 PWG51009_PRINTER_ATTRS = {
-    "feed-orientation-default": "",
-    "feed-orientation-supported": "",
-    "job-creation-attributes-supported": "",
-    "job-ids-supported": "",
-    "job-password-supported": "",
-    "job-password-encryption-supported": "",
-    "media-col-database": "",
-    "which-jobs-supported": "",
+    "printer-alert": "",
+    "printer-alert-description": "",
 }
 
 # PWG 5100.11
@@ -104,6 +140,12 @@ PWG510013_PRINTER_ATTRS = {
 # PWG 5100.13
 IPP20_PRINTER_ATTRIBUTES = {
     **IPP11_PRINTER_ATTRS,
+    **RFC3995_PRINTER_ATTRS,
+    **PWG51002_PRINTER_ATTRS,
+    **PWG51003_PRINTER_ATTRS,
+    **PWG51004_PRINTER_ATTRS,
+    **PWG51006_PRINTER_ATTRS,
+    **PWG51007_PRINTER_ATTRS,
     **PWG51009_PRINTER_ATTRS,
     **PWG510011_PRINTER_ATTRS,
     **PWG510013_PRINTER_ATTRS,
