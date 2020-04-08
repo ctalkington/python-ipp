@@ -37,7 +37,8 @@ IPP11_PRINTER_ATTRIBUTES = {
     "version-number": "",
 }
 
-IPP20_PRINTER_ATTRIBUTES = IPP11_PRINTER_ATTRIBUTES + {
+IPP20_PRINTER_ATTRIBUTES = {
+    **IPP11_PRINTER_ATTRIBUTES,
     "color-supported": "",
     "copies-default": "",
     "copies-supported": "",
