@@ -87,8 +87,9 @@ async def test_printer_with_marker_data():
     """Test Printer model."""
     data = IPPE10_PRINTER_ATTRS.copy()
     data["marker-names"] = []
-    data["marker-levels"] = []
+    data["marker-types"] = []
     data["marker-colors"] = []
+    data["marker-levels"] = []
     data["marker-high-levels"] = []
     data["marker-low-levels"] = []
 
