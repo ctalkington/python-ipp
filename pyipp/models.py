@@ -144,13 +144,13 @@ class Printer:
                 Marker(
                     marker_id=marker_id,
                     marker_type=marker_types[marker_id],
-                    name=marker,
+                    name=marker_names[marker_id],
                     color=marker_colors[marker_id],
                     level=marker_levels[marker_id],
                     high_level=marker_highs[marker_id],
                     low_level=marker_lows[marker_id],
                 )
-                for marker_id, marker in enumerate(marker_names)
+                for marker_id in range(len(marker_names))
             ]
             markers.sort(key=lambda x: x.name)
 
