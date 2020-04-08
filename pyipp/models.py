@@ -114,12 +114,30 @@ class Printer:
     def from_dict(data):
         """Return Printer object from IPP response."""
         markers = []
-        marker_names = data.get("marker-names", [])
-        marker_colors = data.get("marker-colors", [])
-        marker_levels = data.get("marker-levels", [])
-        marker_high_levels = data.get("marker-high-levels", [])
-        marker_low_levels = data.get("marker-low-levels", [])
-        marker_types = data.get("marker-types", [])
+
+        marker_names = []
+        if isinstance(data.get("marker-names"), List):
+            marker_names = data["marker-names"]
+
+        marker_colors = []
+        if isinstance(data.get("marker-colors"), List):
+            marker_colors = data["marker-colors"]
+
+        marker_levels = []
+        if isinstance(data.get("marker-levels"), List):
+            marker_levels = data["marker-levels"]
+
+        marker_highs = []
+        if isinstance(data.get("marker-high-levels"), List):
+            marker_highs = data["marker-high-levels"]
+
+        marker_lows = []
+        if isinstance(data.get("marker-low-levels"), List):
+            marker_lows = data["marker-low-levels"]
+
+        marker_types = []
+        if isinstance(data.get("marker-types"), List):
+            marker_types = data["marker-types"]
 
         if isinstance(marker_names, List):
             markers = [
@@ -129,8 +147,8 @@ class Printer:
                     name=marker,
                     color=marker_colors[marker_id],
                     level=marker_levels[marker_id],
-                    high_level=marker_high_levels[marker_id],
-                    low_level=marker_low_levels[marker_id],
+                    high_level=marker_highs[marker_id],
+                    low_level=markers[marker_id],
                 )
                 for marker_id, marker in enumerate(marker_names)
             ]
