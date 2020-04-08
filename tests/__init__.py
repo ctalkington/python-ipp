@@ -9,7 +9,7 @@ DEFAULT_PRINTER_URI = (
 )
 
 IPP11_PRINTER_ATTRIBUTES = {
-    "attributes-charset" "",
+    "attributes-charset": "",
     "attributes-natural-language": "",
     "charset-configured": "",
     "charset-supported": "",
