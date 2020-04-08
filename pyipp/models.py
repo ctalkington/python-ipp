@@ -120,16 +120,9 @@ class Printer:
         marker_highs = []
         marker_lows = []
 
-        marker_names = []
+        marker_names = None
         if isinstance(data.get("marker-names"), List):
             marker_names = data["marker-names"]
-
-            for r in range(len(marker_names)):
-                marker_colors[r] = None
-                marker_levels[r] = None
-                marker_types[r] = "unknown"
-                marker_highs[r] = 100
-                marker_lows[r] = 0
 
         if isinstance(data.get("marker-colors"), List):
             marker_colors = data["marker-colors"]
@@ -146,7 +139,7 @@ class Printer:
         if isinstance(data.get("marker-types"), List):
             marker_types = data["marker-types"]
 
-        if len(marker_names):
+        if isinstance(marker_names, List) and len(marker_names) > 0:
             markers = [
                 Marker(
                     marker_id=marker_id,
@@ -159,7 +152,7 @@ class Printer:
                 )
                 for marker_id in range(len(marker_names))
             ]
-            markers.sort(key=lambda x: x.name)
+            markers.sort(key=lambda x: x.name)    
 
         return Printer(
             info=Info.from_dict(data), markers=markers, state=State.from_dict(data)
