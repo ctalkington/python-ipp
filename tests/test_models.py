@@ -85,14 +85,18 @@ async def test_printer():
 @pytest.mark.asyncio
 async def test_printer_with_invalid_marker_data():
     """Test Printer model."""
-    printer = models.Printer.from_dict(
-        {
-            "marker-names": 1,
-            "marker-colors": 1,
-            "marker-levels": 1,
-            "marker-low-levels": 1,
-            "marker-high-level": 1,
-        }
-    )
+    data = {
+        "marker-names": 1,
+        "marker-colors": 1,
+        "marker-levels": 1,
+        "marker-low-levels": 1,
+        "marker-high-level": 1,
+    }
 
+    printer = models.Printer.from_dict(data)
+    assert printer
+
+    data["marker-names"] = []
+    
+    printer = models.Printer.from_dict(data)
     assert printer
