@@ -114,25 +114,43 @@ class Printer:
     def from_dict(data):
         """Return Printer object from IPP response."""
         markers = []
-        marker_names = data.get("marker-names", [])
-        marker_colors = data.get("marker-colors", [])
-        marker_levels = data.get("marker-levels", [])
-        marker_high_levels = data.get("marker-high-levels", [])
-        marker_low_levels = data.get("marker-low-levels", [])
-        marker_types = data.get("marker-types", [])
+        marker_colors = []
+        marker_levels = []
+        marker_types = []
+        marker_highs = []
+        marker_lows = []
 
-        if isinstance(marker_names, List):
+        marker_names = None
+        if isinstance(data.get("marker-names"), List):
+            marker_names = data["marker-names"]
+
+        if isinstance(data.get("marker-colors"), List):
+            marker_colors = data["marker-colors"]
+
+        if isinstance(data.get("marker-levels"), List):
+            marker_levels = data["marker-levels"]
+
+        if isinstance(data.get("marker-high-levels"), List):
+            marker_highs = data["marker-high-levels"]
+
+        if isinstance(data.get("marker-low-levels"), List):
+            marker_lows = data["marker-low-levels"]
+
+        if isinstance(data.get("marker-types"), List):
+            marker_types = data["marker-types"]
+
+        if isinstance(marker_names, List) and len(marker_names) > 0:
             markers = [
                 Marker(
                     marker_id=marker_id,
                     marker_type=marker_types[marker_id],
-                    name=marker,
+                    name=marker_names[marker_id],
                     color=marker_colors[marker_id],
                     level=marker_levels[marker_id],
-                    high_level=marker_high_levels[marker_id],
-                    low_level=marker_low_levels[marker_id],
+                    high_level=marker_highs[marker_id],
+                    low_level=marker_lows[marker_id],
                 )
-                for marker_id, marker in enumerate(marker_names)
+                for marker_id in range(len(marker_names))
             ]
             markers.sort(key=lambda x: x.name)
 
