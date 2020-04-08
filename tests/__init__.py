@@ -164,6 +164,15 @@ PWG510013_PRINTER_ATTRS = {
     "which-jobs-supported": "",
 }
 
+# COMMON (NOT DOCUMENTED)
+COMMON_PRINTER_ATTRS = {
+    "marker-colors": "",
+    "marker-high-levels": "",
+    "marker-levels": "",
+    "marker-low-levels": "",
+    "marker-names": "",
+}
+
 # PWG 5100.14
 PWG510014_PRINTER_ATTRS = {
     **RFC2911_PRINTER_ATTRS,
@@ -176,6 +185,7 @@ PWG510014_PRINTER_ATTRS = {
     **PWG51009_PRINTER_ATTRS,
     **PWG510011_PRINTER_ATTRS,
     **PWG510013_PRINTER_ATTRS,
+    **COMMON_PRINTER_ATTRS,
 }
 
 
