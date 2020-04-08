@@ -1,9 +1,7 @@
 """Tests for IPP public interface."""
 import pyipp.models as models
+import pyipp.parser
 import pytest
-from aiohttp import ClientSession
-from pyipp import IPP
-from pyipp.parser import parse
 
 from . import load_fixture_binary
 
