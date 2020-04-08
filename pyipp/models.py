@@ -114,28 +114,35 @@ class Printer:
     def from_dict(data):
         """Return Printer object from IPP response."""
         markers = []
+        marker_colors = []
+        marker_levels = []
+        marker_types = []
+        marker_highs = []
+        marker_lows = []
 
         marker_names = []
         if isinstance(data.get("marker-names"), List):
             marker_names = data["marker-names"]
 
-        marker_colors = [None for marker in marker_names]
+        for r in range(len(marker_names))
+            marker_colors[r] = None
+            marker_levels[r] = None
+            marker_types[r] = "unknown"
+            marker_highs[r] = 100
+            marker_lows[r] = 0
+
         if isinstance(data.get("marker-colors"), List):
             marker_colors = data["marker-colors"]
 
-        marker_levels = [None for marker in marker_names]
         if isinstance(data.get("marker-levels"), List):
             marker_levels = data["marker-levels"]
 
-        marker_highs = [100 for marker in marker_names]
         if isinstance(data.get("marker-high-levels"), List):
             marker_highs = data["marker-high-levels"]
 
-        marker_lows = [0 for marker in marker_names]
         if isinstance(data.get("marker-low-levels"), List):
             marker_lows = data["marker-low-levels"]
 
-        marker_types = ["unknown" for marker in marker_names]
         if isinstance(data.get("marker-types"), List):
             marker_types = data["marker-types"]
 
