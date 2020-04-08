@@ -10,7 +10,7 @@ from . import load_fixture_binary
 async def test_printer():
     """Test Printer model."""
     parsed = parser.parse(load_fixture_binary("get-printer-attributes-epsonxp6000.bin"))
-    printer = models.Printer.from_dict(parsed)
+    printer = models.Printer.from_dict(parsed["printers"][0])
 
     assert printer
 
