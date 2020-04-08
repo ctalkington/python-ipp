@@ -97,6 +97,6 @@ async def test_printer_with_invalid_marker_data():
     assert printer
 
     data["marker-names"] = []
-    
+
     printer = models.Printer.from_dict(data)
     assert printer
