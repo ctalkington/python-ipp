@@ -3,7 +3,7 @@ import pyipp.models as models
 import pyipp.parser as parser
 import pytest
 
-from . import load_fixture_binary, IPPE10_PRINTER_ATTRS
+from . import IPPE10_PRINTER_ATTRS, load_fixture_binary
 
 
 @pytest.mark.asyncio
