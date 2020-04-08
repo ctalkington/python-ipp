@@ -1,9 +1,9 @@
-"""Tests for IPP public interface."""
+"""Tests for IPP Models."""
 import pyipp.models as models
 import pyipp.parser as parser
 import pytest
 
-from . import load_fixture_binary
+from . import MOCK_IPP20_REQUIRED_ATTRIBUTES, load_fixture_binary
 
 
 @pytest.mark.asyncio
@@ -85,13 +85,8 @@ async def test_printer():
 @pytest.mark.asyncio
 async def test_printer_with_invalid_marker_data():
     """Test Printer model."""
-    data = {
-        "marker-names": 1,
-        "marker-colors": 1,
-        "marker-levels": 1,
-        "marker-low-levels": 1,
-        "marker-high-level": 1,
-    }
+    data = MOCK_IPP20_REQUIRED_ATTRIBUTES.copy()
+    data["marker-names"] = 1
 
     printer = models.Printer.from_dict(data)
     assert printer
