@@ -8,8 +8,8 @@ DEFAULT_PRINTER_URI = (
     f"ipp://{DEFAULT_PRINTER_HOST}:{DEFAULT_PRINTER_PORT}{DEFAULT_PRINTER_PATH}"
 )
 
-MOCK_IPP11_REQUIRED_ATTRIBUTES = {
-    "attributes-charset" "en",
+IPP11_PRINTER_ATTRIBUTES = {
+    "attributes-charset" "",
     "attributes-natural-language": "",
     "charset-configured": "",
     "charset-supported": "",
@@ -37,7 +37,7 @@ MOCK_IPP11_REQUIRED_ATTRIBUTES = {
     "version-number": "",
 }
 
-MOCK_IPP20_ATTRIBUTES = MOCK_IPP11_REQUIRED_ATTRIBUTES + {
+IPP20_PRINTER_ATTRIBUTES = IPP11_PRINTER_ATTRIBUTES + {
     "color-supported": "",
     "copies-default": "",
     "copies-supported": "",
