@@ -96,6 +96,11 @@ async def test_printer_with_marker_data():
     assert printer
 
     data["marker-names"] = ["Black"]
+    data["marker-types"] = ["ink-cartridge"]
+    data["marker-colors"] = ["#FF0000"]
+    data["marker-levels"] = [77]
+    data["marker-high-levels"] = [100]
+    data["marker-low-levels"] = [0]
 
     printer = models.Printer.from_dict(data)
     assert printer
