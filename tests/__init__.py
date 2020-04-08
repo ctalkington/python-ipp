@@ -88,7 +88,10 @@ RFC3995_PRINTER_ATTRS = {
 }
 
 # PWG 5100.1 - Finishings
-PWG51001_PRINTER_ATTRS = {}
+PWG51001_PRINTER_ATTRS = {
+    "finishings-col-default": "",
+    "finishings-col-ready": "",
+}
 
 # PWG 5100.2 - Output Bins
 PWG51002_PRINTER_ATTRS = {
