@@ -110,7 +110,15 @@ async def test_printer_with_marker_data():
 
     printer = models.Printer.from_dict(data)
     assert printer
-    assert len(printer.markers) == 0
+    assert len(printer.markers) == 1
+    assert printer.markers[0]
+    assert printer.markers[0].name == "Black"
+    assert printer.markers[0].color == ""
+    assert printer.markers[0].level == -2
+    assert printer.markers[0].high_level == 100
+    assert printer.markers[0].low_level == 0
+    assert printer.markers[0].marker_type == "unknown"
+
 
     # full valid
     data["marker-names"] = ["Black"]
