@@ -137,9 +137,20 @@ class Printer:
             marker_lows = data["marker-low-levels"]
 
         if isinstance(data.get("marker-types"), List):
-            marker_types = data["marker-types"]
+            marker_types = data["marker-types"]     
 
         if isinstance(marker_names, List) and len(marker_names) > 0:
+            marker_data = list(
+                zip(
+                    marker_names,
+                    marker_colors,
+                    marker_levels,
+                    marker_high_levels,
+                    marker_low_levels,
+                    marker_types,
+                )
+            )
+            print(marker_data)
             markers = [
                 Marker(
                     marker_id=marker_id,
@@ -150,7 +161,7 @@ class Printer:
                     high_level=marker_highs[marker_id],
                     low_level=marker_lows[marker_id],
                 )
-                for marker_id in range(len(marker_names))
+                for marker_id in range(names_len)
             ]
             markers.sort(key=lambda x: x.name)
 
