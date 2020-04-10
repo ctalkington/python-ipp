@@ -119,7 +119,6 @@ async def test_printer_with_marker_data():
     assert printer.markers[0].low_level == 0
     assert printer.markers[0].marker_type == "unknown"
 
-
     # full valid
     data["marker-names"] = ["Black"]
     data["marker-types"] = ["ink-cartridge"]
