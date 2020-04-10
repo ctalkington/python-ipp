@@ -93,15 +93,27 @@ async def test_printer_with_marker_data():
     data["marker-high-levels"] = []
     data["marker-low-levels"] = []
 
+    # empty but valid types
     printer = models.Printer.from_dict(data)
     assert printer
     assert len(printer.markers) == 0
 
+    # no names
     data["marker-names"] = -1
+
     printer = models.Printer.from_dict(data)
     assert printer
     assert len(printer.markers) == 0
 
+    # partial valid data
+    data["marker-names"] = ["Black"]
+
+    printer = models.Printer.from_dict(data)
+    assert printer
+    assert len(printer.markers) == 0
+
+
+    # full valid
     data["marker-names"] = ["Black"]
     data["marker-types"] = ["ink-cartridge"]
     data["marker-colors"] = ["#FF0000"]
