@@ -137,7 +137,7 @@ class Printer:
             marker_lows = data["marker-low-levels"]
 
         if isinstance(data.get("marker-types"), List):
-            marker_types = data["marker-types"]     
+            marker_types = data["marker-types"]
 
         if isinstance(marker_names, List) and len(marker_names) > 0:
             marker_data = list(
