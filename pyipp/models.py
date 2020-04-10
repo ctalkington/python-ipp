@@ -124,7 +124,7 @@ class Printer:
         if isinstance(data.get("marker-names"), List):
             marker_names = data["marker-names"]
 
-            for k in range(len(marker_name)):
+            for k in range(len(marker_names)):
                 marker_colors.append("")
                 marker_levels.append(-2)
                 marker_types.append("unknown")
