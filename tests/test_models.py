@@ -112,7 +112,6 @@ async def test_printer_with_marker_data():
     assert printer
     assert len(printer.markers) == 0
 
-
     # full valid
     data["marker-names"] = ["Black"]
     data["marker-types"] = ["ink-cartridge"]
