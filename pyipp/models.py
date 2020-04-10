@@ -150,7 +150,10 @@ class Printer:
                     marker_types,
                 )
             )
-            print(marker_data)
+
+            for marker in marker_data:
+                print(marker)
+
             markers = [
                 Marker(
                     marker_id=marker_id,
