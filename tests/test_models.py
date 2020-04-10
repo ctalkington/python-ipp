@@ -123,7 +123,7 @@ async def test_printer_with_marker_data():
     # partial valid data, extra data
     data["marker-names"] = ["Black"]
     data["marker-colors"] = -2
-    data["marker-levels"] = [99,98]
+    data["marker-levels"] = [99, 98]
 
     printer = models.Printer.from_dict(data)
     assert printer
