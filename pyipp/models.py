@@ -135,23 +135,28 @@ class Printer:
 
         if isinstance(data.get("marker-colors"), List):
             for k, v in enumerate(data["marker-colors"]):
-                marker_colors[k] = v if k < mlen
+                if k < mlen:
+                    marker_colors[k] = v
 
         if isinstance(data.get("marker-levels"), List):
             for k, v in enumerate(data["marker-levels"]):
-                marker_levels[k] = v if k < mlen
+                if k < mlen:
+                    marker_levels[k] = v
 
         if isinstance(data.get("marker-high-levels"), List):
             for k, v in enumerate(data["marker-high-levels"]):
-                marker_highs[k] = v if k < mlen
+                if k < mlen:
+                    marker_highs[k] = v
 
         if isinstance(data.get("marker-low-levels"), List):
             for k, v in enumerate(data["marker-low-levels"]):
-                marker_lows[k] = v if k < mlen
+                if k < mlen:
+                    marker_lows[k] = v
 
         if isinstance(data.get("marker-types"), List):
             for k, v in enumerate(data["marker-types"]):
-                marker_types[k] = v if k < mlen
+                if k < mlen:
+                    marker_types[k] = v
 
         if isinstance(marker_names, List) and mlen > 0:
             markers = [
