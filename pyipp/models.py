@@ -124,36 +124,34 @@ class Printer:
         if isinstance(data.get("marker-names"), List):
             marker_names = data["marker-names"]
 
+            for k in range(len(marker_name)):
+                marker_colors.append("")
+                marker_levels.append(-2)
+                marker_types.append("unknown")
+                marker_highs.append(100)
+                marker_lows.append(0)
+
         if isinstance(data.get("marker-colors"), List):
-            marker_colors = data["marker-colors"]
+            for k, v in enumerate(data["marker-colors"]):
+                marker_colors[k] = v
 
         if isinstance(data.get("marker-levels"), List):
-            marker_levels = data["marker-levels"]
+            for k, v in enumerate(data["marker-levels"]):
+                marker_levels[k] = v
 
         if isinstance(data.get("marker-high-levels"), List):
-            marker_highs = data["marker-high-levels"]
+            for k, v in enumerate(data["marker-high-levels"]):
+                marker_highs[k] = v
 
         if isinstance(data.get("marker-low-levels"), List):
-            marker_lows = data["marker-low-levels"]
+            for k, v in enumerate(data["marker-low-levels"]):
+                marker_lows[k] = v
 
         if isinstance(data.get("marker-types"), List):
-            marker_types = data["marker-types"]
+            for k, v in enumerate(data["marker-types"]):
+                marker_types[k] = v
 
         if isinstance(marker_names, List) and len(marker_names) > 0:
-            marker_data = list(
-                zip(
-                    marker_names,
-                    marker_colors,
-                    marker_levels,
-                    marker_highs,
-                    marker_lows,
-                    marker_types,
-                )
-            )
-
-            for marker in marker_data:
-                print(marker)
-
             markers = [
                 Marker(
                     marker_id=marker_id,
