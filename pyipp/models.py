@@ -145,8 +145,8 @@ class Printer:
                     marker_names,
                     marker_colors,
                     marker_levels,
-                    marker_high_levels,
-                    marker_low_levels,
+                    marker_highs,
+                    marker_lows,
                     marker_types,
                 )
             )
@@ -161,7 +161,7 @@ class Printer:
                     high_level=marker_highs[marker_id],
                     low_level=marker_lows[marker_id],
                 )
-                for marker_id in range(names_len)
+                for marker_id in range(len(marker_names))
             ]
             markers.sort(key=lambda x: x.name)
 
