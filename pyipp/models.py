@@ -114,6 +114,7 @@ class Printer:
     def from_dict(data):
         """Return Printer object from IPP response."""
         markers = []
+        mlen = 0
         marker_colors = []
         marker_levels = []
         marker_types = []
@@ -123,8 +124,9 @@ class Printer:
         marker_names = None
         if isinstance(data.get("marker-names"), List):
             marker_names = data["marker-names"]
+            mlen = len(marker_names)
 
-            for k in range(len(marker_names)):
+            for k in range(mlen):
                 marker_colors.append("")
                 marker_levels.append(-2)
                 marker_types.append("unknown")
@@ -133,25 +135,25 @@ class Printer:
 
         if isinstance(data.get("marker-colors"), List):
             for k, v in enumerate(data["marker-colors"]):
-                marker_colors[k] = v
+                marker_colors[k] = v if k < mlen
 
         if isinstance(data.get("marker-levels"), List):
             for k, v in enumerate(data["marker-levels"]):
-                marker_levels[k] = v
+                marker_levels[k] = v if k < mlen
 
         if isinstance(data.get("marker-high-levels"), List):
             for k, v in enumerate(data["marker-high-levels"]):
-                marker_highs[k] = v
+                marker_highs[k] = v if k < mlen
 
         if isinstance(data.get("marker-low-levels"), List):
             for k, v in enumerate(data["marker-low-levels"]):
-                marker_lows[k] = v
+                marker_lows[k] = v if k < mlen
 
         if isinstance(data.get("marker-types"), List):
             for k, v in enumerate(data["marker-types"]):
-                marker_types[k] = v
+                marker_types[k] = v if k < mlen
 
-        if isinstance(marker_names, List) and len(marker_names) > 0:
+        if isinstance(marker_names, List) and mlen > 0:
             markers = [
                 Marker(
                     marker_id=marker_id,
@@ -162,7 +164,7 @@ class Printer:
                     high_level=marker_highs[marker_id],
                     low_level=marker_lows[marker_id],
                 )
-                for marker_id in range(len(marker_names))
+                for marker_id in range(mlen)
             ]
             markers.sort(key=lambda x: x.name)
 
