@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
+from yarl import URL
+
 from .parser import parse_ieee1284_device_id, parse_make_and_model
 
 PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
@@ -38,7 +40,7 @@ class Info:
 
         if isinstance(uri_supported, List):
             for uri in uri_supported:
-                 uri_path = ""
+                 uri_path = URL(uri).path
                  if uri_path == _printer_name:
                      _printer_name = "'
                      break
