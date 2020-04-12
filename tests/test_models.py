@@ -32,7 +32,7 @@ async def test_info():
 
     data["printer-name"] = "Printy"
     info = models.Info.from_dict(data)
-    
+
     assert info
     assert info.name == "Printy"
     assert info.printer_name == "Printy"
