@@ -27,13 +27,26 @@ class Info:
     @staticmethod
     def from_dict(data: dict):
         """Return Info object from IPP response."""
+        name = ""
         printer_name = data.get("printer-name", "")
         make_model = data.get("printer-make-and-model", "")
         device_id = data.get("printer-device-id", "")
+        uri_supported = data.get("printer-uri-supported", [])
         uuid = data.get("printer-uuid")
 
-        if len(printer_name) > 0:
-            name = printer_name
+        _printer_name = printer_name
+
+        if isinstance(uri_supported, List):
+            for uri in uri_supported:
+                 uri_path = ""
+                 if uri_path == _printer_name:
+                     _printer_name = "'
+                     break
+        else:
+            uri_supported = []
+
+        if len(_printer_name) > 0:
+            name = _printer_name
         elif len(make_model) > 0:
             name = make_model
         else:
@@ -66,7 +79,7 @@ class Info:
             model=model,
             printer_name=printer_name,
             printer_info=data.get("printer-info", None),
-            printer_uri_supported=data.get("printer-uri-supported", []),
+            printer_uri_supported=uri_supported,
             serial=serial,
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,
