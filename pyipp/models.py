@@ -39,10 +39,7 @@ class Info:
         else:
             name = "IPP Printer"
 
-        if len(make_model) > 0:
-            make, model = parse_make_and_model(make_model)
-        else:
-            make = model = None
+        make, model = parse_make_and_model(make_model)
 
         cmd = "Unknown"
         serial = None
