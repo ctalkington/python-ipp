@@ -34,8 +34,8 @@ async def test_info():
     info = models.Info.from_dict(data)
     
     assert info
-    assert info.name = "Printy"
-    assert info.printer_name = "Printy"
+    assert info.name == "Printy"
+    assert info.printer_name == "Printy"
 
 
 @pytest.mark.asyncio
