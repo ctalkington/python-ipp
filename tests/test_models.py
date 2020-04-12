@@ -19,7 +19,7 @@ async def test_info():
     assert info.name == "EPSON XP-6000 Series"
     assert info.manufacturer == "EPSON"
     assert info.model == "XP-6000 Series"
-    assert info.printer_name == ""
+    assert info.printer_name == "ipp/print"
     assert info.printer_info == "EPSON XP-6000 Series"
     assert info.printer_uri_supported == [
         "ipps://epson761251.local.:631/ipp/print",
