@@ -44,8 +44,6 @@ class Info:
                 if uri_path == _printer_name.lstrip("/"):
                     _printer_name = ""
                     break
-        else:
-            uri_supported = []
 
         if len(_printer_name) > 0:
             name = _printer_name
