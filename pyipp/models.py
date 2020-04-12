@@ -42,7 +42,7 @@ class Info:
             for uri in uri_supported:
                  uri_path = URL(uri).path.lstrip("/")
                  if uri_path == _printer_name.lstrip("/"):
-                     _printer_name = "'
+                     _printer_name = ""
                      break
         else:
             uri_supported = []
