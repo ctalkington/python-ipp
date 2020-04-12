@@ -36,7 +36,7 @@ class Info:
             name = printer_name
         elif len(make_model) > 0:
             name = make_model
-        else
+        else:
             name = "IPP Printer"
 
         if len(make_model) > 0:
