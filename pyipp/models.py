@@ -64,7 +64,7 @@ class Info:
         return Info(
             command_set=cmd,
             location=data.get("printer-location", ""),
-            name=make_model,
+            name=name,
             manufacturer=make,
             model=model,
             printer_name=printer_name,
