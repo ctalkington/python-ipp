@@ -40,10 +40,10 @@ class Info:
 
         if isinstance(uri_supported, List):
             for uri in uri_supported:
-                 uri_path = URL(uri).path.lstrip("/")
-                 if uri_path == _printer_name.lstrip("/"):
-                     _printer_name = ""
-                     break
+                uri_path = URL(uri).path.lstrip("/")
+                if uri_path == _printer_name.lstrip("/"):
+                    _printer_name = ""
+                    break
         else:
             uri_supported = []
 
