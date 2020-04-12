@@ -14,8 +14,8 @@ class Info:
     command_set: str
     location: str
     name: str
-    manufacturer: str
-    model: str
+    manufacturer: Optional[str]
+    model: Optional[str]
     printer_name: str
     printer_info: str
     printer_uri_supported: list
