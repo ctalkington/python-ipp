@@ -12,19 +12,18 @@ PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
 @dataclass(frozen=True)
 class Info:
     """Object holding information from IPP."""
-
-    command_set: Optional[str] = None
-    location: str
     name: str
+    printer_name: str
+    printer_uri_supported: list
+    uptime: int
+    command_set: Optional[str] = None
+    location: Optional[str] = None
     manufacturer: Optional[str] = None
     model: Optional[str] = None
-    printer_name: str
     printer_info: Optional[str] = None
-    printer_uri_supported: list
     serial: Optional[str] = None
-    uptime: int
-    uuid: str
-    version: str
+    uuid: Optional[str]
+    version: Optional[str] = None
 
     @staticmethod
     def from_dict(data: dict):
