@@ -1,5 +1,6 @@
 """Tests for IPP Models."""
 from typing import List
+
 import pyipp.models as models
 import pyipp.parser as parser
 import pytest
