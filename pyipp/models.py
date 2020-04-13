@@ -74,7 +74,7 @@ class Info:
         if len(make_model) > 0:
             name = make_model
         elif len(assumed_name) > 0:
-            name = assumed_name.join(" ")
+            name = " ".join(assumed_name)
         elif len(_printer_name) > 0:
             name = _printer_name
         else:
