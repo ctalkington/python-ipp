@@ -2,6 +2,8 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
+from yarl import URL
+
 from .parser import parse_ieee1284_device_id, parse_make_and_model
 
 PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
@@ -11,56 +13,75 @@ PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
 class Info:
     """Object holding information from IPP."""
 
-    command_set: str
-    location: str
     name: str
-    manufacturer: str
-    model: str
     printer_name: str
-    printer_info: str
     printer_uri_supported: list
-    serial: Optional[str]
     uptime: int
-    uuid: str
-    version: str
+    command_set: Optional[str] = None
+    location: Optional[str] = None
+    manufacturer: Optional[str] = None
+    model: Optional[str] = None
+    printer_info: Optional[str] = None
+    serial: Optional[str] = None
+    uuid: Optional[str] = None
+    version: Optional[str] = None
 
     @staticmethod
     def from_dict(data: dict):
         """Return Info object from IPP response."""
-        make_model = data.get("printer-make-and-model", "IPP Printer")
+        cmd = None
+        name = "IPP Printer"
+        name_parts = []
+        serial = None
+        _printer_name = printer_name = data.get("printer-name", "")
+        make_model = data.get("printer-make-and-model", "")
         device_id = data.get("printer-device-id", "")
+        uri_supported = data.get("printer-uri-supported", [])
         uuid = data.get("printer-uuid")
 
-        make, model = parse_make_and_model(make_model)
-        cmd = "Unknown"
-        serial = None
+        if isinstance(uri_supported, List):
+            for uri in uri_supported:
+                uri_path = URL(uri).path.lstrip("/")
+                if uri_path == _printer_name.lstrip("/"):
+                    _printer_name = ""
+                    break
 
+        make, model = parse_make_and_model(make_model)
         parsed_device_id = parse_ieee1284_device_id(device_id)
 
-        if parsed_device_id.get("MFG") is not None:
+        if parsed_device_id.get("MFG") is not None and len(parsed_device_id["MFG"]) > 0:
             make = parsed_device_id["MFG"]
+            name_parts.append(make)
 
-        if parsed_device_id.get("MDL") is not None:
+        if parsed_device_id.get("MDL") is not None and len(parsed_device_id["MDL"]) > 0:
             model = parsed_device_id["MDL"]
+            name_parts.append(model)
 
-        if parsed_device_id.get("CMD") is not None:
+        if parsed_device_id.get("CMD") is not None and len(parsed_device_id["CMD"]) > 0:
             cmd = parsed_device_id["CMD"]
 
-        if parsed_device_id.get("SN") is not None:
+        if parsed_device_id.get("SN") is not None and len(parsed_device_id["SN"]) > 0:
             serial = parsed_device_id["SN"]
+
+        if len(make_model) > 0:
+            name = make_model
+        elif len(name_parts) == 2:
+            name = " ".join(name_parts)
+        elif len(_printer_name) > 0:
+            name = _printer_name
 
         return Info(
             command_set=cmd,
             location=data.get("printer-location", ""),
-            name=make_model,
+            name=name,
             manufacturer=make,
             model=model,
-            printer_name=data.get("printer-name", None),
+            printer_name=printer_name,
             printer_info=data.get("printer-info", None),
-            printer_uri_supported=data.get("printer-uri-supported", []),
+            printer_uri_supported=uri_supported,
             serial=serial,
             uptime=data.get("printer-up-time", 0),
-            uuid=uuid[9:] if uuid else None,
+            uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
             version=data.get("printer-firmware-string-version", None),
         )
 

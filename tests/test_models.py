@@ -7,6 +7,77 @@ from . import IPPE10_PRINTER_ATTRS, load_fixture_binary
 
 
 @pytest.mark.asyncio
+async def test_info():
+    """Test Info model."""
+    parsed = parser.parse(load_fixture_binary("get-printer-attributes-epsonxp6000.bin"))
+    data = parsed["printers"][0]
+    info = models.Info.from_dict(data)
+
+    assert info
+    assert info.command_set == "ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF"
+    assert info.location == ""
+    assert info.name == "EPSON XP-6000 Series"
+    assert info.manufacturer == "EPSON"
+    assert info.model == "XP-6000 Series"
+    assert info.printer_name == "ipp/print"
+    assert info.printer_info == "EPSON XP-6000 Series"
+    assert info.printer_uri_supported == [
+        "ipps://epson761251.local.:631/ipp/print",
+        "ipp://epson761251.local.:631/ipp/print",
+    ]
+    assert info.serial == "583434593035343012"
+    assert info.uuid == "cfe92100-67c4-11d4-a45f-f8d027761251"
+    assert info.version == "20.44.NU20K2"
+    assert info.uptime == 4119
+
+    # no make/model, device id
+    data["printer-make-and-model"] = ""
+    info = models.Info.from_dict(data)
+
+    assert info
+    assert info.name == "EPSON XP-6000 Series"
+    assert info.printer_name == "ipp/print"
+    assert info.manufacturer == "EPSON"
+    assert info.model == "XP-6000 Series"
+
+    # no make/model, no device id, URI name
+    data["printer-device-id"] = ""
+    data["printer-make-and-model"] = ""
+    data["printer-name"] = "ipp/print"
+    info = models.Info.from_dict(data)
+
+    assert info
+    assert info.name == "IPP Printer"
+    assert info.printer_name == "ipp/print"
+    assert info.manufacturer == "Unknown"
+    assert info.model == "Unknown"
+
+    # no make/model, no device id, name
+    data["printer-device-id"] = ""
+    data["printer-make-and-model"] = ""
+    data["printer-name"] = "Printy"
+    info = models.Info.from_dict(data)
+
+    assert info
+    assert info.name == "Printy"
+    assert info.printer_name == "Printy"
+    assert info.manufacturer == "Unknown"
+    assert info.model == "Unknown"
+
+    # no make/model, no device id, no name
+    data["printer-device-id"] = ""
+    data["printer-make-and-model"] = ""
+    data["printer-name"] = ""
+    info = models.Info.from_dict(data)
+
+    assert info
+    assert info.name == "IPP Printer"
+    assert info.printer_name == ""
+    assert info.manufacturer == "Unknown"
+    assert info.model == "Unknown"
+
+
+@pytest.mark.asyncio
 async def test_printer():
     """Test Printer model."""
     parsed = parser.parse(load_fixture_binary("get-printer-attributes-epsonxp6000.bin"))
@@ -20,6 +91,7 @@ async def test_printer():
     assert printer.info.name == "EPSON XP-6000 Series"
     assert printer.info.manufacturer == "EPSON"
     assert printer.info.model == "XP-6000 Series"
+    assert printer.info.printer_name == "ipp/print"
     assert printer.info.printer_info == "EPSON XP-6000 Series"
     assert printer.info.printer_uri_supported == [
         "ipps://epson761251.local.:631/ipp/print",

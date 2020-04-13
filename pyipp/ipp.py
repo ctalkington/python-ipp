@@ -100,9 +100,6 @@ class IPP:
             self._session = aiohttp.ClientSession()
             self._close_session = True
 
-        if data is None:
-            data = {}
-
         if isinstance(data, dict):
             data = encode_dict(data)
 
