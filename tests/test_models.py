@@ -164,13 +164,13 @@ async def test_printer():
 
     assert printer.uris[0]
     assert printer.uris[0].uri == "ipps://epson761251.local.:631/ipp/print"
-    assert printer.uris[0].authentication == "none"
+    assert printer.uris[0].authentication is None
     assert printer.uris[0].security == "tls"
 
     assert printer.uris[1]
     assert printer.uris[1].uri == "ipp://epson761251.local.:631/ipp/print"
-    assert printer.uris[1].authentication == "none"
-    assert printer.uris[1].security == "none"
+    assert printer.uris[1].authentication is None
+    assert printer.uris[1].security is None
 
 
 @pytest.mark.asyncio
