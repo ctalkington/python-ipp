@@ -29,7 +29,10 @@ class Info:
     @staticmethod
     def from_dict(data: dict):
         """Return Info object from IPP response."""
-        name = ""
+        cmd = "Unknown"
+        name = "IPP Printer"
+        name_parts = []
+        serial = None
         _printer_name = printer_name = data.get("printer-name", "")
         make_model = data.get("printer-make-and-model", "")
         device_id = data.get("printer-device-id", "")
@@ -44,20 +47,15 @@ class Info:
                     break
 
         make, model = parse_make_and_model(make_model)
-
-        cmd = "Unknown"
-        serial = None
-
         parsed_device_id = parse_ieee1284_device_id(device_id)
-
-        assumed_name = []
+        
         if parsed_device_id.get("MFG") is not None and len(parsed_device_id["MFG"]) > 0:
             make = parsed_device_id["MFG"]
-            assumed_name.append(make)
+            name_parts.append(make)
 
         if parsed_device_id.get("MDL") is not None and len(parsed_device_id["MDL"]) > 0:
             model = parsed_device_id["MDL"]
-            assumed_name.append(model)
+            name_parts.append(model)
 
         if parsed_device_id.get("CMD") is not None and len(parsed_device_id["CMD"]) > 0:
             cmd = parsed_device_id["CMD"]
@@ -67,12 +65,10 @@ class Info:
 
         if len(make_model) > 0:
             name = make_model
-        elif len(assumed_name) > 0:
-            name = " ".join(assumed_name)
+        elif len(name_parts) == 2:
+            name = " ".join(name_parts)
         elif len(_printer_name) > 0:
             name = _printer_name
-        else:
-            name = "IPP Printer"
 
         return Info(
             command_set=cmd,
@@ -85,7 +81,7 @@ class Info:
             printer_uri_supported=uri_supported,
             serial=serial,
             uptime=data.get("printer-up-time", 0),
-            uuid=uuid[9:] if uuid else None,
+            uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
             version=data.get("printer-firmware-string-version", None),
         )
 
