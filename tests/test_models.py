@@ -1,4 +1,6 @@
 """Tests for IPP Models."""
+from typing import List
+
 import pyipp.models as models
 import pyipp.parser as parser
 import pytest
@@ -108,6 +110,9 @@ async def test_printer():
     assert printer.state.message is None
 
     assert printer.markers
+    assert isinstance(printer.markers, List)
+    assert len(printer.markers) == 5
+
     assert printer.markers[0]
     assert printer.markers[0].marker_id == 4
     assert printer.markers[0].marker_type == "ink-cartridge"
@@ -152,6 +157,20 @@ async def test_printer():
     assert printer.markers[4].level == 92
     assert printer.markers[4].low_level == 15
     assert printer.markers[4].high_level == 100
+
+    assert printer.uris
+    assert isinstance(printer.uris, List)
+    assert len(printer.uris) == 2
+
+    assert printer.uris[0]
+    assert printer.uris[0].uri == "ipps://epson761251.local.:631/ipp/print"
+    assert printer.uris[0].authentication == "none"
+    assert printer.uris[0].security == "tls"
+
+    assert printer.uris[1]
+    assert printer.uris[1].uri == "ipp://epson761251.local.:631/ipp/print"
+    assert printer.uris[1].authentication == "none"
+    assert printer.uris[1].security == "none"
 
 
 @pytest.mark.asyncio
