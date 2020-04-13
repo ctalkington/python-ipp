@@ -12,6 +12,7 @@ PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
 @dataclass(frozen=True)
 class Info:
     """Object holding information from IPP."""
+
     name: str
     printer_name: str
     printer_uri_supported: list
@@ -47,7 +48,7 @@ class Info:
 
         make, model = parse_make_and_model(make_model)
         parsed_device_id = parse_ieee1284_device_id(device_id)
-        
+
         if parsed_device_id.get("MFG") is not None and len(parsed_device_id["MFG"]) > 0:
             make = parsed_device_id["MFG"]
             name_parts.append(make)
