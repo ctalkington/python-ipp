@@ -238,12 +238,12 @@ class Printer:
         if isinstance(data.get("uri-authentication-supported"), List):
             for k, v in enumerate(data["uri-authentication-supported"]):
                 if k < ulen:
-                    auth[k] = v
+                    auth[k] = v if v != "none" else None
 
         if isinstance(data.get("uri-security-supported"), List):
             for k, v in enumerate(data["uri-security-supported"]):
                 if k < ulen:
-                    security[k] = v
+                    security[k] = v if v != "none" else None
 
         if isinstance(_uris, List) and ulen > 0:
             uris = [
