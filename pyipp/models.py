@@ -145,6 +145,7 @@ class Printer:
     def merge_uri_data(data):
         """Return URI data from IPP response."""
         uris = []
+        ulen = 0
 
         _uris = []
         auth = []
