@@ -168,18 +168,17 @@ class Printer:
                 if k < ulen:
                     security[k] = v
 
-
         if isinstance(_uris, List) and ulen > 0:
             uris = [
                 Uri(
                     uri=_uris[uri_id],
-                    authentication=authentication[uri_id],
+                    authentication=auth[uri_id],
                     security=security[uri_id],
                 )
                 for uri_id in range(ulen)
             ]
 
-        return urls
+        return uris
 
     @staticmethod
     def from_dict(data):
