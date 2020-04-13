@@ -38,18 +38,18 @@ async def test_info():
     assert info.name == "Printy"
     assert info.printer_name == "Printy"
 
-    # no name, no make/model
-    data["printer-name"] = ""
+    # no custom name, no make/model
+    data["printer-name"] = "ipp/print"
     data["printer-make-and-model"] = ""
     info = models.Info.from_dict(data)
 
     assert info
     assert info.name == "IPP Printer"
-    assert info.printer_name == ""
+    assert info.printer_name == "ipp/print"
     assert info.manufacturer == "EPSON"
     assert info.model == "XP-6000 Series"
 
-    # no name, no make/model, no device id
+    # no custom name, no make/model, no device id
     data["printer-name"] = ""
     data["printer-make-and-model"] = ""
     data["printer-device-id"] = ""
