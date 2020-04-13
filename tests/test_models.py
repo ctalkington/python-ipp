@@ -110,6 +110,9 @@ async def test_printer():
     assert printer.state.message is None
 
     assert printer.markers
+    assert isinstance(printer.markers, List)
+    assert len(printer.markers) == 5
+
     assert printer.markers[0]
     assert printer.markers[0].marker_id == 4
     assert printer.markers[0].marker_type == "ink-cartridge"
@@ -157,6 +160,7 @@ async def test_printer():
 
     assert printer.uris
     assert isinstance(printer.uris, List)
+    assert len(printer.uris) == 2
 
     assert printer.uris[0]
     assert printer.uris[0].uri == "ipps://epson761251.local.:631/ipp/print"
