@@ -217,7 +217,6 @@ class Printer:
 
         return markers
 
-
     @staticmethod
     def merge_uri_data(data):
         """Return URI data from IPP response."""
