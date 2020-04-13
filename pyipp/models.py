@@ -30,13 +30,11 @@ class Info:
     def from_dict(data: dict):
         """Return Info object from IPP response."""
         name = ""
-        printer_name = data.get("printer-name", "")
+        _printer_name = printer_name = data.get("printer-name", "")
         make_model = data.get("printer-make-and-model", "")
         device_id = data.get("printer-device-id", "")
         uri_supported = data.get("printer-uri-supported", [])
         uuid = data.get("printer-uuid")
-
-        _printer_name = printer_name
 
         if isinstance(uri_supported, List):
             for uri in uri_supported:
@@ -45,10 +43,10 @@ class Info:
                     _printer_name = ""
                     break
 
-        if len(_printer_name) > 0:
-            name = _printer_name
-        elif len(make_model) > 0:
+        if len(make_model) > 0:
             name = make_model
+        elif len(_printer_name) > 0:
+            name = _printer_name
         else:
             name = "IPP Printer"
 
