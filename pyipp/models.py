@@ -22,7 +22,7 @@ class Info:
     model: Optional[str] = None
     printer_info: Optional[str] = None
     serial: Optional[str] = None
-    uuid: Optional[str]
+    uuid: Optional[str] = None
     version: Optional[str] = None
 
     @staticmethod
