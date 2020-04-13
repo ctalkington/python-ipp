@@ -1,4 +1,5 @@
 """Tests for IPP Models."""
+from typing import List
 import pyipp.models as models
 import pyipp.parser as parser
 import pytest
@@ -152,6 +153,19 @@ async def test_printer():
     assert printer.markers[4].level == 92
     assert printer.markers[4].low_level == 15
     assert printer.markers[4].high_level == 100
+
+    assert printer.uris
+    assert isinstance(printer.uris, List)
+
+    assert printers.uris[0]
+    assert printers.uris[0].uri == ""
+    assert printers.uris[0].authentication == ""
+    assert printers.uris[0].security == ""
+
+    assert printers.uris[1]
+    assert printers.uris[1].uri == ""
+    assert printers.uris[1].authentication == ""
+    assert printers.uris[1].security == ""
 
 
 @pytest.mark.asyncio
