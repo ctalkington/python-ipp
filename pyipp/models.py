@@ -142,6 +142,16 @@ class Printer:
     uris: List[Uri]
 
     @staticmethod
+    def from_dict(data):
+        """Return Printer object from IPP response."""
+        return Printer(
+            info=Info.from_dict(data),
+            markers=Printer.merge_marker_data(data),
+            state=State.from_dict(data),
+            uris=Printer.merge_uri_data(data),
+        )
+
+    @staticmethod
     def merge_marker_data(data):
         """Return Marker data from IPP response."""
         markers = []
@@ -247,13 +257,3 @@ class Printer:
             ]
 
         return uris
-
-    @staticmethod
-    def from_dict(data):
-        """Return Printer object from IPP response."""
-        return Printer(
-            info=Info.from_dict(data),
-            markers=Printer.merge_marker_data(data),
-            state=State.from_dict(data),
-            uris=Printer.merge_uri_data(data),
-        )
