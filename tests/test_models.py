@@ -30,6 +30,14 @@ async def test_info():
     assert info.version == "20.44.NU20K2"
     assert info.uptime == 4119
 
+    # printer name is URI path
+    data["printer-name"] = "ipp/print"
+    info = models.Info.from_dict(data)
+
+    assert info
+    assert info.name == "EPSON XP-6000 Series"
+    assert info.printer_name == "ipp/print"
+
     # custom printer name
     data["printer-name"] = "Printy"
     info = models.Info.from_dict(data)
@@ -39,13 +47,13 @@ async def test_info():
     assert info.printer_name == "Printy"
 
     # no custom name, no make/model
-    data["printer-name"] = "ipp/print"
+    data["printer-name"] = ""
     data["printer-make-and-model"] = ""
     info = models.Info.from_dict(data)
 
     assert info
     assert info.name == "IPP Printer"
-    assert info.printer_name == "ipp/print"
+    assert info.printer_name == ""
     assert info.manufacturer == "EPSON"
     assert info.model == "XP-6000 Series"
 
