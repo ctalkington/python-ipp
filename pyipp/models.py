@@ -13,15 +13,15 @@ PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
 class Info:
     """Object holding information from IPP."""
 
-    command_set: str
+    command_set: Optional[str] = None
     location: str
     name: str
-    manufacturer: Optional[str]
-    model: Optional[str]
+    manufacturer: Optional[str] = None
+    model: Optional[str] = None
     printer_name: str
-    printer_info: str
+    printer_info: Optional[str] = None
     printer_uri_supported: list
-    serial: Optional[str]
+    serial: Optional[str] = None
     uptime: int
     uuid: str
     version: str
@@ -29,7 +29,7 @@ class Info:
     @staticmethod
     def from_dict(data: dict):
         """Return Info object from IPP response."""
-        cmd = "Unknown"
+        cmd = None
         name = "IPP Printer"
         name_parts = []
         serial = None
