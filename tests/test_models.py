@@ -158,15 +158,15 @@ async def test_printer():
     assert printer.uris
     assert isinstance(printer.uris, List)
 
-    assert printers.uris[0]
-    assert printers.uris[0].uri == ""
-    assert printers.uris[0].authentication == ""
-    assert printers.uris[0].security == ""
+    assert printer.uris[0]
+    assert printer.uris[0].uri == ""
+    assert printer.uris[0].authentication == ""
+    assert printer.uris[0].security == ""
 
-    assert printers.uris[1]
-    assert printers.uris[1].uri == ""
-    assert printers.uris[1].authentication == ""
-    assert printers.uris[1].security == ""
+    assert printer.uris[1]
+    assert printer.uris[1].uri == ""
+    assert printer.uris[1].authentication == ""
+    assert printer.uris[1].security == ""
 
 
 @pytest.mark.asyncio
