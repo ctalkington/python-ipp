@@ -100,6 +100,15 @@ class Marker:
 
 
 @dataclass(frozen=True)
+class Uri:
+    """Object holding URI info from IPP."""
+
+    uri: str
+    authentication: str
+    security: str
+
+
+@dataclass(frozen=True)
 class State:
     """Object holding the IPP printer state."""
 
@@ -130,6 +139,47 @@ class Printer:
     info: Info
     markers: List[Marker]
     state: State
+    uris: List[Uri]
+
+    @staticmethod
+    def merge_uri_data(data):
+        """Return URI data from IPP response."""
+        uris = []
+
+        _uris = []
+        auth = []
+        security = []
+
+        if isinstance(data.get("printer-uri-supported"), List):
+            _uris = data["printer-uri-supported"]
+            ulen = len(_uris)
+
+            for k in range(ulen):
+                auth.append(None)
+                security.append(None)
+
+        if isinstance(data.get("uri-authentication-supported"), List):
+            for k, v in enumerate(data["uri-authentication-supported"]):
+                if k < ulen:
+                    auth[k] = v
+
+        if isinstance(data.get("uri-security-supported"), List):
+            for k, v in enumerate(data["uri-security-supported"]):
+                if k < ulen:
+                    security[k] = v
+
+
+        if isinstance(_uris, List) and ulen > 0:
+            uris = [
+                Uri(
+                    uri=_uris[uri_id],
+                    authentication=authentication[uri_id],
+                    security=security[uri_id],
+                )
+                for uri_id in range(ulen)
+            ]
+
+        return urls
 
     @staticmethod
     def from_dict(data):
@@ -141,6 +191,7 @@ class Printer:
         marker_types = []
         marker_highs = []
         marker_lows = []
+        uris = []
 
         marker_names = None
         if isinstance(data.get("marker-names"), List):
@@ -195,5 +246,8 @@ class Printer:
             markers.sort(key=lambda x: x.name)
 
         return Printer(
-            info=Info.from_dict(data), markers=markers, state=State.from_dict(data)
+            info=Info.from_dict(data),
+            markers=markers,
+            state=State.from_dict(data),
+            uris=Printer.merge_uri_data(data),
         )
