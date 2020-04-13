@@ -51,24 +51,18 @@ class Info:
         parsed_device_id = parse_ieee1284_device_id(device_id)
 
         assumed_name = []
-        if (
-            parsed_device_id.get("MFG") is not None and
-            len(parsed_device_id["MFG"]) > 0
-        ):
+        if parsed_device_id.get("MFG") is not None and len(parsed_device_id["MFG"]) > 0:
             make = parsed_device_id["MFG"]
             assumed_name.append(make)
 
-        if (
-            parsed_device_id.get("MDL") is not None and
-            len(parsed_device_id["MDL"]) > 0
-        ):
+        if parsed_device_id.get("MDL") is not None and len(parsed_device_id["MDL"]) > 0:
             model = parsed_device_id["MDL"]
             assumed_name.append(model)
 
-        if parsed_device_id.get("CMD") is not None:
+        if parsed_device_id.get("CMD") is not None and len(parsed_device_id["CMD"]) > 0:
             cmd = parsed_device_id["CMD"]
 
-        if parsed_device_id.get("SN") is not None:
+        if parsed_device_id.get("SN") is not None and len(parsed_device_id["SN"]) > 0:
             serial = parsed_device_id["SN"]
 
         if len(make_model) > 0:
