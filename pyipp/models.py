@@ -43,13 +43,6 @@ class Info:
                     _printer_name = ""
                     break
 
-        if len(make_model) > 0:
-            name = make_model
-        elif len(_printer_name) > 0:
-            name = _printer_name
-        else:
-            name = "IPP Printer"
-
         make, model = parse_make_and_model(make_model)
 
         cmd = "Unknown"
@@ -57,17 +50,35 @@ class Info:
 
         parsed_device_id = parse_ieee1284_device_id(device_id)
 
-        if parsed_device_id.get("MFG") is not None:
+        assumed_name = []
+        if (
+            parsed_device_id.get("MFG") is not None and
+            len(parsed_device_id["MFG"]) > 0
+        ):
             make = parsed_device_id["MFG"]
+            assumed_name.append(make)
 
-        if parsed_device_id.get("MDL") is not None:
+        if (
+            parsed_device_id.get("MDL") is not None and
+            len(parsed_device_id["MDL"]) > 0
+        ):
             model = parsed_device_id["MDL"]
+            assumed_name.append(model)
 
         if parsed_device_id.get("CMD") is not None:
             cmd = parsed_device_id["CMD"]
 
         if parsed_device_id.get("SN") is not None:
             serial = parsed_device_id["SN"]
+
+        if len(make_model) > 0:
+            name = make_model
+        elsif len(assumed_name) > 0:
+            name = assumed_name.join(" ")
+        elif len(_printer_name) > 0:
+            name = _printer_name
+        else:
+            name = "IPP Printer"
 
         return Info(
             command_set=cmd,
