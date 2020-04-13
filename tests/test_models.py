@@ -30,7 +30,18 @@ async def test_info():
     assert info.version == "20.44.NU20K2"
     assert info.uptime == 4119
 
-    # no make/model, URI name, device id
+    # no make/model, device id
+    data["printer-make-and-model"] = ""
+    info = models.Info.from_dict(data)
+
+    assert info
+    assert info.name == "EPSON XP-6000 Series"
+    assert info.printer_name == "ipp/print"
+    assert info.manufacturer == "EPSON"
+    assert info.model == "XP-6000 Series"
+
+    # no make/model, no device id, URI name
+    data["printer-device-id"] = ""
     data["printer-make-and-model"] = ""
     data["printer-name"] = "ipp/print"
     info = models.Info.from_dict(data)
@@ -38,10 +49,11 @@ async def test_info():
     assert info
     assert info.name == "IPP Printer"
     assert info.printer_name == "ipp/print"
-    assert info.manufacturer == "EPSON"
-    assert info.model == "XP-6000 Series"
+    assert info.manufacturer == "Unknown"
+    assert info.model == "Unknown"
 
-    # no make/model, name, device id
+    # no make/model, no device id, name
+    data["printer-device-id"] = ""
     data["printer-make-and-model"] = ""
     data["printer-name"] = "Printy"
     info = models.Info.from_dict(data)
@@ -49,24 +61,13 @@ async def test_info():
     assert info
     assert info.name == "Printy"
     assert info.printer_name == "Printy"
-    assert info.manufacturer == "EPSON"
-    assert info.model == "XP-6000 Series"
+    assert info.manufacturer == "Unknown"
+    assert info.model == "Unknown"
 
-    # no make/model, no name, device id
-    data["printer-make-and-model"] = ""
-    data["printer-name"] = ""
-    info = models.Info.from_dict(data)
-
-    assert info
-    assert info.name == "IPP Printer"
-    assert info.printer_name == ""
-    assert info.manufacturer == "EPSON"
-    assert info.model == "XP-6000 Series"
-
-    # no make/model, no name, no device id
-    data["printer-make-and-model"] = ""
-    data["printer-name"] = ""
+    # no make/model, no device id, no name
     data["printer-device-id"] = ""
+    data["printer-make-and-model"] = ""
+    data["printer-name"] = ""
     info = models.Info.from_dict(data)
 
     assert info
