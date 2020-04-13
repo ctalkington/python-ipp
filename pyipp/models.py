@@ -190,7 +190,6 @@ class Printer:
         marker_types = []
         marker_highs = []
         marker_lows = []
-        uris = []
 
         marker_names = None
         if isinstance(data.get("marker-names"), List):
