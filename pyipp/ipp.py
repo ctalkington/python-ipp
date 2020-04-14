@@ -16,13 +16,14 @@ from .const import (
     DEFAULT_PRINTER_ATTRIBUTES,
     DEFAULT_PROTO_VERSION,
 )
-from .enums import IppOperation
+from .enums import IppOperation, IppStatus
 from .exceptions import (
     IPPConnectionError,
     IPPConnectionUpgradeRequired,
     IPPError,
     IPPParseError,
     IPPResponseError,
+    IPPVersionNotSupportedError,
 )
 from .models import Printer
 from .parser import parse as parse_response
@@ -180,7 +181,9 @@ class IPP:
         except (StructError, Exception) as exc:  # disable=broad-except
             raise IPPParseError from exc
 
-        if parsed["status-code"] != 0:
+        if parsed["status-code"] == IppStatus.ERROR_VERSION_NOT_SUPPORTED:
+            raise IPPVersionNotSupported("IPP version not supported by server")
+        elif parsed["status-code"] != IppStatus.OK:
             raise IPPError(
                 "Unexpected printer status code",
                 {"status-code": parsed["status-code"]},
