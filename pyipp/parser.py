@@ -3,13 +3,7 @@ import logging
 import struct
 from typing import Any, Dict, Tuple, cast
 
-from .enums import (
-    IppDocumentState,
-    IppJobState,
-    IppPrinterState,
-    IppStatus,
-    IppTag,
-)
+from .enums import IppDocumentState, IppJobState, IppPrinterState, IppStatus, IppTag
 
 _LOGGER = logging.getLogger(__name__)
 
