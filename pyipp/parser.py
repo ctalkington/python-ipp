@@ -75,6 +75,8 @@ def parse_attribute(data: bytes, offset: int):
                 attribute["value"] = IppPrinterState(attribute["value"])
             elif attribute["name"] == "document-state":
                 attribute["value"] = IppDocumentState(attribute["value"])
+            elif attribute["name"] == "status-code":
+                attribute["value"] = IppStatus(attribute["value"])
 
         offset += 4
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
