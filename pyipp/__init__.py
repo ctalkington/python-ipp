@@ -6,5 +6,6 @@ from .ipp import (  # noqa
     IPPError,
     IPPParseError,
     IPPResponseError,
+    IPPVersionNotSupportedError,
 )
 from .models import Printer  # noqa
