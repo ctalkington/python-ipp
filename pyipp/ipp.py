@@ -182,7 +182,7 @@ class IPP:
             raise IPPParseError from exc
 
         if parsed["status-code"] == IppStatus.ERROR_VERSION_NOT_SUPPORTED:
-            raise IPPVersionNotSupported("IPP version not supported by server")
+            raise IPPVersionNotSupportedError("IPP version not supported by server")
         elif parsed["status-code"] != IppStatus.OK:
             raise IPPError(
                 "Unexpected printer status code",
