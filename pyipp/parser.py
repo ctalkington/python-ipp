@@ -3,7 +3,7 @@ import logging
 import struct
 from typing import Any, Dict, Tuple, cast
 
-from .enums import IppDocumentState, IppJobState, IppPrinterState, IppTag
+from .enums import IppDocumentState, IppJobState, IppPrinterState, IppStatus, IppTag
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -69,6 +69,8 @@ def parse_attribute(data: bytes, offset: int):
                 attribute["value"] = IppPrinterState(attribute["value"])
             elif attribute["name"] == "document-state":
                 attribute["value"] = IppDocumentState(attribute["value"])
+            elif attribute["name"] == "status-code":
+                attribute["value"] = IppStatus(attribute["value"])
 
         offset += 4
         _LOGGER.debug("Attribute Value: %s", attribute["value"])

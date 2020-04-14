@@ -11,6 +11,7 @@ from pyipp.exceptions import (
     IPPConnectionUpgradeRequired,
     IPPError,
     IPPParseError,
+    IPPVersionNotSupportedError,
 )
 
 from . import (
@@ -247,6 +248,33 @@ async def test_unexpected_response(aresponses):
     async with ClientSession() as session:
         ipp = IPP(DEFAULT_PRINTER_URI, session=session)
         with pytest.raises(IPPParseError):
+            assert await ipp.execute(
+                IppOperation.GET_PRINTER_ATTRIBUTES,
+                {
+                    "operation-attributes-tag": {
+                        "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
+                    },
+                },
+            )
+
+
+@pytest.mark.asyncio
+async def test_ipp_error_0x0503(aresponses):
+    """Test IPP Error 0x0503 response handling."""
+    aresponses.add(
+        MATCH_DEFAULT_HOST,
+        DEFAULT_PRINTER_PATH,
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/ipp"},
+            body=load_fixture_binary("get-printer-attributes-error-0x0503.bin"),
+        ),
+    )
+
+    async with ClientSession() as session:
+        ipp = IPP(DEFAULT_PRINTER_URI, session=session)
+        with pytest.raises(IPPVersionNotSupportedError):
             assert await ipp.execute(
                 IppOperation.GET_PRINTER_ATTRIBUTES,
                 {
