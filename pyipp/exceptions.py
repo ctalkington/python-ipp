@@ -29,3 +29,9 @@ class IPPResponseError(IPPError):
     """IPP response exception."""
 
     pass
+
+
+class IPPVersionNotSupportedError(IPPError)
+    """IPP version not supported."""
+
+    pass
