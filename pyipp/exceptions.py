@@ -31,7 +31,7 @@ class IPPResponseError(IPPError):
     pass
 
 
-class IPPVersionNotSupportedError(IPPError)
+class IPPVersionNotSupportedError(IPPError):
     """IPP version not supported."""
 
     pass
