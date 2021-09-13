@@ -19,8 +19,9 @@ def __construct_attibute_values(tag: IppTag, value: Any) -> bytes:
         bs += struct.pack(">h", 1)
         bs += struct.pack(">?", value)
     else:
-        bs += struct.pack(">h", len(value))
-        bs += value.encode("utf-8")
+        encoded_value = value.encode("utf-8")
+        bs += struct.pack(">h", len(encoded_value))
+        bs += encoded_value
 
     return bs
 
