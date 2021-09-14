@@ -56,7 +56,7 @@ jobs:
         run: pytest --log-level=debug --cov=pyipp --cov-report=xml
       - name: Upload coverage to Codecov
         if: matrix.python == 3.8 && matrix.os == 'ubuntu'
-        uses: codecov/codecov-action@v1.5.2
+        uses: codecov/codecov-action@v2.1.0
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           file: ./coverage.xml
