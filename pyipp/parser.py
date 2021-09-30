@@ -1,6 +1,7 @@
 """Response Parser for IPP."""
 import logging
 import struct
+import datetime
 from typing import Any, Dict, Tuple, cast
 
 from .enums import IppDocumentState, IppJobState, IppPrinterState, IppStatus, IppTag
@@ -79,9 +80,21 @@ def parse_attribute(data: bytes, offset: int):
         offset += 1
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.DATE.value:
-        attribute["value"] = struct.unpack_from(
-            ">" + "b" * attribute["value-length"], data, offset
-        )[0]
+        if attribute["value-length"] != 11:
+            raise IPPParseError(f'Invalid DATE size {attribute["value-length"]}')
+        raw_date = {k:v for k,v
+                    in zip(
+                        ("year", "month", "day", "hour", "minute", "second",
+                            "decisecond", "tz_dir", "tz_hour", "tz_minute"),
+                        struct.unpack_from(">hbbbbbbcbb", data, offset))
+                    }
+        raw_date['microsecond'] = raw_date.pop('decisecond')*100_000
+        raw_date['tzinfo'] = datetime.timezone(
+                {b'+': 1, b'-': -1}[raw_date.pop('tz_dir')]
+                * datetime.timedelta(
+                    hours=raw_date.pop('tz_hour'),
+                    minutes=raw_date.pop('tz_minute')))
+        attribute["value"] = datetime.datetime(**raw_date)
         offset += attribute["value-length"]
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
@@ -166,6 +179,7 @@ def parse(raw_data: bytes, contains_data=False):
     data["operation-attributes"] = []
     data["jobs"] = []
     data["printers"] = []
+    data["unsupported-attributes"] = []
     data["data"] = b""
 
     attribute_key = ""
@@ -196,6 +210,13 @@ def parse(raw_data: bytes, contains_data=False):
                 tmp_data = {}
 
             attribute_key = "printers"
+            offset += 1
+        elif struct.unpack_from("b", raw_data, offset)[0] == IppTag.UNSUPPORTED_GROUP.value:
+            if tmp_data and attribute_key:
+                data[attribute_key].append(tmp_data)
+                tmp_data = {}
+
+            attribute_key = "unsupported-attributes"
             offset += 1
 
         attribute, new_offset = parse_attribute(raw_data, offset)
@@ -257,4 +278,4 @@ def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
         if len(split) == 2:
             model = split[1].strip()
 
-    return (make, model)
+    return (make, model) 
