@@ -1,7 +1,8 @@
 """Tests for Parser."""
 from pyipp import parser
 from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
-from pyipp.enums import IppOperation
+from pyipp.enums import IppOperation, IppPrinterState
+import datetime
 
 from . import load_fixture_binary
 
@@ -24,9 +25,10 @@ def test_parse() -> None:
             "printer-uri": "ipp://printer.example.com:361/ipp/print",
             "requesting-user-name": "PythonIPP",
         },
+        "unsupported-attributes": [],
         "printers": [],
         "request-id": 1,
-        "status-code": IppOperation.GET_PRINTER_ATTRIBUTES,
+        "status-code": IppOperation.GET_PRINTER_ATTRIBUTES.value,
         "version": DEFAULT_PROTO_VERSION,
     }
 
@@ -43,6 +45,22 @@ def test_parse_attribute() -> None:
             "value-length": 5,
         },
         37,
+    )
+
+
+def test_parse_attribute_date() -> None:
+    """Test DATE attribute parser"""
+    blob = load_fixture_binary('get-jobs-kyocera-ecosys-m2540dn-000.bin')
+    date = parser.parse_attribute(blob, 1022)
+    assert date == (
+        {
+            'tag': 49,
+            'name-length': 21,
+            'name': 'date-time-at-creation',
+            'value-length': 11,
+            'value': datetime.datetime(2021, 9, 28, 9, 37, 15,
+                                       tzinfo=datetime.timezone.utc)},
+        1059,
     )
 
 
@@ -106,3 +124,42 @@ def test_parse_brother_mfcj5320dw() -> None:
     printer = result["printers"][0]
     assert printer["printer-make-and-model"] == "Brother MFC-J5320DW"
     assert printer["printer-uuid"] == "urn:uuid:e3248000-80ce-11db-8000-30055ce13be2"
+
+
+def test_parse_kyocera_ecosys_m2540() -> None:
+    """Test the parse method against response from KYOCERA ECOSYS M2540dn.
+       Responce with some incomplete/substituted/unsupported attributes
+    """
+    response = load_fixture_binary("get-printer-attributes-kyocera-ecosys-m2540dn-001.bin")
+
+    result = parser.parse(response)
+    assert result
+
+    assert result == {
+        "version": (2, 0),
+        "status-code": 1,
+        "request-id": 47131,
+        "operation-attributes": {
+            "attributes-charset": "utf-8",
+            "attributes-natural-language": "en-us"},
+        "jobs": [],
+        "printers": [
+            {
+                "printer-name": "mfu00-0365",
+                "printer-location": "8409",
+                "printer-info": "mfu00-0365",
+                "printer-make-and-model": "ECOSYS M2540dn",
+                "printer-state": IppPrinterState.IDLE,
+                "printer-state-message": "Sleeping...  ",
+                "printer-uri-supported": [
+                    "ipps://10.104.12.95:443/ipp/print",
+                    "ipp://10.104.12.95:631/ipp/print"]}],
+        "unsupported-attributes": [
+            {
+                "requested-attributes": [
+                    "printer-type",
+                    "printer-state-reason",
+                    "device-uri",
+                    "printer-is-shared"]}],
+        "data": b""}
+    
