@@ -166,10 +166,11 @@ class IPP:
             },
         }
 
-        if msg is not dict:
+        if not isinstance(msg, dict):
             msg = {}
 
-        return always_merger.merge(base, msg)
+        rv = always_merger.merge(base, msg)
+        return rv
 
     async def execute(self, operation: IppOperation, message: dict) -> dict:
         """Send a request message to the server."""
@@ -184,7 +185,7 @@ class IPP:
         if parsed["status-code"] == IppStatus.ERROR_VERSION_NOT_SUPPORTED:
             raise IPPVersionNotSupportedError("IPP version not supported by server")
 
-        if parsed["status-code"] != IppStatus.OK:
+        if parsed["status-code"] not in range(0, 0x200):  # "successful" & "informational"
             raise IPPError(
                 "Unexpected printer status code",
                 {"status-code": parsed["status-code"]},
@@ -229,4 +230,4 @@ class IPP:
 
     async def __aexit__(self, *exc_info) -> None:
         """Async exit."""
-        await self.close()
+        await self.close() 
