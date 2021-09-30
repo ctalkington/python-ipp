@@ -54,6 +54,35 @@ async def test_ipp_request(aresponses):
 
 
 @pytest.mark.asyncio
+async def test_ipp_request_code_1(aresponses):
+    """Test IPP "informational" code response is handled correctly."""
+    aresponses.add(
+        MATCH_DEFAULT_HOST,
+        DEFAULT_PRINTER_PATH,
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/ipp"},
+            body=load_fixture_binary(
+                "get-printer-attributes-kyocera-ecosys-m2540dn-001.bin"
+            ),
+        ),
+    )
+
+    async with ClientSession() as session:
+        ipp = IPP(DEFAULT_PRINTER_URI, session=session)
+        response = await ipp.execute(
+            IppOperation.GET_PRINTER_ATTRIBUTES,
+            {
+                "operation-attributes-tag": {
+                    "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
+                },
+            },
+        )
+        assert response["status-code"] == 1
+
+
+@pytest.mark.asyncio
 async def test_internal_session(aresponses):
     """Test IPP response is handled correctly."""
     aresponses.add(
@@ -283,3 +312,30 @@ async def test_ipp_error_0x0503(aresponses):
                     },
                 },
             )
+
+
+def test_ipp_message() -> None:
+    """Test merging user & default attri"""
+    ipp = IPP("#")
+    result = ipp._message(
+        IppOperation.CUPS_NONE,
+        {"operation-attributes-tag": {
+            "some-tag": "some-value",
+            "requesting-user-name": "some-user-name",
+            }
+        }
+    )
+
+    assert result == {
+        "version": (2, 0),
+        "operation": IppOperation.CUPS_NONE.value,
+        "request-id": None,
+        "operation-attributes-tag": {
+            "attributes-charset": "utf-8",
+            "attributes-natural-language": "en-US",
+            "printer-uri": "ipp://#:631/ipp/print",
+            "requesting-user-name": "some-user-name",
+            "some-tag": "some-value",
+        }
+    }
+ 
