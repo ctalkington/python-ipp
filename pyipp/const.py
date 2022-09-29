@@ -31,6 +31,7 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "printer-uri-supported",
     "device-uri",
     "printer-is-shared",
+    "printer-more-info",
 ]
 
 DEFAULT_PORT = 631
