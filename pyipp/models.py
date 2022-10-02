@@ -25,6 +25,7 @@ class Info:
     serial: Optional[str] = None
     uuid: Optional[str] = None
     version: Optional[str] = None
+    more_info: Optional[str] = None
 
     @staticmethod
     def from_dict(data: dict):
@@ -83,6 +84,8 @@ class Info:
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
             version=data.get("printer-firmware-string-version", None),
+            more_info=data.get("printer-more-info", None)
+
         )
 
 
