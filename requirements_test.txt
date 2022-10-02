@@ -1,6 +1,6 @@
 aresponses==2.1.6
 coverage==6.5.0
-flake8==3.9.2
+flake8==5.0.4
 flake8-docstrings==1.6.0
 isort==5.9.2
 mypy==0.800
