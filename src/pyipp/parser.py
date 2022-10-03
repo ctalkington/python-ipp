@@ -1,22 +1,27 @@
 """Response Parser for IPP."""
+# pylint: disable=R0912,R0915
+from __future__ import annotations
+
 import logging
 import struct
-from typing import Any, Dict, Tuple, cast
+from typing import Any
 
 from .enums import IppDocumentState, IppJobState, IppPrinterState, IppStatus, IppTag
 
 _LOGGER = logging.getLogger(__name__)
 
 
-def parse_ieee1284_device_id(device_id: str) -> Dict[str, Any]:
+def parse_ieee1284_device_id(device_id: str) -> dict[str, Any]:
     """Parse IEEE 1284 device id for common device info."""
     if device_id == "":
         return {}
 
     device_id = device_id.strip(";")
-    device_info: Dict[str, Any] = dict(
-        cast(Tuple[str, str], x.split(":", 2)) for x in device_id.split(";")
-    )
+    device_info: dict[str, str] = {}
+
+    for pair in device_id.split(";"):
+        key, value = pair.split(":", 2)
+        device_info[key.strip()] = value.strip()
 
     if not device_info.get("MANUFACTURER") and device_info.get("MFG"):
         device_info["MANUFACTURER"] = device_info["MFG"]
@@ -145,7 +150,7 @@ def parse(raw_data: bytes, contains_data=False):
     1 byte: Attribute End Byte (\0x03)
     """
 
-    data: Dict[str, Any] = {}
+    data: dict[str, Any] = {}
     offset = 0
 
     _LOGGER.debug("Parsing IPP Data")
@@ -170,7 +175,7 @@ def parse(raw_data: bytes, contains_data=False):
 
     attribute_key = ""
     previous_attribute_name = ""
-    tmp_data: Dict[str, Any] = {}
+    tmp_data: dict[str, Any] = {}
 
     while struct.unpack_from("b", raw_data, offset)[0] != IppTag.END.value:
         # check for operation, job or printer attribute start byte
@@ -229,11 +234,9 @@ def parse(raw_data: bytes, contains_data=False):
     return data
 
 
-def parse_make_and_model(make_and_model: str) -> Tuple[str, str]:
+def parse_make_and_model(make_and_model: str) -> tuple[str, str]:
     """Parse make and model for separate device make and model."""
-    make_and_model = make_and_model.strip()
-
-    if make_and_model == "":
+    if (make_and_model := make_and_model.strip()) == "":
         return ("Unknown", "Unknown")
 
     make = "Unknown"

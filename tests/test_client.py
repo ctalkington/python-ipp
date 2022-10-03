@@ -153,7 +153,10 @@ async def test_timeout(aresponses):
         return aresponses.Response(body="Timeout!")
 
     aresponses.add(
-        MATCH_DEFAULT_HOST, DEFAULT_PRINTER_PATH, "POST", response_handler,
+        MATCH_DEFAULT_HOST,
+        DEFAULT_PRINTER_PATH,
+        "POST",
+        response_handler,
     )
 
     async with ClientSession() as session:

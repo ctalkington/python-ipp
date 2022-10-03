@@ -1,15 +1,18 @@
 """Asynchronous Python client for IPP."""
+from __future__ import annotations
+
 import asyncio
+from collections.abc import Mapping
+from importlib import metadata
 from socket import gaierror as SocketGIAError
 from struct import error as StructError
-from typing import Any, Mapping, Optional
+from typing import Any
 
 import aiohttp
 import async_timeout
 from deepmerge import always_merger
 from yarl import URL
 
-from .__version__ import __version__
 from .const import (
     DEFAULT_CHARSET,
     DEFAULT_CHARSET_LANGUAGE,
@@ -37,14 +40,14 @@ class IPP:
         self,
         host: str,
         base_path: str = "/ipp/print",
-        password: str = None,
+        password: str | None = None,
         port: int = 631,
         request_timeout: int = 8,
-        session: aiohttp.client.ClientSession = None,
+        session: aiohttp.client.ClientSession | None = None,
         tls: bool = False,
-        username: str = None,
+        username: str | None = None,
         verify_ssl: bool = False,
-        user_agent: str = None,
+        user_agent: str | None = None,
     ) -> None:
         """Initialize connection with IPP server."""
         self._session = session
@@ -63,21 +66,27 @@ class IPP:
         if host.startswith("ipp://") or host.startswith("ipps://"):
             self.printer_uri = host
             printer_uri = URL(host)
-            self.host = printer_uri.host
-            self.port = printer_uri.port
+
+            if printer_uri.host is not None:
+                self.host = printer_uri.host
+
+            if printer_uri.port is not None:
+                self.port = printer_uri.port
+
             self.tls = printer_uri.scheme == "ipps"
             self.base_path = printer_uri.path
         else:
             self.printer_uri = self._build_printer_uri()
 
         if user_agent is None:
-            self.user_agent = f"PythonIPP/{__version__}"
+            version = metadata.version(__package__)
+            self.user_agent = f"PythonIPP/{version}"
 
     async def _request(
         self,
         uri: str = "",
-        data: Optional[Any] = None,
-        params: Optional[Mapping[str, str]] = None,
+        data: Any | None = None,
+        params: Mapping[str, str] | None = None,
     ) -> Any:
         """Handle a request to an IPP server."""
         scheme = "https" if self.tls else "http"
@@ -223,10 +232,10 @@ class IPP:
 
         return printer
 
-    async def __aenter__(self) -> "IPP":
+    async def __aenter__(self) -> IPP:
         """Async enter."""
         return self
 
-    async def __aexit__(self, *exc_info) -> None:
+    async def __aexit__(self, *_exec_info) -> None:
         """Async exit."""
         await self.close()

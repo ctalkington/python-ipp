@@ -1,4 +1,6 @@
 """Data Serializer for IPP."""
+from __future__ import annotations
+
 import random
 import struct
 from typing import Any
@@ -8,62 +10,62 @@ from .enums import IppTag
 from .tags import ATTRIBUTE_TAG_MAP
 
 
-def __construct_attibute_values(tag: IppTag, value: Any) -> bytes:
+def construct_attibute_values(tag: IppTag, value: Any) -> bytes:
     """Serialize the attribute values into IPP format."""
-    bs = b""
+    byte_str = b""
 
     if tag in (IppTag.INTEGER, IppTag.ENUM):
-        bs += struct.pack(">h", 4)
-        bs += struct.pack(">i", value)
+        byte_str += struct.pack(">h", 4)
+        byte_str += struct.pack(">i", value)
     elif tag == IppTag.BOOLEAN:
-        bs += struct.pack(">h", 1)
-        bs += struct.pack(">?", value)
+        byte_str += struct.pack(">h", 1)
+        byte_str += struct.pack(">?", value)
     else:
-        bs += struct.pack(">h", len(value))
-        bs += value.encode("utf-8")
+        byte_str += struct.pack(">h", len(value))
+        byte_str += value.encode("utf-8")
 
-    return bs
+    return byte_str
 
 
-def construct_attribute(name: str, value: Any, tag: IppTag = None) -> bytes:
+def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> bytes:
     """Serialize the attribute into IPP format."""
-    bs = b""
+    byte_str = b""
 
     if not tag:
         tag = ATTRIBUTE_TAG_MAP.get(name, None)
 
     if not tag:
-        return bs
+        return byte_str
 
     if isinstance(value, (list, tuple, set)):
-        for index, v in enumerate(value):
-            bs += struct.pack(">b", tag.value)
+        for index, list_value in enumerate(value):
+            byte_str += struct.pack(">b", tag.value)
 
             if index == 0:
-                bs += struct.pack(">h", len(name))
-                bs += name.encode("utf-8")
+                byte_str += struct.pack(">h", len(name))
+                byte_str += name.encode("utf-8")
             else:
-                bs += struct.pack(">h", 0)
+                byte_str += struct.pack(">h", 0)
 
-            bs += __construct_attibute_values(tag, v)
+            byte_str += construct_attibute_values(tag, list_value)
     else:
-        bs = struct.pack(">b", tag.value)
+        byte_str = struct.pack(">b", tag.value)
 
-        bs += struct.pack(">h", len(name))
-        bs += name.encode("utf-8")
+        byte_str += struct.pack(">h", len(name))
+        byte_str += name.encode("utf-8")
 
-        bs += __construct_attibute_values(tag, value)
+        byte_str += construct_attibute_values(tag, value)
 
-    return bs
+    return byte_str
 
 
-def encode_dict(data: dict) -> Any:
+def encode_dict(data: dict[str, Any]) -> bytes:
     """Serialize a dictionary of data into IPP format."""
     version = data["version"] or DEFAULT_PROTO_VERSION
     operation = data["operation"]
-    request_id = data.get("request-id", None)
-    if request_id is None:
-        request_id = random.choice(range(10000, 99999))
+
+    if (request_id := data.get("request-id", None)) is None:
+        request_id = random.choice(range(10000, 99999))  # nosec  # noqa: S311
 
     encoded = struct.pack(">bb", *version)
     encoded += struct.pack(">h", operation.value)
