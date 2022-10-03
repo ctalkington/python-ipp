@@ -1,6 +1,9 @@
 """Models for IPP."""
+# pylint: disable=R0912,R0915
+from __future__ import annotations
+
 from dataclasses import dataclass
-from typing import List, Optional
+from typing import Any
 
 from yarl import URL
 
@@ -17,18 +20,18 @@ class Info:
     printer_name: str
     printer_uri_supported: list
     uptime: int
-    command_set: Optional[str] = None
-    location: Optional[str] = None
-    manufacturer: Optional[str] = None
-    model: Optional[str] = None
-    printer_info: Optional[str] = None
-    serial: Optional[str] = None
-    uuid: Optional[str] = None
-    version: Optional[str] = None
-    more_info: Optional[str] = None
+    command_set: str | None = None
+    location: str | None = None
+    manufacturer: str | None = None
+    model: str | None = None
+    printer_info: str | None = None
+    serial: str | None = None
+    uuid: str | None = None
+    version: str | None = None
+    more_info: str | None = None
 
     @staticmethod
-    def from_dict(data: dict):
+    def from_dict(data: dict[str, Any]):
         """Return Info object from IPP response."""
         cmd = None
         name = "IPP Printer"
@@ -40,10 +43,9 @@ class Info:
         uri_supported = data.get("printer-uri-supported", [])
         uuid = data.get("printer-uuid")
 
-        if isinstance(uri_supported, List):
+        if isinstance(uri_supported, list):
             for uri in uri_supported:
-                uri_path = URL(uri).path.lstrip("/")
-                if uri_path == _printer_name.lstrip("/"):
+                if (URL(uri).path.lstrip("/")) == _printer_name.lstrip("/"):
                     _printer_name = ""
                     break
 
@@ -84,8 +86,7 @@ class Info:
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
             version=data.get("printer-firmware-string-version", None),
-            more_info=data.get("printer-more-info", None)
-
+            more_info=data.get("printer-more-info", None),
         )
 
 
@@ -116,16 +117,15 @@ class State:
     """Object holding the IPP printer state."""
 
     printer_state: str
-    reasons: str
-    message: str
+    reasons: str | None
+    message: str | None
 
     @staticmethod
     def from_dict(data):
         """Return State object from IPP response."""
         state = data.get("printer-state", 0)
-        reasons = data.get("printer-state-reasons", None)
 
-        if reasons == "none":
+        if (reasons := data.get("printer-state-reasons", None)) == "none":
             reasons = None
 
         return State(
@@ -140,9 +140,9 @@ class Printer:
     """Object holding the IPP printer information."""
 
     info: Info
-    markers: List[Marker]
+    markers: list[Marker]
     state: State
-    uris: List[Uri]
+    uris: list[Uri]
 
     @staticmethod
     def from_dict(data):
@@ -167,43 +167,43 @@ class Printer:
         marker_lows = []
 
         marker_names = None
-        if isinstance(data.get("marker-names"), List):
+        if isinstance(data.get("marker-names"), list):
             marker_names = data["marker-names"]
             mlen = len(marker_names)
 
-            for k in range(mlen):
+            for _k in range(mlen):
                 marker_colors.append("")
                 marker_levels.append(-2)
                 marker_types.append("unknown")
                 marker_highs.append(100)
                 marker_lows.append(0)
 
-        if isinstance(data.get("marker-colors"), List):
-            for k, v in enumerate(data["marker-colors"]):
-                if k < mlen:
-                    marker_colors[k] = v
+        if isinstance(data.get("marker-colors"), list):
+            for index, list_value in enumerate(data["marker-colors"]):
+                if index < mlen:
+                    marker_colors[index] = list_value
 
-        if isinstance(data.get("marker-levels"), List):
-            for k, v in enumerate(data["marker-levels"]):
-                if k < mlen:
-                    marker_levels[k] = v
+        if isinstance(data.get("marker-levels"), list):
+            for index, list_value in enumerate(data["marker-levels"]):
+                if index < mlen:
+                    marker_levels[index] = list_value
 
-        if isinstance(data.get("marker-high-levels"), List):
-            for k, v in enumerate(data["marker-high-levels"]):
-                if k < mlen:
-                    marker_highs[k] = v
+        if isinstance(data.get("marker-high-levels"), list):
+            for index, list_value in enumerate(data["marker-high-levels"]):
+                if index < mlen:
+                    marker_highs[index] = list_value
 
-        if isinstance(data.get("marker-low-levels"), List):
-            for k, v in enumerate(data["marker-low-levels"]):
-                if k < mlen:
-                    marker_lows[k] = v
+        if isinstance(data.get("marker-low-levels"), list):
+            for index, list_value in enumerate(data["marker-low-levels"]):
+                if index < mlen:
+                    marker_lows[index] = list_value
 
-        if isinstance(data.get("marker-types"), List):
-            for k, v in enumerate(data["marker-types"]):
-                if k < mlen:
-                    marker_types[k] = v
+        if isinstance(data.get("marker-types"), list):
+            for index, list_value in enumerate(data["marker-types"]):
+                if index < mlen:
+                    marker_types[index] = list_value
 
-        if isinstance(marker_names, List) and mlen > 0:
+        if isinstance(marker_names, list) and mlen > 0:
             markers = [
                 Marker(
                     marker_id=marker_id,
@@ -230,25 +230,25 @@ class Printer:
         auth = []
         security = []
 
-        if isinstance(data.get("printer-uri-supported"), List):
+        if isinstance(data.get("printer-uri-supported"), list):
             _uris = data["printer-uri-supported"]
             ulen = len(_uris)
 
-            for k in range(ulen):
+            for _k in range(ulen):
                 auth.append(None)
                 security.append(None)
 
-        if isinstance(data.get("uri-authentication-supported"), List):
-            for k, v in enumerate(data["uri-authentication-supported"]):
+        if isinstance(data.get("uri-authentication-supported"), list):
+            for k, list_value in enumerate(data["uri-authentication-supported"]):
                 if k < ulen:
-                    auth[k] = v if v != "none" else None
+                    auth[k] = list_value if list_value != "none" else None
 
-        if isinstance(data.get("uri-security-supported"), List):
-            for k, v in enumerate(data["uri-security-supported"]):
+        if isinstance(data.get("uri-security-supported"), list):
+            for k, list_value in enumerate(data["uri-security-supported"]):
                 if k < ulen:
-                    security[k] = v if v != "none" else None
+                    security[k] = list_value if list_value != "none" else None
 
-        if isinstance(_uris, List) and ulen > 0:
+        if isinstance(_uris, list) and ulen > 0:
             uris = [
                 Uri(
                     uri=_uris[uri_id],

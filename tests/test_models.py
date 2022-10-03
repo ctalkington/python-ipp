@@ -1,9 +1,9 @@
 """Tests for IPP Models."""
-from typing import List
+# pylint: disable=R0912,R0915
+from __future__ import annotations
 
-import pyipp.models as models
-import pyipp.parser as parser
 import pytest
+from pyipp import models, parser
 
 from . import IPPE10_PRINTER_ATTRS, load_fixture_binary
 
@@ -110,7 +110,7 @@ async def test_printer():
     assert printer.state.message is None
 
     assert printer.markers
-    assert isinstance(printer.markers, List)
+    assert isinstance(printer.markers, list)
     assert len(printer.markers) == 5
 
     assert printer.markers[0]
@@ -159,7 +159,7 @@ async def test_printer():
     assert printer.markers[4].high_level == 100
 
     assert printer.uris
-    assert isinstance(printer.uris, List)
+    assert isinstance(printer.uris, list)
     assert len(printer.uris) == 2
 
     assert printer.uris[0]

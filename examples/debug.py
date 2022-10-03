@@ -30,9 +30,9 @@ async def main():
             },
         )
 
-        with open("printer-attributes.bin", "wb") as f:
-            f.write(response)
-            f.close()
+        with open("printer-attributes.bin", "wb") as file:
+            file.write(response)
+            file.close()
 
 
 if __name__ == "__main__":
