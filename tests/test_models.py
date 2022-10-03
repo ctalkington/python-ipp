@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+
 from pyipp import models, parser
 
 from . import IPPE10_PRINTER_ATTRS, load_fixture_binary

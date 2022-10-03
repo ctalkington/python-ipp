@@ -3,6 +3,7 @@ import asyncio
 
 import pytest
 from aiohttp import ClientSession
+
 from pyipp import IPP
 from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
 from pyipp.enums import IppOperation

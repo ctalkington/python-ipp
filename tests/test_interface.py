@@ -1,6 +1,7 @@
 """Tests for IPP public interface."""
 import pytest
 from aiohttp import ClientSession
+
 from pyipp import IPP, Printer
 from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
 from pyipp.enums import IppOperation
