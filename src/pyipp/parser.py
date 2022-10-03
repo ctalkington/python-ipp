@@ -248,7 +248,7 @@ def parse_make_and_model(make_and_model: str) -> tuple[str, str]:
         "epson",
         "kyocera",
         "hp",
-        "xerox"
+        "xerox",
     ]
 
     test_against = make_and_model.lower()
