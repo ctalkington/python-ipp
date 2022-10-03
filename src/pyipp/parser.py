@@ -169,6 +169,7 @@ def parse(raw_data: bytes, contains_data=False):
     offset += 4
 
     data["operation-attributes"] = []
+    data["unsupported-attributes"] = []
     data["jobs"] = []
     data["printers"] = []
     data["data"] = b""
@@ -201,6 +202,16 @@ def parse(raw_data: bytes, contains_data=False):
                 tmp_data = {}
 
             attribute_key = "printers"
+            offset += 1
+        elif (
+            struct.unpack_from("b", raw_data, offset)[0]
+            == IppTag.UNSUPPORTED_GROUP.value
+        ):
+            if tmp_data and attribute_key:
+                data[attribute_key].append(tmp_data)
+                tmp_data = {}
+
+            attribute_key = "unsupported-attributes"
             offset += 1
 
         attribute, new_offset = parse_attribute(raw_data, offset)
