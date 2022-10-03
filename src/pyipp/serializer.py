@@ -21,8 +21,9 @@ def construct_attibute_values(tag: IppTag, value: Any) -> bytes:
         byte_str += struct.pack(">h", 1)
         byte_str += struct.pack(">?", value)
     else:
-        byte_str += struct.pack(">h", len(value))
-        byte_str += value.encode("utf-8")
+        encoded_value = value.encode("utf-8")
+        byte_str += struct.pack(">h", len(encoded_value))
+        byte_str += encoded_value
 
     return byte_str
 
