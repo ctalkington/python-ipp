@@ -107,3 +107,32 @@ def test_parse_brother_mfcj5320dw() -> None:
     printer = result["printers"][0]
     assert printer["printer-make-and-model"] == "Brother MFC-J5320DW"
     assert printer["printer-uuid"] == "urn:uuid:e3248000-80ce-11db-8000-30055ce13be2"
+
+
+@pytest.mark.asyncio
+async def test_ipp_request_code_1(aresponses):
+    """Test the parse method against response from Kyocera Ecosys M2540DN."""
+    aresponses.add(
+        MATCH_DEFAULT_HOST,
+        DEFAULT_PRINTER_PATH,
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/ipp"},
+            body=load_fixture_binary(
+                "get-printer-attributes-kyocera-ecosys-m2540dn-001.bin"
+            ),
+        ),
+    )
+
+    async with ClientSession() as session:
+        ipp = IPP(DEFAULT_PRINTER_URI, session=session)
+        response = await ipp.execute(
+            IppOperation.GET_PRINTER_ATTRIBUTES,
+            {
+                "operation-attributes-tag": {
+                    "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
+                },
+            },
+        )
+        assert response["status-code"] == 1
