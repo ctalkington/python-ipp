@@ -107,3 +107,5 @@ def test_parse_brother_mfcj5320dw() -> None:
     printer = result["printers"][0]
     assert printer["printer-make-and-model"] == "Brother MFC-J5320DW"
     assert printer["printer-uuid"] == "urn:uuid:e3248000-80ce-11db-8000-30055ce13be2"
+
+    assert result["unsupported-attributes"] == []
