@@ -25,6 +25,8 @@ async def main():
                         "printer-uri-supported",
                         "device-uri",
                         "printer-is-shared",
+                        "printer-more-info",
+                        "printer-unsupported-attr",
                     ],
                 },
             },
