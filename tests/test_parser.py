@@ -27,6 +27,7 @@ def test_parse() -> None:
         "printers": [],
         "request-id": 1,
         "status-code": IppOperation.GET_PRINTER_ATTRIBUTES,
+        "unsupported-attributes": [],
         "version": DEFAULT_PROTO_VERSION,
     }
 

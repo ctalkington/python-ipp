@@ -161,7 +161,7 @@ class IPP:
             scheme=scheme, host=self.host, port=self.port, path=self.base_path
         ).human_repr()
 
-    def _message(self, operation: IppOperation, msg: dict) -> dict:
+    def _message(self, operation: IppOperation, msg: dict[str, Any]) -> dict[str, Any]:
         """Build a request message to be sent to the server."""
         base = {
             "version": DEFAULT_PROTO_VERSION,
@@ -175,12 +175,11 @@ class IPP:
             },
         }
 
-        if msg is not dict:
-            msg = {}
-
         return always_merger.merge(base, msg)
 
-    async def execute(self, operation: IppOperation, message: dict) -> dict:
+    async def execute(
+        self, operation: IppOperation, message: dict[str, Any]
+    ) -> dict[str, Any]:
         """Send a request message to the server."""
         message = self._message(operation, message)
         response = await self._request(data=message)
@@ -201,7 +200,7 @@ class IPP:
 
         return parsed
 
-    async def raw(self, operation: IppOperation, message: dict) -> bytes:
+    async def raw(self, operation: IppOperation, message: dict[str, Any]) -> bytes:
         """Send a request message to the server and return raw response."""
         message = self._message(operation, message)
 
