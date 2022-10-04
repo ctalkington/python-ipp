@@ -107,3 +107,23 @@ def test_parse_brother_mfcj5320dw() -> None:
     printer = result["printers"][0]
     assert printer["printer-make-and-model"] == "Brother MFC-J5320DW"
     assert printer["printer-uuid"] == "urn:uuid:e3248000-80ce-11db-8000-30055ce13be2"
+
+
+def test_parse_kyocera_ecosys_m2540dn():
+    """Test the parse method against response from Kyocera Ecosys M2540DN."""
+    response = load_fixture_binary(
+        "get-printer-attributes-kyocera-ecosys-m2540dn-001.bin"
+    )
+
+    result = parser.parse(response)
+    assert result
+
+    assert result["version"] == DEFAULT_PROTO_VERSION
+    assert result["status-code"] == 1
+    assert result["printers"]
+
+    assert result["printers"][0]
+
+    printer = result["printers"][0]
+    assert printer["printer-make-and-model"] == "ECOSYS M2540dn"
+    assert printer["printer-name"] == "mfu00-0365"
