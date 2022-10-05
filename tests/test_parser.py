@@ -590,3 +590,12 @@ def test_parse_kyocera_ecosys_m2540dn():
         ],
         "data": b"",
     }
+
+
+def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
+    """Test the parse method against get-jobs response from Kyocera Ecosys M2540DN."""
+    response = load_fixture_binary('get-jobs-kyocera-ecosys-m2540dn-000.bin')
+    result = parser.parse(blob)
+    assert result
+
+    assert result == {}
