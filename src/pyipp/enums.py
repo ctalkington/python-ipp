@@ -313,7 +313,7 @@ class IppOrientationRequested(IntEnum):
 
 ATTRIBUTE_ENUM_MAP = {
     "document-state": IppDocumentState,
-    "finishing": IppFinishing,
+    "finishings": IppFinishing,
     "job-state": IppJobState,
     "orientation-requested": IppOrientationRequested,
     "printer-state": IppPrinterState,
