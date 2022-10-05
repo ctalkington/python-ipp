@@ -8,7 +8,7 @@ from pyipp.enums import IppOperation
 
 async def main():
     """Show example of connecting to your IPP print server."""
-    async with IPP("ipps://EPSON761251.local:631/ipp/print") as ipp:
+    async with IPP("ipps://192.168.1.92:631/ipp/print") as ipp:
         response = await ipp.raw(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
@@ -25,6 +25,7 @@ async def main():
                         "printer-uri-supported",
                         "device-uri",
                         "printer-is-shared",
+                        "printer-more-info",
                     ],
                 },
             },
