@@ -277,3 +277,12 @@ class IppOrientationRequested(IntEnum):
     LANDSCAPE = 0x0004
     REVERSE_LANDSCAPE = 0x0005
     REVERSE_PORTRAIT = 0x0006
+
+
+ATTRIBUTE_ENUM_MAP = {
+    "document-state": IppDocumentState,
+    "job-state": IppJobState,
+    "orientation-requested": IppOrientationRequested,
+    "printer-state": IppPrinterState,
+    "status-code": IppStatus,
+}
