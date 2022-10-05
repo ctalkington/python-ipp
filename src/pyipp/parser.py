@@ -6,7 +6,7 @@ import logging
 import struct
 from typing import Any
 
-from .enums import IppTag, ATTRIBUTE_ENUM_MAP
+from .enums import ATTRIBUTE_ENUM_MAP, IppTag
 
 _LOGGER = logging.getLogger(__name__)
 

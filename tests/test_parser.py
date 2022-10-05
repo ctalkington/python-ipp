@@ -104,8 +104,9 @@ def test_parse_brother_mfcj5320dw() -> None:
 
     result = parser.parse(response)
     assert result
+    assert result["version"] == (2, 0)
+    assert result["status-code"] == IppStatus.OK
 
-    assert result["version"] == DEFAULT_PROTO_VERSION
     assert result["printers"]
     assert result["printers"][0]
 
@@ -120,12 +121,17 @@ def test_parse_epson_xp6000():
 
     result = parser.parse(response)
     assert result
-    assert result["data"] == b""
-    assert result["jobs"] == []
+    assert result["version"] == (2, 0)
+    assert result["status-code"] == IppStatus.OK
+    assert result["request-id"] == 66306
+
     assert result["operation-attributes"] == {
         "attributes-charset": "utf-8",
         "attributes-natural-language": "en",
     }
+
+    assert result["jobs"] == []
+
     assert result["printers"]
     assert result["printers"][0] == {
         "charset-configured": "utf-8",
@@ -546,10 +552,10 @@ def test_parse_epson_xp6000():
         "uri-security-supported": ["tls", "none"],
         "which-jobs-supported": ["completed", "not-completed"],
     }
-    assert result["request-id"] == 66306
-    assert result["status-code"] == 0
+
     assert result["unsupported-attributes"] == []
-    assert result["version"] == (2, 0)
+
+    assert result["data"] == b""
 
 
 def test_parse_kyocera_ecosys_m2540dn():
@@ -564,13 +570,15 @@ def test_parse_kyocera_ecosys_m2540dn():
     assert result["version"] == (2, 0)
     assert result["status-code"] == IppStatus.OK_IGNORED_OR_SUBSTITUTED
     assert result["request-id"] == 47131
+
     assert result["operation-attributes"] == {
         "attributes-charset": "utf-8",
         "attributes-natural-language": "en-us",
     }
-    assert result["jobs"] == []
-    assert result["printers"]
 
+    assert result["jobs"] == []
+
+    assert result["printers"]
     assert result["printers"][0] == {
         "printer-name": "mfu00-0365",
         "printer-location": "8409",
@@ -607,6 +615,7 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
     assert result["version"] == (2, 0)
     assert result["status-code"] == IppStatus.OK
     assert result["request-id"] == 92255
+
     assert result["operation-attributes"] == {
         "attributes-charset": "utf-8",
         "attributes-natural-language": "en-us",
@@ -652,4 +661,5 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
     }
 
     assert result["unsupported-attributes"] == []
+
     assert result["data"] == b""
