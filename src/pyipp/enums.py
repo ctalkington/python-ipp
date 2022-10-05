@@ -270,6 +270,30 @@ class IppPrinterState(IntEnum):
     STOPPED = 0x0005
 
 
+class IppFinishing(IntEnum):
+    """Represent the ENUMs of the finishing attribute."""
+
+    NONE = 0x0003
+    STAPLE = 0x0004
+    PUNCH = 0x0005
+    COVER = 0x0006
+    BIND = 0x0007
+    SADDLE_STITCH = 0x0008
+    EDGE_STITCH = 0x0009
+    STAPLE_TOP_LEFT = 0x0020
+    STAPLE_BOTTOM_LEFT = 0x0021
+    STAPLE_TOP_RIGHT = 0x0022
+    STAPLE_BOTTOM_RIGHT = 0x0023
+    EDGE_STITCH_LEFT = 0x0024
+    EDGE_STITCH_TOP = 0x0025
+    EDGE_STITCH_RIGHT = 0x0026
+    EDGE_STITCH_BOTTOM = 0x0027
+    STAPLE_DUAL_LEFT = 0X0028
+    STAPLE_DUAL_TOP = 0x0029
+    STAPLE_DUAL_RIGHT = 0x0030
+    STAPLE_DUAL_BOTTOM = 0x0031
+
+
 class IppPrintQuality(IntEnum):
     """Represent the ENUMs of the print-quality attribute."""
 
@@ -289,6 +313,7 @@ class IppOrientationRequested(IntEnum):
 
 ATTRIBUTE_ENUM_MAP = {
     "document-state": IppDocumentState,
+    "finishing": IppFinishing,
     "job-state": IppJobState,
     "orientation-requested": IppOrientationRequested,
     "printer-state": IppPrinterState,
