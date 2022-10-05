@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import logging
 import struct
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from .enums import IppDocumentState, IppJobState, IppPrinterState, IppStatus, IppTag
+from .enums import ATTRIBUTE_ENUM_MAP, IppTag
+from .exceptions import IPPParseError
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -67,15 +69,12 @@ def parse_attribute(data: bytes, offset: int):
     if attribute["tag"] in (IppTag.ENUM.value, IppTag.INTEGER.value):
         attribute["value"] = struct.unpack_from(">i", data, offset)[0]
 
-        if attribute["tag"] == IppTag.ENUM.value:
-            if attribute["name"] == "job-state":
-                attribute["value"] = IppJobState(attribute["value"])
-            elif attribute["name"] == "printer-state":
-                attribute["value"] = IppPrinterState(attribute["value"])
-            elif attribute["name"] == "document-state":
-                attribute["value"] = IppDocumentState(attribute["value"])
-            elif attribute["name"] == "status-code":
-                attribute["value"] = IppStatus(attribute["value"])
+        if (
+            attribute["tag"] == IppTag.ENUM.value
+            and attribute["name"] in ATTRIBUTE_ENUM_MAP
+        ):
+            enum_class = ATTRIBUTE_ENUM_MAP[attribute["name"]]
+            attribute["value"] = enum_class(attribute["value"])
 
         offset += 4
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
@@ -84,9 +83,35 @@ def parse_attribute(data: bytes, offset: int):
         offset += 1
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.DATE.value:
-        attribute["value"] = struct.unpack_from(
-            ">" + "b" * attribute["value-length"], data, offset
-        )[0]
+        if attribute["value-length"] != 11:
+            raise IPPParseError(f'Invalid DATE size {attribute["value-length"]}')
+
+        raw_date = dict(
+            zip(
+                (
+                    "year",
+                    "month",
+                    "day",
+                    "hour",
+                    "minute",
+                    "second",
+                    "decisecond",
+                    "tz_dir",
+                    "tz_hour",
+                    "tz_minute",
+                ),
+                struct.unpack_from(">hbbbbbbcbb", data, offset),
+            )
+        )
+        raw_date["microsecond"] = raw_date.pop("decisecond") * 100_000
+        raw_date["tzinfo"] = timezone(
+            {b"+": 1, b"-": -1}[raw_date.pop("tz_dir")]
+            * timedelta(
+                hours=raw_date.pop("tz_hour"), minutes=raw_date.pop("tz_minute")
+            )
+        )
+
+        attribute["value"] = datetime(**raw_date)
         offset += attribute["value-length"]
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
