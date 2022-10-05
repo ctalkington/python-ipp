@@ -1,12 +1,5 @@
 """Attribute Tags for IPP."""
-from .enums import (
-    IppDocumentState,
-    IppJobState,
-    IppOrientationRequested,
-    IppPrinterState,
-    IppStatus,
-    IppTag,
-)
+from .enums import IppTag
 
 ATTRIBUTE_TAG_MAP = {
     "attributes-charset": IppTag.CHARSET,
