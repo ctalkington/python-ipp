@@ -6,6 +6,7 @@ from pyipp.enums import (
     IppOperation,
     IppOrientationRequested,
     IppPrinterState,
+    IppPrintQuality,
     IppStatus,
 )
 
@@ -651,7 +652,7 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "output-bin": "top",
         "print-color-mode": "monochrome",
         "print-content-optimize": "auto",
-        "print-quality": 4,
+        "print-quality": IppPrintQuality.NORMAL,
         "print-scaling": "auto",
         "printer-resolution": (600, 600, 3),
         "sides": "one-sided",
