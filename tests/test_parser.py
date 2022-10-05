@@ -2,6 +2,7 @@
 from pyipp import parser
 from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
 from pyipp.enums import (
+    IppFinishing,
     IppJobState,
     IppOperation,
     IppOrientationRequested,
@@ -633,7 +634,7 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "document-format-version-supplied": "1.4",
         "document-name-supplied": "doc",
         "feed-orientation": "short-edge-first",
-        "finishings": 3,
+        "finishings": IppFinishing.STAPLE,
         "job-id": 1000,
         "job-impressions": "",
         "job-impressions-completed": 3,
