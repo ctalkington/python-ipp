@@ -41,7 +41,7 @@ ATTRIBUTE_TAG_MAP = {
     "document-state": IppTag.ENUM,
     "device-uri": IppTag.URI,
     "ipp-attribute-fidelity": IppTag.BOOLEAN,
-    "finishing": IppTag.ENUM,
+    "finishings": IppTag.ENUM,
     "orientation-requested": IppTag.ENUM,
     "print-quality": IppTag.ENUM,
 }

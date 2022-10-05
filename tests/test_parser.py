@@ -1,4 +1,6 @@
 """Tests for Parser."""
+from datetime import datetime, timezone
+
 from pyipp import parser
 from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
 from pyipp.enums import (
@@ -480,7 +482,7 @@ def test_parse_epson_xp6000():
         "printer-alert-description": "feed roller needed soon",
         "printer-config-change-date-time": "",
         "printer-config-change-time": 25,
-        "printer-current-time": 7,
+        "printer-current-time": datetime(2022, 10, 4, 2, 21, 58, tzinfo=timezone.utc),
         "printer-device-id": "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;",
         "printer-dns-sd-name": "EPSON XP-6000 Series",
         "printer-firmware-name": "Firmware",
@@ -515,7 +517,9 @@ def test_parse_epson_xp6000():
             (5760, 1440, 3),
         ],
         "printer-state": IppPrinterState.IDLE,
-        "printer-state-change-date-time": 7,
+        "printer-state-change-date-time": datetime(
+            2022, 9, 27, 3, 47, 19, tzinfo=timezone.utc
+        ),
         "printer-state-change-time": 184119,
         "printer-state-reasons": "marker-supply-low-warning",
         "printer-strings-languages-supported": ["en", "es-mx", "pt", "fr"],
@@ -627,14 +631,16 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
     assert result["jobs"][0] == {
         "compression-supplied": "none",
         "copies": 1,
-        "date-time-at-completed": 7,
-        "date-time-at-creation": 7,
-        "date-time-at-processing": 7,
+        "date-time-at-completed": datetime(2021, 9, 28, 9, 37, 35, tzinfo=timezone.utc),
+        "date-time-at-creation": datetime(2021, 9, 28, 9, 37, 15, tzinfo=timezone.utc),
+        "date-time-at-processing": datetime(
+            2021, 9, 28, 9, 37, 16, tzinfo=timezone.utc
+        ),
         "document-format-supplied": "image/urf",
         "document-format-version-supplied": "1.4",
         "document-name-supplied": "doc",
         "feed-orientation": "short-edge-first",
-        "finishings": IppFinishing.STAPLE,
+        "finishings": IppFinishing.NONE,
         "job-id": 1000,
         "job-impressions": "",
         "job-impressions-completed": 3,

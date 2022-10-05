@@ -271,7 +271,7 @@ class IppPrinterState(IntEnum):
 
 
 class IppFinishing(IntEnum):
-    """Represent the ENUMs of the finishing attribute."""
+    """Represent the ENUMs of the finishings attribute."""
 
     NONE = 0x0003
     STAPLE = 0x0004
@@ -288,7 +288,7 @@ class IppFinishing(IntEnum):
     EDGE_STITCH_TOP = 0x0025
     EDGE_STITCH_RIGHT = 0x0026
     EDGE_STITCH_BOTTOM = 0x0027
-    STAPLE_DUAL_LEFT = 0X0028
+    STAPLE_DUAL_LEFT = 0x0028
     STAPLE_DUAL_TOP = 0x0029
     STAPLE_DUAL_RIGHT = 0x0030
     STAPLE_DUAL_BOTTOM = 0x0031
