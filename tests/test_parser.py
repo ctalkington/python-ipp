@@ -562,7 +562,7 @@ def test_parse_kyocera_ecosys_m2540dn():
     assert result
 
     assert result["version"] == (2, 0)
-    assert result["status-code"] == IppStatus.OK
+    assert result["status-code"] == IppStatus.OK_IGNORED_OR_SUBSTITUTED
     assert result["request-id"] == 47131
     assert result["operation-attributes"] == {
         "attributes-charset": "utf-8",
@@ -605,7 +605,7 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
 
     assert result
     assert result["version"] == (2, 0)
-    assert result["status-code"] == IppStatus.IDLE
+    assert result["status-code"] == IppStatus.OK
     assert result["request-id"] == 92255
     assert result["operation-attributes"] == {
         "attributes-charset": "utf-8",
