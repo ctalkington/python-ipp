@@ -1,5 +1,12 @@
 """Attribute Tags for IPP."""
-from .enums import IppTag
+from .enums import (
+    IppDocumentState,
+    IppJobState,
+    IppOrientationRequested,
+    IppPrinterState,
+    IppStatus,
+    IppTag,
+)
 
 ATTRIBUTE_TAG_MAP = {
     "attributes-charset": IppTag.CHARSET,
@@ -42,4 +49,12 @@ ATTRIBUTE_TAG_MAP = {
     "device-uri": IppTag.URI,
     "ipp-attribute-fidelity": IppTag.BOOLEAN,
     "orientation-requested": IppTag.ENUM,
+}
+
+ATTRIBUTE_ENUM_MAP = {
+    "document-state": IppDocumentState,
+    "job-state": IppJobState,
+    "orientation-requested": IppOrientationRequested,
+    "printer-state": IppPrinterState,
+    "status-code": IppStatus,
 }

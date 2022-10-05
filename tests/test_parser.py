@@ -1,7 +1,13 @@
 """Tests for Parser."""
 from pyipp import parser
 from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
-from pyipp.enums import IppOperation, IppPrinterState
+from pyipp.enums import (
+    IppJobState,
+    IppOperation,
+    IppOrientationRequested,
+    IppPrinterState,
+    IppStatus,
+)
 
 from . import load_fixture_binary
 
@@ -555,47 +561,91 @@ def test_parse_kyocera_ecosys_m2540dn():
     result = parser.parse(response)
     assert result
 
-    assert result == {
-        "version": (2, 0),
-        "status-code": 1,
-        "request-id": 47131,
-        "operation-attributes": {
-            "attributes-charset": "utf-8",
-            "attributes-natural-language": "en-us",
-        },
-        "jobs": [],
-        "printers": [
-            {
-                "printer-name": "mfu00-0365",
-                "printer-location": "8409",
-                "printer-info": "mfu00-0365",
-                "printer-make-and-model": "ECOSYS M2540dn",
-                "printer-state": IppPrinterState.IDLE,
-                "printer-state-message": "Sleeping...  ",
-                "printer-uri-supported": [
-                    "ipps://10.104.12.95:443/ipp/print",
-                    "ipp://10.104.12.95:631/ipp/print",
-                ],
-            }
-        ],
-        "unsupported-attributes": [
-            {
-                "requested-attributes": [
-                    "printer-type",
-                    "printer-state-reason",
-                    "device-uri",
-                    "printer-is-shared",
-                ]
-            }
-        ],
-        "data": b"",
+    assert result["version"] == (2, 0)
+    assert result["status-code"] == IppStatus.OK
+    assert result["request-id"] == 47131
+    assert result["operation-attributes"] == {
+        "attributes-charset": "utf-8",
+        "attributes-natural-language": "en-us",
     }
+    assert result["jobs"] == []
+    assert result["printers"]
+
+    assert result["printers"][0] == {
+        "printer-name": "mfu00-0365",
+        "printer-location": "8409",
+        "printer-info": "mfu00-0365",
+        "printer-make-and-model": "ECOSYS M2540dn",
+        "printer-state": IppPrinterState.IDLE,
+        "printer-state-message": "Sleeping...  ",
+        "printer-uri-supported": [
+            "ipps://10.104.12.95:443/ipp/print",
+            "ipp://10.104.12.95:631/ipp/print",
+        ],
+    }
+
+    assert result["unsupported-attributes"] == [
+        {
+            "requested-attributes": [
+                "printer-type",
+                "printer-state-reason",
+                "device-uri",
+                "printer-is-shared",
+            ]
+        }
+    ]
+
+    assert result["data"] == b""
 
 
 def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
     """Test the parse method against get-jobs response from Kyocera Ecosys M2540DN."""
-    response = load_fixture_binary('get-jobs-kyocera-ecosys-m2540dn-000.bin')
-    result = parser.parse(blob)
-    assert result
+    response = load_fixture_binary("get-jobs-kyocera-ecosys-m2540dn-000.bin")
+    result = parser.parse(response)
 
-    assert result == {}
+    assert result
+    assert result["data"] == b""
+
+    assert result["jobs"]
+    assert result["jobs"][0] == {
+        "compression-supplied": "none",
+        "copies": 1,
+        "date-time-at-completed": 7,
+        "date-time-at-creation": 7,
+        "date-time-at-processing": 7,
+        "document-format-supplied": "image/urf",
+        "document-format-version-supplied": "1.4",
+        "document-name-supplied": "doc",
+        "feed-orientation": "short-edge-first",
+        "finishings": 3,
+        "job-id": 1000,
+        "job-impressions": "",
+        "job-impressions-completed": 3,
+        "job-name": "Microsoft Word - ТСД",
+        "job-originating-user-name": "CORP\\OFFICE20708$",
+        "job-printer-up-time": 179727,
+        "job-printer-uri": "ipps://10.104.12.95:443/ipp/print",
+        "job-priority": 50,
+        "job-state": IppJobState.COMPLETED,
+        "job-state-message": "completed : job-completed-successfully",
+        "job-state-reasons": "job-completed-successfully",
+        "job-uri": "ipps://mfu00-0365:443/jobs/1000",
+        "job-uuid": "urn:uuid:4509a320-00a2-0079-00c9-00557cc48011",
+        "multiple-document-handling": "separate-documents-collated-copies",
+        "orientation-requested": IppOrientationRequested.PORTRAIT,
+        "output-bin": "top",
+        "print-color-mode": "monochrome",
+        "print-content-optimize": "auto",
+        "print-quality": 4,
+        "print-scaling": "auto",
+        "printer-resolution": (600, 600, 3),
+        "sides": "one-sided",
+        "time-at-completed": 1632821855,
+        "time-at-creation": 1632821835,
+        "time-at-processing": 1632821836,
+    }
+
+    assert result["request-id"] == 92255
+    assert result["status-code"] == 0
+    assert result["unsupported-attributes"] == []
+    assert result["version"] == (2, 0)

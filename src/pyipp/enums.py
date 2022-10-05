@@ -268,3 +268,12 @@ class IppPrinterState(IntEnum):
     IDLE = 0x0003
     PROCESSING = 0x0004
     STOPPED = 0x0005
+
+
+class IppOrientationRequested(IntEnum):
+    """Represent the ENUMs of the orientation-requested attribute."""
+
+    PORTRAIT = 0x0003
+    LANDSCAPE = 0x0004
+    REVERSE_LANDSCAPE = 0x0005
+    REVERSE_PORTRAIT = 0x0006

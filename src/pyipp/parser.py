@@ -6,7 +6,8 @@ import logging
 import struct
 from typing import Any
 
-from .enums import IppDocumentState, IppJobState, IppPrinterState, IppStatus, IppTag
+from .enums import IppTag
+from .tags import ATTRIBUTE_ENUM_MAP
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -67,15 +68,12 @@ def parse_attribute(data: bytes, offset: int):
     if attribute["tag"] in (IppTag.ENUM.value, IppTag.INTEGER.value):
         attribute["value"] = struct.unpack_from(">i", data, offset)[0]
 
-        if attribute["tag"] == IppTag.ENUM.value:
-            if attribute["name"] == "job-state":
-                attribute["value"] = IppJobState(attribute["value"])
-            elif attribute["name"] == "printer-state":
-                attribute["value"] = IppPrinterState(attribute["value"])
-            elif attribute["name"] == "document-state":
-                attribute["value"] = IppDocumentState(attribute["value"])
-            elif attribute["name"] == "status-code":
-                attribute["value"] = IppStatus(attribute["value"])
+        if (
+            attribute["tag"] == IppTag.ENUM.value
+            and attribute["name"] in ATTRIBUTE_ENUM_MAP
+        ):
+            enum_class = ATTRIBUTE_ENUM_MAP[attribute["name"]]
+            attribute["value"] = enum_class(attribute["value"])
 
         offset += 4
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
