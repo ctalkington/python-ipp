@@ -270,6 +270,14 @@ class IppPrinterState(IntEnum):
     STOPPED = 0x0005
 
 
+class IppPrintQuality(IntEnum):
+    """Represent the ENUMs of the print-quality attribute."""
+
+    DRAFT = 0x0003
+    NORMAL = 0x0004
+    HIGH = 0x0005
+
+
 class IppOrientationRequested(IntEnum):
     """Represent the ENUMs of the orientation-requested attribute."""
 
@@ -284,5 +292,6 @@ ATTRIBUTE_ENUM_MAP = {
     "job-state": IppJobState,
     "orientation-requested": IppOrientationRequested,
     "printer-state": IppPrinterState,
+    "print-quality": IppPrintQuality,
     "status-code": IppStatus,
 }
