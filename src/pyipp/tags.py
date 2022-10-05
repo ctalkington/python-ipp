@@ -50,11 +50,3 @@ ATTRIBUTE_TAG_MAP = {
     "ipp-attribute-fidelity": IppTag.BOOLEAN,
     "orientation-requested": IppTag.ENUM,
 }
-
-ATTRIBUTE_ENUM_MAP = {
-    "document-state": IppDocumentState,
-    "job-state": IppJobState,
-    "orientation-requested": IppOrientationRequested,
-    "printer-state": IppPrinterState,
-    "status-code": IppStatus,
-}
