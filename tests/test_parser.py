@@ -604,7 +604,13 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
     result = parser.parse(response)
 
     assert result
-    assert result["data"] == b""
+    assert result["version"] == (2, 0)
+    assert result["status-code"] == IppStatus.IDLE
+    assert result["request-id"] == 92255
+    assert result["operation-attributes"] == {
+        "attributes-charset": "utf-8",
+        "attributes-natural-language": "en-us",
+    }
 
     assert result["jobs"]
     assert result["jobs"][0] == {
@@ -645,7 +651,5 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "time-at-processing": 1632821836,
     }
 
-    assert result["request-id"] == 92255
-    assert result["status-code"] == 0
     assert result["unsupported-attributes"] == []
-    assert result["version"] == (2, 0)
+    assert result["data"] == b""
