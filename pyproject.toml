@@ -60,7 +60,7 @@ pytest-asyncio = "^0.18.1"
 pytest-cov = "^3.0.0"
 pytest-freezegun = "^0.4.2"
 pyupgrade = "^2.34.0"
-safety = "^1.10.3"
+safety = "^2.3.1"
 vulture = "^2.5"
 yamllint = "^1.26.3"
 
