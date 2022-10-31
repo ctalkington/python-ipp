@@ -20,6 +20,7 @@ DEFAULT_JOB_ATTRIBUTES = [
 ]
 
 DEFAULT_PRINTER_ATTRIBUTES = [
+    "printer-device-id",
     "printer-name",
     "printer-type",
     "printer-location",
