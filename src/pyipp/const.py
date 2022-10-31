@@ -20,6 +20,7 @@ DEFAULT_JOB_ATTRIBUTES = [
 ]
 
 DEFAULT_PRINTER_ATTRIBUTES = [
+    "printer-device-id",
     "printer-name",
     "printer-type",
     "printer-location",
@@ -28,10 +29,19 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "printer-state",
     "printer-state-message",
     "printer-state-reason",
+    "printer-supply",
+    "printer-up-time",
     "printer-uri-supported",
     "device-uri",
     "printer-is-shared",
     "printer-more-info",
+    "printer-firmware-string-version",
+    "marker-colors",
+    "marker-high-levels",
+    "marker-levels",
+    "marker-low-levels",
+    "marker-names",
+    "marker-types",
 ]
 
 DEFAULT_PORT = 631
