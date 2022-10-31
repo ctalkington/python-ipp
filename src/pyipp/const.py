@@ -32,6 +32,12 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "device-uri",
     "printer-is-shared",
     "printer-more-info",
+    "marker-colors",
+    "marker-high-levels",
+    "marker-levels",
+    "marker-low-levels",
+    "marker-names",
+    "marker-types",
 ]
 
 DEFAULT_PORT = 631
