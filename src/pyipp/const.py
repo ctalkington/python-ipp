@@ -29,6 +29,7 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "printer-state",
     "printer-state-message",
     "printer-state-reason",
+    "printer-supply",
     "printer-up-time",
     "printer-uri-supported",
     "device-uri",
