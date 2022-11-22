@@ -856,7 +856,7 @@ python-versions = ">=3.5"
 
 [[package]]
 name = "safety"
-version = "2.3.1"
+version = "2.3.2"
 description = "Checks installed dependencies for known vulnerabilities and licenses."
 category = "dev"
 optional = false
@@ -1039,7 +1039,7 @@ multidict = ">=4.0"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "e824722fd9f61ed36d02c9c15f710e28cba1722ad0299d6c7283fb39c505b188"
+content-hash = "1dd6d4d7cb19c623030829dbd73326f490f8fce2bf92b7ff8075ba9ec79ada69"
 
 [metadata.files]
 aiohttp = [
@@ -1709,8 +1709,8 @@ requests = [
     {file = "ruamel.yaml.clib-0.2.7.tar.gz", hash = "sha256:1f08fd5a2bea9c4180db71678e850b995d2a5f4537be0e94557668cf0f5f9497"},
 ]
 safety = [
-    {file = "safety-2.3.1-py3-none-any.whl", hash = "sha256:8f098d12b607db2756886280e85c28ece8db1bba4f45fc5f981f4663217bd619"},
-    {file = "safety-2.3.1.tar.gz", hash = "sha256:6e6fcb7d4e8321098cf289f59b65051cafd3467f089c6e57c9f894ae32c23b71"},
+    {file = "safety-2.3.2-py3-none-any.whl", hash = "sha256:d824cccd76fcf451c745d0a280dabc5176903878a68b9b9a2ec7dbfc2f8d03ff"},
+    {file = "safety-2.3.2.tar.gz", hash = "sha256:7ed8d71f5ba7590d1c9abfa22c72a64de389ae2e07c6732b1c90955a168c55bf"},
 ]
 setuptools = [
     {file = "setuptools-65.5.0-py3-none-any.whl", hash = "sha256:f62ea9da9ed6289bfe868cd6845968a2c854d1427f8548d52cae02a42b4f0356"},
