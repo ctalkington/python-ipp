@@ -257,7 +257,7 @@ class Printer:
             for _k in range(ulen):
                 auth.append(None)
                 security.append(None)
-                
+
         elif isinstance(data.get("printer-uri-supported"), str):
             _uris = [data["printer-uri-supported"]]
             ulen = 1
@@ -270,14 +270,22 @@ class Printer:
                 if k < ulen:
                     auth[k] = list_value if list_value != "none" else None
         elif isinstance(data.get("uri-authentication-supported"), str) and ulen == 1:
-            auth[0] = data["uri-authentication-supported"] if data["uri-authentication-supported"] != "none" else None
+            auth[0] = (
+                data["uri-authentication-supported"]
+                if data["uri-authentication-supported"] != "none"
+                else None
+            )
 
         if isinstance(data.get("uri-security-supported"), list):
             for k, list_value in enumerate(data["uri-security-supported"]):
                 if k < ulen:
                     security[k] = list_value if list_value != "none" else None
         elif isinstance(data.get("uri-security-supported"), str) and ulen == 1:
-            security[0] = data["uri-security-supported"] if data["uri-security-supported"] != "none" else None
+            security[0] = (
+                data["uri-security-supported"]
+                if data["uri-security-supported"] != "none"
+                else None
+            )
 
         if isinstance(_uris, list) and ulen > 0:
             uris = [
