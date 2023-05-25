@@ -213,7 +213,7 @@ class Printer:
             for index, list_value in enumerate(data["marker-low-levels"]):
                 if index < mlen:
                     marker_lows[index] = list_value
-        elif isinstance(data.get("marker--low-levels"), int) and mlen == 1:
+        elif isinstance(data.get("marker-low-levels"), int) and mlen == 1:
             marker_lows[0] = data.get("marker-low-levels")
 
         if isinstance(data.get("marker-types"), list):
