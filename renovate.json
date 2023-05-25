@@ -3,7 +3,7 @@
   "extends": [
     "config:base",
     "schedule:daily"
-  ]
+  ],
   "timezone": "America/Chicago",
   "labels": ["dependencies"],
   "lockFileMaintenance": {
