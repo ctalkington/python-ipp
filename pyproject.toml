@@ -1,0 +1,173 @@
+[tool.poetry]
+name = "pyipp"
+description = "Asynchronous Python client for Internet Printing Protocol (IPP)"
+authors = ["Chris Talkington <chris@talkingtontech.com>"]
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Framework :: AsyncIO",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3",
+  "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["ipp", "api", "async", "client", "printer"]
+documentation = "https://github.com/ctalkington/python-ipp"
+homepage = "https://github.com/ctalkington/python-ipp"
+license = "MIT"
+maintainers = ["Chris Talkington <chris@talkingtontech.com>"]
+packages = [
+  {include = "pyipp", from = "src"},
+]
+readme = "README.md"
+repository = "https://github.com/ctalkington/python-ipp"
+version = "0.0.0"
+
+[tool.poetry.dependencies]
+aiohttp = ">=3.0.0"
+awesomeversion = ">=21.10.1"
+backoff = ">=2.2.0"
+deepmerge = ">=0.1.0"
+python = "^3.9"
+yarl = ">=1.6.0"
+
+[tool.poetry.dev-dependencies]
+aresponses = "2.1.6"
+black = "23.1.0"
+blacken-docs = "1.13.0"
+codespell = "2.2.4"
+covdefaults = "2.3.0"
+coverage = {version = "7.2.2", extras = ["toml"]}
+mypy = "1.1.1"
+pre-commit = "3.2.0"
+pre-commit-hooks = "4.4.0"
+pylint = "2.17.0"
+pytest = "7.2.2"
+pytest-asyncio = "0.21.0"
+pytest-cov = "4.0.0"
+ruff = "0.0.257"
+safety = "2.4.0b1"
+types-cachetools = "^5.3.0"
+yamllint = "1.32.0"
+
+[tool.poetry.urls]
+"Bug Tracker" = "https://github.com/ctalkington/python-ipp/issues"
+Changelog = "https://github.com/ctalkington/python-ipp/releases"
+
+[tool.coverage.paths]
+source = ["src"]
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 53
+
+[tool.coverage.run]
+plugins = ["covdefaults"]
+source = ["pyipp"]
+
+[tool.mypy]
+# Specify the target platform details in config, so your developers are
+# free to run mypy on Windows, Linux, or macOS and get consistent
+# results.
+platform = "linux"
+python_version = 3.9
+
+# show error messages from unrelated files
+follow_imports = "normal"
+
+# suppress errors about unsatisfied imports
+ignore_missing_imports = true
+
+# be strict
+#check_untyped_defs = true
+#disallow_any_generics = true
+#disallow_incomplete_defs = true
+#disallow_subclassing_any = true
+#disallow_untyped_calls = true
+#disallow_untyped_defs = true
+#disallow_untyped_decorators = true
+#no_implicit_optional = true
+#no_implicit_reexport = true
+#strict_optional = true
+#warn_incomplete_stub = true
+#warn_no_return = true
+#warn_redundant_casts = true
+#warn_return_any = true
+#warn_unused_configs = true
+#warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+follow_imports = "skip"
+module = "mypy-aiohttp.*"
+
+[tool.pylint.MASTER]
+extension-pkg-whitelist = [
+  "pydantic",
+]
+ignore = [
+  "examples",
+  "tests",
+]
+
+[tool.pylint.BASIC]
+good-names = [
+  "_",
+  "ex",
+  "fp",
+  "i",
+  "id",
+  "j",
+  "k",
+  "on",
+  "Run",
+  "T",
+  "wv",
+]
+
+[tool.pylint."MESSAGES CONTROL"]
+disable = [
+  "too-few-public-methods",
+  "too-many-arguments",
+  "duplicate-code",
+  "format",
+  "unsubscriptable-object",
+]
+
+[tool.pylint.SIMILARITIES]
+ignore-imports = true
+
+[tool.pylint.FORMAT]
+max-line-length = 88
+
+[tool.pylint.DESIGN]
+max-attributes = 20
+
+[tool.pyright]
+include = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "--cov"
+asyncio_mode = "auto"
+
+[tool.ruff]
+select = ["ALL"]
+ignore = [
+  "ANN101", # Self... explanatory
+  "ANN401", # Opinionated warning on disallowing dynamically typed expressions
+  "D203", # Conflicts with other rules
+  "D213", # Conflicts with other rules
+  "D417", # False positives in some occasions
+  "PLR2004", # Just annoying, not really useful
+]
+
+[tool.ruff.flake8-pytest-style]
+mark-parentheses = false
+fixture-parentheses = false
+
+[tool.ruff.isort]
+known-first-party = ["pyipp"]
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]

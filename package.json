@@ -1,0 +1,14 @@
+{
+  "name": "python-ipp",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Asynchronous Python client for Internet Printing Protocol (IPP)",
+  "scripts": {
+    "prettier": "prettier --write **/*.{json,js,md,yml,yaml} *.{json,js,md,yml,yaml}"
+  },
+  "author": "Chris Talkington <chris@talkingtontech.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "prettier": "2.7.1"
+  }
+}
