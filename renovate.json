@@ -22,28 +22,23 @@
     },
     {
       "matchManagers": ["poetry"],
-      "matchDepTypes": ["dev"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     },
     {
       "matchManagers": ["npm", "nvm"],
       "addLabels": ["javascript"],
-      "stabilityDays": 3,
-      "rangeStrategy": "pin",
-      "automerge": true
+      "rangeStrategy": "pin"
     },
     {
-      "matchManagers": ["npm"],
+      "matchManagers": ["npm", "nvm"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true
     },
     {
       "matchManagers": ["github-actions"],
       "addLabels": ["github_actions"],
-      "stabilityDays": 3,
-      "rangeStrategy": "pin",
-      "pinDigests": true
+      "rangeStrategy": "pin"
     },
     {
       "matchManagers": ["github-actions"],
