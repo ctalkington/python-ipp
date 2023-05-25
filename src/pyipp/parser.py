@@ -46,7 +46,6 @@ def parse_attribute(data: bytes, offset: int):
     2 byte: Value Length -h
     N bytes: Value - direct access
     """
-
     _LOGGER.debug("Parsing Attribute at offset %s", offset)
 
     attribute = {"tag": struct.unpack_from(">b", data, offset)[0]}
@@ -101,14 +100,15 @@ def parse_attribute(data: bytes, offset: int):
                     "tz_minute",
                 ),
                 struct.unpack_from(">hbbbbbbcbb", data, offset),
-            )
+            ),
         )
         raw_date["microsecond"] = raw_date.pop("decisecond") * 100_000
         raw_date["tzinfo"] = timezone(
             {b"+": 1, b"-": -1}[raw_date.pop("tz_dir")]
             * timedelta(
-                hours=raw_date.pop("tz_hour"), minutes=raw_date.pop("tz_minute")
-            )
+                hours=raw_date.pop("tz_hour"),
+                minutes=raw_date.pop("tz_minute"),
+            ),
         )
 
         attribute["value"] = datetime(**raw_date)
@@ -174,7 +174,6 @@ def parse(raw_data: bytes, contains_data=False):
 
     1 byte: Attribute End Byte (\0x03)
     """
-
     data: dict[str, Any] = {}
     offset = 0
 

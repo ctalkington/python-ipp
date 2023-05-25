@@ -63,7 +63,7 @@ class IPP:
         self.verify_ssl = verify_ssl
         self.user_agent = user_agent
 
-        if host.startswith("ipp://") or host.startswith("ipps://"):
+        if host.startswith(("ipp://", "ipps://")):
             self.printer_uri = host
             printer_uri = URL(host)
 
@@ -93,7 +93,10 @@ class IPP:
 
         method = "POST"
         url = URL.build(
-            scheme=scheme, host=self.host, port=self.port, path=self.base_path
+            scheme=scheme,
+            host=self.host,
+            port=self.port,
+            path=self.base_path,
         ).join(URL(uri))
 
         auth = None
@@ -126,11 +129,11 @@ class IPP:
                 )
         except asyncio.TimeoutError as exc:
             raise IPPConnectionError(
-                "Timeout occurred while connecting to IPP server."
+                "Timeout occurred while connecting to IPP server.",
             ) from exc
         except (aiohttp.ClientError, SocketGIAError) as exc:
             raise IPPConnectionError(
-                "Error occurred while communicating with IPP server."
+                "Error occurred while communicating with IPP server.",
             ) from exc
 
         if response.status == 426:
@@ -158,7 +161,10 @@ class IPP:
         scheme = "ipps" if self.tls else "ipp"
 
         return URL.build(
-            scheme=scheme, host=self.host, port=self.port, path=self.base_path
+            scheme=scheme,
+            host=self.host,
+            port=self.port,
+            path=self.base_path,
         ).human_repr()
 
     def _message(self, operation: IppOperation, msg: dict[str, Any]) -> dict[str, Any]:
@@ -178,7 +184,9 @@ class IPP:
         return always_merger.merge(base, msg)
 
     async def execute(
-        self, operation: IppOperation, message: dict[str, Any]
+        self,
+        operation: IppOperation,
+        message: dict[str, Any],
     ) -> dict[str, Any]:
         """Send a request message to the server."""
         message = self._message(operation, message)

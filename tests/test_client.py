@@ -148,6 +148,7 @@ async def test_request_tls(aresponses):
 @pytest.mark.asyncio
 async def test_timeout(aresponses):
     """Test request timeout from the IPP server."""
+
     # Faking a timeout by sleeping
     async def response_handler(_):
         await asyncio.sleep(2)
