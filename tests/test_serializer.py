@@ -9,12 +9,14 @@ from . import load_fixture_binary
 def test_construct_attibute_values() -> None:
     """Test the __construct_attibute_values method."""
     result = serializer.construct_attibute_values(
-        IppTag.INTEGER, IppOperation.GET_PRINTER_ATTRIBUTES
+        IppTag.INTEGER,
+        IppOperation.GET_PRINTER_ATTRIBUTES,
     )
     assert result == b"\x00\x04\x00\x00\x00\x0b"
 
     result = serializer.construct_attibute_values(
-        IppTag.ENUM, IppOperation.GET_PRINTER_ATTRIBUTES
+        IppTag.ENUM,
+        IppOperation.GET_PRINTER_ATTRIBUTES,
     )
     assert result == b"\x00\x04\x00\x00\x00\x0b"
 
@@ -44,7 +46,7 @@ def test_encode_dict() -> None:
                 "printer-uri": "ipp://printer.example.com:361/ipp/print",
                 "requesting-user-name": "PythonIPP",
             },
-        }
+        },
     )
 
     assert result == load_fixture_binary("get-printer-attributes-request-000.bin")

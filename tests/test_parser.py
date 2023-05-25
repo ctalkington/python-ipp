@@ -16,7 +16,7 @@ from pyipp.enums import (
 from . import load_fixture_binary
 
 RESPONSE_GET_PRINTER_ATTRIBUTES = load_fixture_binary(
-    "get-printer-attributes-response-000.bin"
+    "get-printer-attributes-response-000.bin",
 )
 
 MOCK_IEEE1284_DEVICE_ID = "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;"  # noqa
@@ -518,7 +518,13 @@ def test_parse_epson_xp6000():
         ],
         "printer-state": IppPrinterState.IDLE,
         "printer-state-change-date-time": datetime(
-            2022, 9, 27, 3, 47, 19, tzinfo=timezone.utc
+            2022,
+            9,
+            27,
+            3,
+            47,
+            19,
+            tzinfo=timezone.utc,
         ),
         "printer-state-change-time": 184119,
         "printer-state-reasons": "marker-supply-low-warning",
@@ -567,7 +573,7 @@ def test_parse_epson_xp6000():
 def test_parse_kyocera_ecosys_m2540dn():
     """Test the parse method against response from Kyocera Ecosys M2540DN."""
     response = load_fixture_binary(
-        "get-printer-attributes-kyocera-ecosys-m2540dn-001.bin"
+        "get-printer-attributes-kyocera-ecosys-m2540dn-001.bin",
     )
 
     result = parser.parse(response)
@@ -605,8 +611,8 @@ def test_parse_kyocera_ecosys_m2540dn():
                 "printer-state-reason",
                 "device-uri",
                 "printer-is-shared",
-            ]
-        }
+            ],
+        },
     ]
 
     assert result["data"] == b""
@@ -634,7 +640,13 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "date-time-at-completed": datetime(2021, 9, 28, 9, 37, 35, tzinfo=timezone.utc),
         "date-time-at-creation": datetime(2021, 9, 28, 9, 37, 15, tzinfo=timezone.utc),
         "date-time-at-processing": datetime(
-            2021, 9, 28, 9, 37, 16, tzinfo=timezone.utc
+            2021,
+            9,
+            28,
+            9,
+            37,
+            16,
+            tzinfo=timezone.utc,
         ),
         "document-format-supplied": "image/urf",
         "document-format-version-supplied": "1.4",
@@ -644,7 +656,7 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "job-id": 1000,
         "job-impressions": "",
         "job-impressions-completed": 3,
-        "job-name": "Microsoft Word - ТСД",
+        "job-name": "Microsoft Word - TCД",
         "job-originating-user-name": "CORP\\OFFICE20708$",
         "job-printer-up-time": 179727,
         "job-printer-uri": "ipps://10.104.12.95:443/ipp/print",
