@@ -19,7 +19,7 @@ RESPONSE_GET_PRINTER_ATTRIBUTES = load_fixture_binary(
     "get-printer-attributes-response-000.bin",
 )
 
-MOCK_IEEE1284_DEVICE_ID = "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;"  # noqa
+MOCK_IEEE1284_DEVICE_ID = "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;"  # noqa:E501
 
 
 def test_parse() -> None:
@@ -119,7 +119,7 @@ def test_parse_brother_mfcj5320dw() -> None:
     assert printer["printer-uuid"] == "urn:uuid:e3248000-80ce-11db-8000-30055ce13be2"
 
 
-def test_parse_epson_xp6000():
+def test_parse_epson_xp6000() -> None:
     """Test the parse method against response from Epson XP-6000 Series."""
     response = load_fixture_binary("get-printer-attributes-epsonxp6000.bin")
 
@@ -570,7 +570,7 @@ def test_parse_epson_xp6000():
     assert result["data"] == b""
 
 
-def test_parse_kyocera_ecosys_m2540dn():
+def test_parse_kyocera_ecosys_m2540dn() -> None:
     """Test the parse method against response from Kyocera Ecosys M2540DN."""
     response = load_fixture_binary(
         "get-printer-attributes-kyocera-ecosys-m2540dn-001.bin",
