@@ -2,6 +2,8 @@
 # pylint: disable=R0912,R0915
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 
 from pyipp import models, parser
@@ -79,6 +81,22 @@ async def test_info() -> None:  # noqa: PLR0915
     assert info.printer_name == ""
     assert info.manufacturer == "Unknown"
     assert info.model == "Unknown"
+
+
+@pytest.mark.asyncio
+async def test_state() -> None:
+    """Test State model."""
+    data: dict[str, Any] = {
+        "printer-state": 4,
+        "printer-state-reasons": "none",
+    }
+
+    state = models.State.from_dict(data)
+
+    assert state
+    assert state.printer_state == "printing"
+    assert state.reasons is None
+    assert state.message is None
 
 
 @pytest.mark.asyncio
