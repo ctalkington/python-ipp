@@ -19,7 +19,7 @@ RESPONSE_GET_PRINTER_ATTRIBUTES = load_fixture_binary(
     "get-printer-attributes-response-000.bin",
 )
 
-MOCK_IEEE1284_DEVICE_ID = "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;"  # noqa:E501
+MOCK_IEEE1284_DEVICE_ID = "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;"
 
 
 def test_parse() -> None:
@@ -656,7 +656,7 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "job-id": 1000,
         "job-impressions": "",
         "job-impressions-completed": 3,
-        "job-name": "Microsoft Word - ТСД",
+        "job-name": "Microsoft Word - ТСД",  # noqa: RUF001
         "job-originating-user-name": "CORP\\OFFICE20708$",
         "job-printer-up-time": 179727,
         "job-printer-uri": "ipps://10.104.12.95:443/ipp/print",

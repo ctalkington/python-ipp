@@ -2,11 +2,10 @@
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Mapping
 from importlib import metadata
-from socket import gaierror as SocketGIAError
-from struct import error as StructError
-from typing import Any
+from socket import gaierror
+from struct import error as structerror
+from typing import TYPE_CHECKING, Any
 
 import aiohttp
 import async_timeout
@@ -32,11 +31,14 @@ from .models import Printer
 from .parser import parse as parse_response
 from .serializer import encode_dict
 
+if TYPE_CHECKING:
+    from collections.abc import Mapping
+
 
 class IPP:
     """Main class for handling connections with IPP servers."""
 
-    def __init__(
+    def __init__(  # noqa: PLR0913
         self,
         host: str,
         base_path: str = "/ipp/print",
@@ -44,9 +46,9 @@ class IPP:
         port: int = 631,
         request_timeout: int = 8,
         session: aiohttp.client.ClientSession | None = None,
-        tls: bool = False,
+        tls: bool = False,  # noqa: FBT002, FBT001
         username: str | None = None,
-        verify_ssl: bool = False,
+        verify_ssl: bool = False,  # noqa: FBT002, FBT001
         user_agent: str | None = None,
     ) -> None:
         """Initialize connection with IPP server."""
@@ -87,7 +89,7 @@ class IPP:
         uri: str = "",
         data: Any | None = None,
         params: Mapping[str, str] | None = None,
-    ) -> Any:
+    ) -> bytes:
         """Handle a request to an IPP server."""
         scheme = "https" if self.tls else "http"
 
@@ -131,7 +133,7 @@ class IPP:
             raise IPPConnectionError(
                 "Timeout occurred while connecting to IPP server.",
             ) from exc
-        except (aiohttp.ClientError, SocketGIAError) as exc:
+        except (aiohttp.ClientError, gaierror) as exc:
             raise IPPConnectionError(
                 "Error occurred while communicating with IPP server.",
             ) from exc
@@ -147,7 +149,7 @@ class IPP:
             response.close()
 
             raise IPPResponseError(
-                f"HTTP {response.status}",
+                f"HTTP {response.status}",  # noqa: EM102
                 {
                     "content-type": response.headers.get("Content-Type"),
                     "message": content.decode("utf8"),
@@ -181,7 +183,7 @@ class IPP:
             },
         }
 
-        return always_merger.merge(base, msg)
+        return always_merger.merge(base, msg)  # type: ignore  # noqa: PGH003
 
     async def execute(
         self,
@@ -194,7 +196,7 @@ class IPP:
 
         try:
             parsed = parse_response(response)
-        except (StructError, Exception) as exc:  # disable=broad-except
+        except (structerror, Exception) as exc:  # disable=broad-except
             raise IPPParseError from exc
 
         if parsed["status-code"] == IppStatus.ERROR_VERSION_NOT_SUPPORTED:
@@ -230,11 +232,11 @@ class IPP:
             },
         )
 
-        parsed: dict = next(iter(response_data["printers"] or []), {})
+        parsed: dict[str, Any] = next(iter(response_data["printers"] or []), {})
 
         try:
             printer = Printer.from_dict(parsed)
-        except Exception as exc:  # disable=broad-except
+        except Exception as exc:  # noqa: BLE001
             raise IPPParseError from exc
 
         return printer
@@ -243,6 +245,6 @@ class IPP:
         """Async enter."""
         return self
 
-    async def __aexit__(self, *_exec_info) -> None:
+    async def __aexit__(self, *_exec_info: Any) -> None:
         """Async exit."""
         await self.close()

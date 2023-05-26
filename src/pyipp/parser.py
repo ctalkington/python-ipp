@@ -1,5 +1,4 @@
 """Response Parser for IPP."""
-# pylint: disable=R0912,R0915
 from __future__ import annotations
 
 import logging
@@ -13,9 +12,9 @@ from .exceptions import IPPParseError
 _LOGGER = logging.getLogger(__name__)
 
 
-def parse_ieee1284_device_id(device_id: str) -> dict[str, Any]:
+def parse_ieee1284_device_id(device_id: str) -> dict[str, str]:
     """Parse IEEE 1284 device id for common device info."""
-    if device_id == "":
+    if not device_id:
         return {}
 
     device_id = device_id.strip(";")
@@ -37,7 +36,11 @@ def parse_ieee1284_device_id(device_id: str) -> dict[str, Any]:
     return device_info
 
 
-def parse_attribute(data: bytes, offset: int):
+# pylint: disable=R0912,R0915
+def parse_attribute(  # noqa: PLR0912, PLR0915
+    data: bytes,
+    offset: int,
+) -> tuple[dict[str, Any], int]:
     """Parse attribute from IPP data.
 
     1 byte: Tag - b
@@ -83,10 +86,12 @@ def parse_attribute(data: bytes, offset: int):
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.DATE.value:
         if attribute["value-length"] != 11:
-            raise IPPParseError(f'Invalid DATE size {attribute["value-length"]}')
+            raise IPPParseError(
+                f'Invalid DATE size {attribute["value-length"]}',  # noqa: EM102
+            )
 
         raw_date = dict(
-            zip(
+            zip(  # noqa: B905
                 (
                     "year",
                     "month",
@@ -111,7 +116,7 @@ def parse_attribute(data: bytes, offset: int):
             ),
         )
 
-        attribute["value"] = datetime(**raw_date)
+        attribute["value"] = datetime(**raw_date)  # noqa: DTZ001
         offset += attribute["value-length"]
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.RESERVED_STRING.value:
@@ -160,7 +165,11 @@ def parse_attribute(data: bytes, offset: int):
     return attribute, offset
 
 
-def parse(raw_data: bytes, contains_data=False):
+# pylint: disable=R0912,R0915
+def parse(  # noqa: PLR0912, PLR0915
+    raw_data: bytes,
+    contains_data: bool = False,  # noqa: FBT001, FBT002
+) -> dict[str, Any]:
     r"""Parse raw IPP data.
 
     1 byte: Protocol Major Version - b
@@ -271,7 +280,7 @@ def parse(raw_data: bytes, contains_data=False):
 
 def parse_make_and_model(make_and_model: str) -> tuple[str, str]:
     """Parse make and model for separate device make and model."""
-    if (make_and_model := make_and_model.strip()) == "":
+    if not (make_and_model := make_and_model.strip()):
         return ("Unknown", "Unknown")
 
     make = "Unknown"

@@ -52,6 +52,7 @@
     }
   },
   "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
-  "name": "Asynchronous Python client for Internet Printing Protocol (IPP)",
-  "updateContentCommand": ". ${NVM_DIR}/nvm.sh && nvm install && nvm use && npm install && poetry install && poetry run pre-commit install"
+  "name": "Async Python client for IPP",
+  "updateContentCommand": ". ${NVM_DIR}/nvm.sh && nvm install && nvm use && npm install && poetry install",
+  "postStartCommand": "git config --global --add safe.directory ${containerWorkspaceFolder} && poetry run pre-commit install"
 }

@@ -9,7 +9,7 @@ class IPPConnectionError(IPPError):
     """IPP connection exception."""
 
 
-class IPPConnectionUpgradeRequired(IPPError):
+class IPPConnectionUpgradeRequired(IPPError):  # noqa: N818
     """IPP connection upgrade requested."""
 
 
