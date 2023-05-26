@@ -51,6 +51,7 @@ def test_construct_attribute_no_tag_unmapped() -> None:
         "no-tag-unmapped",
         None,
     )
+
     assert result == b""
 
 
