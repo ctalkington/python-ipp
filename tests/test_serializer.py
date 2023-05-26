@@ -31,6 +31,16 @@ def test_construct_attribute() -> None:
     assert result == b"#\x00\x14operations-supported\x00\x04\x00\x00\x00\x0b"
 
 
+def test_construct_attribute_no_tag_unmapped() -> None:
+    """Test the construct_attribute method with no tag and unmapped attribute name."""
+    result = serializer.construct_attribute(
+        "no-tag-unmapped",
+        None,
+    )
+
+    assert result == b""
+
+
 def test_encode_dict() -> None:
     """Test the encode_dict method."""
     result = serializer.encode_dict(
