@@ -38,7 +38,7 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
     if not tag:
         return byte_str
 
-    if isinstance(value, (list, tuple, set)):
+    if isinstance(value, (list, tuple, set)):  # noqa: UP038
         for index, list_value in enumerate(value):
             byte_str += struct.pack(">b", tag.value)
 
