@@ -177,7 +177,6 @@ class Printer:
                 marker_types.append("unknown")
                 marker_highs.append(100)
                 marker_lows.append(0)
-
         elif isinstance(data.get("marker-names"), str):
             marker_names = [data["marker-names"]]
 
@@ -193,35 +192,35 @@ class Printer:
                 if index < mlen:
                     marker_colors[index] = list_value
         elif isinstance(data.get("marker-colors"), str) and mlen == 1:
-            marker_colors[0] = data.get("marker-colors")
+            marker_colors[0] = data["marker-colors"]
 
         if isinstance(data.get("marker-levels"), list):
             for index, list_value in enumerate(data["marker-levels"]):
                 if index < mlen:
                     marker_levels[index] = list_value
         elif isinstance(data.get("marker-levels"), int) and mlen == 1:
-            marker_levels[0] = data.get("marker-levels")
+            marker_levels[0] = data["marker-levels"]
 
         if isinstance(data.get("marker-high-levels"), list):
             for index, list_value in enumerate(data["marker-high-levels"]):
                 if index < mlen:
                     marker_highs[index] = list_value
         elif isinstance(data.get("marker-high-levels"), int) and mlen == 1:
-            marker_highs[0] = data.get("marker-high-levels")
+            marker_highs[0] = data["marker-high-levels"]
 
         if isinstance(data.get("marker-low-levels"), list):
             for index, list_value in enumerate(data["marker-low-levels"]):
                 if index < mlen:
                     marker_lows[index] = list_value
         elif isinstance(data.get("marker-low-levels"), int) and mlen == 1:
-            marker_lows[0] = data.get("marker-low-levels")
+            marker_lows[0] = data["marker-low-levels"]
 
         if isinstance(data.get("marker-types"), list):
             for index, list_value in enumerate(data["marker-types"]):
                 if index < mlen:
                     marker_types[index] = list_value
         elif isinstance(data.get("marker-types"), str) and mlen == 1:
-            marker_types[0] = data.get("marker-types")
+            marker_types[0] = data["marker-types"]
 
         if isinstance(marker_names, list) and mlen > 0:
             markers = [
