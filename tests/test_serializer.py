@@ -8,12 +8,12 @@ from . import load_fixture_binary
 
 def test_construct_attibute_values() -> None:
     """Test the __construct_attibute_values method."""
-    result = serializer.construct_attibute_values(
+    result = serializer.construct_attribute_values(
         IppTag.INTEGER, IppOperation.GET_PRINTER_ATTRIBUTES
     )
     assert result == b"\x00\x04\x00\x00\x00\x0b"
 
-    result = serializer.construct_attibute_values(
+    result = serializer.construct_attribute_values(
         IppTag.ENUM, IppOperation.GET_PRINTER_ATTRIBUTES
     )
     assert result == b"\x00\x04\x00\x00\x00\x0b"
