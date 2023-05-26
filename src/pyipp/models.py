@@ -18,7 +18,7 @@ class Info:
 
     name: str
     printer_name: str
-    printer_uri_supported: list
+    printer_uri_supported: list[Uri]
     uptime: int
     command_set: str | None = None
     location: str | None = None
@@ -31,7 +31,7 @@ class Info:
     more_info: str | None = None
 
     @staticmethod
-    def from_dict(data: dict[str, Any]):
+    def from_dict(data: dict[str, Any]) -> Info:
         """Return Info object from IPP response."""
         cmd = None
         name = "IPP Printer"
@@ -108,8 +108,8 @@ class Uri:
     """Object holding URI info from IPP."""
 
     uri: str
-    authentication: str
-    security: str
+    authentication: str | None
+    security: str | None
 
 
 @dataclass(frozen=True)
@@ -121,7 +121,7 @@ class State:
     message: str | None
 
     @staticmethod
-    def from_dict(data):
+    def from_dict(data: dict[str, Any]) -> State:
         """Return State object from IPP response."""
         state = data.get("printer-state", 0)
 
@@ -145,7 +145,7 @@ class Printer:
     uris: list[Uri]
 
     @staticmethod
-    def from_dict(data):
+    def from_dict(data: dict[str, Any]) -> Printer:
         """Return Printer object from IPP response."""
         return Printer(
             info=Info.from_dict(data),
@@ -155,7 +155,7 @@ class Printer:
         )
 
     @staticmethod
-    def merge_marker_data(data):
+    def merge_marker_data(data: dict[str, Any]) -> list[Marker]:  # noqa: PLR0912
         """Return Marker data from IPP response."""
         markers = []
         mlen = 0
@@ -241,14 +241,14 @@ class Printer:
         return markers
 
     @staticmethod
-    def merge_uri_data(data):
+    def merge_uri_data(data: dict[str, Any]) -> list[Uri]:
         """Return URI data from IPP response."""
         uris = []
         ulen = 0
 
-        _uris = []
-        auth = []
-        security = []
+        _uris: list[str] = []
+        auth: list[str | None] = []
+        security: list[str | None] = []
 
         if isinstance(data.get("printer-uri-supported"), list):
             _uris = data["printer-uri-supported"]

@@ -1,6 +1,7 @@
 """Data Serializer for IPP."""
 from __future__ import annotations
 
+import logging
 import random
 import struct
 from typing import Any
@@ -9,8 +10,10 @@ from .const import DEFAULT_PROTO_VERSION
 from .enums import IppTag
 from .tags import ATTRIBUTE_TAG_MAP
 
+_LOGGER = logging.getLogger(__name__)
 
-def construct_attibute_values(tag: IppTag, value: Any) -> bytes:
+
+def construct_attribute_values(tag: IppTag, value: Any) -> bytes:
     """Serialize the attribute values into IPP format."""
     byte_str = b""
 
@@ -32,13 +35,11 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
     """Serialize the attribute into IPP format."""
     byte_str = b""
 
-    if not tag:
-        tag = ATTRIBUTE_TAG_MAP.get(name, None)
-
-    if not tag:
+    if not tag and not (tag := ATTRIBUTE_TAG_MAP.get(name, None)):
+        _LOGGER.debug("Unknown IppTag for %s", name)
         return byte_str
 
-    if isinstance(value, (list, tuple, set)):
+    if isinstance(value, (list, tuple, set)):  # noqa: UP038
         for index, list_value in enumerate(value):
             byte_str += struct.pack(">b", tag.value)
 
@@ -48,14 +49,14 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
             else:
                 byte_str += struct.pack(">h", 0)
 
-            byte_str += construct_attibute_values(tag, list_value)
+            byte_str += construct_attribute_values(tag, list_value)
     else:
         byte_str = struct.pack(">b", tag.value)
 
         byte_str += struct.pack(">h", len(name))
         byte_str += name.encode("utf-8")
 
-        byte_str += construct_attibute_values(tag, value)
+        byte_str += construct_attribute_values(tag, value)
 
     return byte_str
 

@@ -70,10 +70,10 @@ jobs:
             name: Check YAML style
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v3
+        uses: actions/checkout@8e5e7e5ab8b370d6c329ec480221332ada57f0ab # v3
       - name: Set up Python 3.9
         id: python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@bd6b4b6205c4dbad673328db7b31b7fab9e241c0 # v4
         with:
           python-version: 3.9
       - name: Read .nvmrc
@@ -82,7 +82,7 @@ jobs:
         run: echo "##[set-output name=nvmrc;]$(cat .nvmrc)"
       - name: Set up Node.js ${{ steps.nvm.outputs.nvmrc }}
         if: ${{ matrix.id == 'prettier' }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@64ed1c7eab4cce3362f8c340dee64e5eaeef8f7c # v3
         with:
           node-version: "${{ steps.nvm.outputs.nvmrc }}"
       - name: Get pip cache dir
@@ -90,7 +90,7 @@ jobs:
         run: |
           echo "::set-output name=dir::$(pip cache dir)"
       - name: Restore cached Python PIP packages
-        uses: actions/cache@v3
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3
         with:
           path: ${{ steps.pip-cache.outputs.dir }}
           key: pip-${{ runner.os }}-${{ steps.python.outputs.python-version }}-${{ hashFiles('.github/workflows/requirements.txt') }}
@@ -103,7 +103,7 @@ jobs:
           poetry config virtualenvs.in-project true
       - name: Restore cached Python virtual environment
         id: cached-poetry-dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3
         with:
           path: .venv
           key: >-
@@ -118,7 +118,7 @@ jobs:
           echo "::set-output name=dir::$(npm config get cache)"
       - name: Restore cached node modules
         if: ${{ matrix.id == 'prettier' }}
-        uses: actions/cache@v3
+        uses: actions/cache@88522ab9f39a2ea568f7027eddc7d8d8bc9d59c8 # v3
         with:
           path: ${{ steps.npm-cache.outputs.dir }}
           key: node-${{ runner.os }}-${{ steps.nvm.outputs.nvmrc }}-${{ hashFiles('.github/workflows/requirements.txt') }}

@@ -8,12 +8,12 @@ from . import load_fixture_binary
 
 def test_construct_attibute_values() -> None:
     """Test the __construct_attibute_values method."""
-    result = serializer.construct_attibute_values(
+    result = serializer.construct_attribute_values(
         IppTag.INTEGER, IppOperation.GET_PRINTER_ATTRIBUTES
     )
     assert result == b"\x00\x04\x00\x00\x00\x0b"
 
-    result = serializer.construct_attibute_values(
+    result = serializer.construct_attribute_values(
         IppTag.ENUM, IppOperation.GET_PRINTER_ATTRIBUTES
     )
     assert result == b"\x00\x04\x00\x00\x00\x0b"
@@ -29,6 +29,16 @@ def test_construct_attribute() -> None:
         [IppOperation.GET_PRINTER_ATTRIBUTES],
     )
     assert result == b"#\x00\x14operations-supported\x00\x04\x00\x00\x00\x0b"
+
+
+def test_construct_attribute_no_tag_unmapped() -> None:
+    """Test the construct_attribute method with no tag and unmapped attribute name."""
+    result = serializer.construct_attribute(
+        "no-tag-unmapped",
+        None,
+    )
+
+    assert result == b""
 
 
 def test_encode_dict() -> None:
