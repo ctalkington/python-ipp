@@ -1,7 +1,9 @@
 """Tests for Parser."""
 from datetime import datetime, timezone
 
-from pyipp import parser
+import pytest
+
+from pyipp import IPPParseError, parser
 from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
 from pyipp.enums import (
     IppFinishing,
@@ -57,6 +59,41 @@ def test_parse_attribute() -> None:
     )
 
 
+def test_parse_attribute_reserved_string() -> None:
+    """Test the parse_attribute method when provided a reserved string."""
+    result = parser.parse_attribute(b"C\x00\x0freserved-string\x00\x04yoda", 0)
+    assert result == (
+        {
+            "name": "reserved-string",
+            "name-length": 15,
+            "tag": 67,
+            "value": "yoda",
+            "value-length": 4,
+        },
+        24,
+    )
+
+    result = parser.parse_attribute(b"C\x00\x0freserved-string\x00\x00", 0)
+    assert result == (
+        {
+            "name": "reserved-string",
+            "name-length": 15,
+            "tag": 67,
+            "value": None,
+            "value-length": 0,
+        },
+        20,
+    )
+
+
+def test_parse_attribute_invalid_date() -> None:
+    """Test the parse_attribute method when provided an invalid date."""
+    invalid = b"1\x00\x14printer-current-time\x00\x0299"
+
+    with pytest.raises(IPPParseError):
+        parser.parse_attribute(invalid, 0)
+
+
 def test_parse_ieee1284_device_id() -> None:
     """Test the parse_ieee1284_device_id method."""
     result = parser.parse_ieee1284_device_id(MOCK_IEEE1284_DEVICE_ID)
@@ -70,6 +107,15 @@ def test_parse_ieee1284_device_id() -> None:
     assert result["MANUFACTURER"] == result["MFG"]
     assert result["MODEL"] == result["MDL"]
     assert result["COMMAND SET"] == result["CMD"]
+
+
+def test_parse_ieee1284_device_id_manufacturer_only() -> None:
+    """Test the parse_ieee1284_device_id method with only a manufacturer."""
+    result = parser.parse_ieee1284_device_id("MANUFACTURER:EPSON")
+
+    assert result == {
+        "MANUFACTURER": "EPSON",
+    }
 
 
 def test_parse_ieee1284_device_id_empty() -> None:
