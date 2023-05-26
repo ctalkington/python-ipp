@@ -2,6 +2,8 @@
 # pylint: disable=R0912,R0915
 from __future__ import annotations
 
+from typing import Any
+
 import pytest
 
 from pyipp import models, parser
@@ -10,7 +12,7 @@ from . import IPPE10_PRINTER_ATTRS, load_fixture_binary
 
 
 @pytest.mark.asyncio
-async def test_info():
+async def test_info() -> None:  # noqa: PLR0915
     """Test Info model."""
     parsed = parser.parse(load_fixture_binary("get-printer-attributes-epsonxp6000.bin"))
     data = parsed["printers"][0]
@@ -82,7 +84,23 @@ async def test_info():
 
 
 @pytest.mark.asyncio
-async def test_printer():
+async def test_state() -> None:
+    """Test State model."""
+    data: dict[str, Any] = {
+        "printer-state": 4,
+        "printer-state-reasons": "none",
+    }
+
+    state = models.State.from_dict(data)
+
+    assert state
+    assert state.printer_state == "printing"
+    assert state.reasons is None
+    assert state.message is None
+
+
+@pytest.mark.asyncio
+async def test_printer() -> None:  # noqa: PLR0915
     """Test Printer model."""
     parsed = parser.parse(load_fixture_binary("get-printer-attributes-epsonxp6000.bin"))
     printer = models.Printer.from_dict(parsed["printers"][0])
@@ -177,7 +195,7 @@ async def test_printer():
 
 
 @pytest.mark.asyncio
-async def test_printer_with_marker_data():
+async def test_printer_with_marker_data() -> None:  # noqa: PLR0915, assignment
     """Test Printer model."""
     data = IPPE10_PRINTER_ATTRS.copy()
     data["marker-names"] = []
