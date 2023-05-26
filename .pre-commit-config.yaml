@@ -127,7 +127,7 @@ repos:
       - id: prettier
         name: Ensuring files are prettier
         language: system
-        types: [text]
+        types: [yaml, json, markdown]
         entry: npm run prettier
         pass_filenames: false
       - id: pylint
