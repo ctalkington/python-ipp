@@ -1,6 +1,7 @@
 """Tests for IPP public interface."""
 import pytest
 from aiohttp import ClientSession
+from aresponses import ResponsesMockServer
 
 from pyipp import IPP, Printer
 from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
@@ -18,7 +19,7 @@ MATCH_DEFAULT_HOST = f"{DEFAULT_PRINTER_HOST}:{DEFAULT_PRINTER_PORT}"
 
 
 @pytest.mark.asyncio
-async def test_printer(aresponses):
+async def test_printer(aresponses: ResponsesMockServer) -> None:
     """Test getting IPP printer information."""
     aresponses.add(
         MATCH_DEFAULT_HOST,
@@ -40,7 +41,7 @@ async def test_printer(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_raw(aresponses):
+async def test_raw(aresponses: ResponsesMockServer) -> None:
     """Test raw method is handled correctly."""
     aresponses.add(
         MATCH_DEFAULT_HOST,

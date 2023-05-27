@@ -67,7 +67,7 @@ def encode_dict(data: dict[str, Any]) -> bytes:
     operation = data["operation"]
 
     if (request_id := data.get("request-id", None)) is None:
-        request_id = random.choice(range(10000, 99999))  # nosec  # noqa: S311
+        request_id = random.choice(range(10000, 99999))  # nosec
 
     encoded = struct.pack(">bb", *version)
     encoded += struct.pack(">h", operation.value)

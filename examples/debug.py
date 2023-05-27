@@ -6,7 +6,7 @@ from pyipp import IPP
 from pyipp.enums import IppOperation
 
 
-async def main():
+async def main() -> None:
     """Show example of connecting to your IPP print server."""
     async with IPP("ipps://192.168.1.92:631/ipp/print") as ipp:
         response = await ipp.raw(
@@ -41,7 +41,7 @@ async def main():
             },
         )
 
-        with open("printer-attributes.bin", "wb") as file:
+        with open("printer-attributes.bin", "wb") as file:  # noqa: PTH123
             file.write(response)
             file.close()
 

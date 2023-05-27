@@ -6,17 +6,31 @@ from pyipp.enums import IppOperation, IppTag
 from . import load_fixture_binary
 
 
-def test_construct_attibute_values() -> None:
-    """Test the __construct_attibute_values method."""
+def test_construct_attribute_values() -> None:
+    """Test the construct_attribute_values method."""
     result = serializer.construct_attribute_values(
-        IppTag.INTEGER, IppOperation.GET_PRINTER_ATTRIBUTES
+        IppTag.INTEGER,
+        IppOperation.GET_PRINTER_ATTRIBUTES,
     )
     assert result == b"\x00\x04\x00\x00\x00\x0b"
 
     result = serializer.construct_attribute_values(
-        IppTag.ENUM, IppOperation.GET_PRINTER_ATTRIBUTES
+        IppTag.ENUM,
+        IppOperation.GET_PRINTER_ATTRIBUTES,
     )
     assert result == b"\x00\x04\x00\x00\x00\x0b"
+
+    result = serializer.construct_attribute_values(
+        IppTag.BOOLEAN,
+        "0",
+    )
+    assert result == b"\x00\x01\x01"
+
+    result = serializer.construct_attribute_values(
+        IppTag.URI,
+        "ipps://localhost:631",
+    )
+    assert result == b"\x00\x14ipps://localhost:631"
 
 
 def test_construct_attribute() -> None:
@@ -54,7 +68,9 @@ def test_encode_dict() -> None:
                 "printer-uri": "ipp://printer.example.com:361/ipp/print",
                 "requesting-user-name": "PythonIPP",
             },
-        }
+        },
     )
 
-    assert result == load_fixture_binary("get-printer-attributes-request-000.bin")
+    assert result == load_fixture_binary(
+        "serializer/get-printer-attributes-request-000.bin",
+    )

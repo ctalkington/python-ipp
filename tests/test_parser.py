@@ -1,7 +1,9 @@
 """Tests for Parser."""
 from datetime import datetime, timezone
 
-from pyipp import parser
+import pytest
+
+from pyipp import IPPParseError, parser
 from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
 from pyipp.enums import (
     IppFinishing,
@@ -16,10 +18,10 @@ from pyipp.enums import (
 from . import load_fixture_binary
 
 RESPONSE_GET_PRINTER_ATTRIBUTES = load_fixture_binary(
-    "get-printer-attributes-response-000.bin"
+    "get-printer-attributes-response-000.bin",
 )
 
-MOCK_IEEE1284_DEVICE_ID = "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;"  # noqa
+MOCK_IEEE1284_DEVICE_ID = "MFG:EPSON;CMD:ESCPL2,BDC,D4,D4PX,ESCPR7,END4,GENEP,URF;MDL:XP-6000 Series;CLS:PRINTER;DES:EPSON XP-6000 Series;CID:EpsonRGB;FID:FXN,DPA,WFA,ETN,AFN,DAN,WRA;RID:20;DDS:022500;ELG:1000;SN:583434593035343012;URF:CP1,PQ4-5,OB9,OFU0,RS360,SRGB24,W8,DM3,IS1-7-6,V1.4,MT1-3-7-8-10-11-12;"
 
 
 def test_parse() -> None:
@@ -57,6 +59,41 @@ def test_parse_attribute() -> None:
     )
 
 
+def test_parse_attribute_reserved_string() -> None:
+    """Test the parse_attribute method when provided a reserved string."""
+    result = parser.parse_attribute(b"C\x00\x0freserved-string\x00\x04yoda", 0)
+    assert result == (
+        {
+            "name": "reserved-string",
+            "name-length": 15,
+            "tag": 67,
+            "value": "yoda",
+            "value-length": 4,
+        },
+        24,
+    )
+
+    result = parser.parse_attribute(b"C\x00\x0freserved-string\x00\x00", 0)
+    assert result == (
+        {
+            "name": "reserved-string",
+            "name-length": 15,
+            "tag": 67,
+            "value": None,
+            "value-length": 0,
+        },
+        20,
+    )
+
+
+def test_parse_attribute_invalid_date() -> None:
+    """Test the parse_attribute method when provided an invalid date."""
+    invalid = b"1\x00\x14printer-current-time\x00\x0299"
+
+    with pytest.raises(IPPParseError):
+        parser.parse_attribute(invalid, 0)
+
+
 def test_parse_ieee1284_device_id() -> None:
     """Test the parse_ieee1284_device_id method."""
     result = parser.parse_ieee1284_device_id(MOCK_IEEE1284_DEVICE_ID)
@@ -70,6 +107,15 @@ def test_parse_ieee1284_device_id() -> None:
     assert result["MANUFACTURER"] == result["MFG"]
     assert result["MODEL"] == result["MDL"]
     assert result["COMMAND SET"] == result["CMD"]
+
+
+def test_parse_ieee1284_device_id_manufacturer_only() -> None:
+    """Test the parse_ieee1284_device_id method with only a manufacturer."""
+    result = parser.parse_ieee1284_device_id("MANUFACTURER:EPSON")
+
+    assert result == {
+        "MANUFACTURER": "EPSON",
+    }
 
 
 def test_parse_ieee1284_device_id_empty() -> None:
@@ -119,7 +165,7 @@ def test_parse_brother_mfcj5320dw() -> None:
     assert printer["printer-uuid"] == "urn:uuid:e3248000-80ce-11db-8000-30055ce13be2"
 
 
-def test_parse_epson_xp6000():
+def test_parse_epson_xp6000() -> None:
     """Test the parse method against response from Epson XP-6000 Series."""
     response = load_fixture_binary("get-printer-attributes-epsonxp6000.bin")
 
@@ -518,7 +564,13 @@ def test_parse_epson_xp6000():
         ],
         "printer-state": IppPrinterState.IDLE,
         "printer-state-change-date-time": datetime(
-            2022, 9, 27, 3, 47, 19, tzinfo=timezone.utc
+            2022,
+            9,
+            27,
+            3,
+            47,
+            19,
+            tzinfo=timezone.utc,
         ),
         "printer-state-change-time": 184119,
         "printer-state-reasons": "marker-supply-low-warning",
@@ -564,10 +616,10 @@ def test_parse_epson_xp6000():
     assert result["data"] == b""
 
 
-def test_parse_kyocera_ecosys_m2540dn():
+def test_parse_kyocera_ecosys_m2540dn() -> None:
     """Test the parse method against response from Kyocera Ecosys M2540DN."""
     response = load_fixture_binary(
-        "get-printer-attributes-kyocera-ecosys-m2540dn-001.bin"
+        "get-printer-attributes-kyocera-ecosys-m2540dn-001.bin",
     )
 
     result = parser.parse(response)
@@ -605,8 +657,8 @@ def test_parse_kyocera_ecosys_m2540dn():
                 "printer-state-reason",
                 "device-uri",
                 "printer-is-shared",
-            ]
-        }
+            ],
+        },
     ]
 
     assert result["data"] == b""
@@ -634,7 +686,13 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "date-time-at-completed": datetime(2021, 9, 28, 9, 37, 35, tzinfo=timezone.utc),
         "date-time-at-creation": datetime(2021, 9, 28, 9, 37, 15, tzinfo=timezone.utc),
         "date-time-at-processing": datetime(
-            2021, 9, 28, 9, 37, 16, tzinfo=timezone.utc
+            2021,
+            9,
+            28,
+            9,
+            37,
+            16,
+            tzinfo=timezone.utc,
         ),
         "document-format-supplied": "image/urf",
         "document-format-version-supplied": "1.4",
@@ -644,7 +702,7 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "job-id": 1000,
         "job-impressions": "",
         "job-impressions-completed": 3,
-        "job-name": "Microsoft Word - ТСД",
+        "job-name": "Microsoft Word - ТСД",  # noqa: RUF001
         "job-originating-user-name": "CORP\\OFFICE20708$",
         "job-printer-up-time": 179727,
         "job-printer-uri": "ipps://10.104.12.95:443/ipp/print",

@@ -2,7 +2,8 @@
 import asyncio
 
 import pytest
-from aiohttp import ClientSession
+from aiohttp import ClientResponse, ClientSession
+from aresponses import Response, ResponsesMockServer
 
 from pyipp import IPP
 from pyipp.const import DEFAULT_PRINTER_ATTRIBUTES
@@ -28,7 +29,7 @@ NON_STANDARD_PORT = 3333
 
 
 @pytest.mark.asyncio
-async def test_ipp_request(aresponses):
+async def test_ipp_request(aresponses: ResponsesMockServer) -> None:
     """Test IPP response is handled correctly."""
     aresponses.add(
         MATCH_DEFAULT_HOST,
@@ -55,7 +56,7 @@ async def test_ipp_request(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_internal_session(aresponses):
+async def test_internal_session(aresponses: ResponsesMockServer) -> None:
     """Test IPP response is handled correctly."""
     aresponses.add(
         MATCH_DEFAULT_HOST,
@@ -81,7 +82,7 @@ async def test_internal_session(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_request_port(aresponses):
+async def test_request_port(aresponses: ResponsesMockServer) -> None:
     """Test the IPP server running on non-standard port."""
     aresponses.add(
         f"{DEFAULT_PRINTER_HOST}:{NON_STANDARD_PORT}",
@@ -113,7 +114,7 @@ async def test_request_port(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_request_tls(aresponses):
+async def test_request_tls(aresponses: ResponsesMockServer) -> None:
     """Test the IPP server over TLS."""
     aresponses.add(
         MATCH_DEFAULT_HOST,
@@ -146,12 +147,13 @@ async def test_request_tls(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_timeout(aresponses):
+async def test_timeout(aresponses: ResponsesMockServer) -> None:
     """Test request timeout from the IPP server."""
+
     # Faking a timeout by sleeping
-    async def response_handler(_):
+    async def response_handler(_: ClientResponse) -> Response:
         await asyncio.sleep(2)
-        return aresponses.Response(body="Timeout!")
+        return Response(body="Timeout!")
 
     aresponses.add(
         MATCH_DEFAULT_HOST,
@@ -174,7 +176,7 @@ async def test_timeout(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_client_error():
+async def test_client_error() -> None:
     """Test http client error."""
     async with ClientSession() as session:
         ipp = IPP("#", session=session)
@@ -190,7 +192,7 @@ async def test_client_error():
 
 
 @pytest.mark.asyncio
-async def test_http_error404(aresponses):
+async def test_http_error404(aresponses: ResponsesMockServer) -> None:
     """Test HTTP 404 response handling."""
     aresponses.add(
         MATCH_DEFAULT_HOST,
@@ -213,7 +215,7 @@ async def test_http_error404(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_http_error426(aresponses):
+async def test_http_error426(aresponses: ResponsesMockServer) -> None:
     """Test HTTP 426 response handling."""
     aresponses.add(
         MATCH_DEFAULT_HOST,
@@ -240,7 +242,7 @@ async def test_http_error426(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_unexpected_response(aresponses):
+async def test_unexpected_response(aresponses: ResponsesMockServer) -> None:
     """Test unexpected response handling."""
     aresponses.add(
         MATCH_DEFAULT_HOST,
@@ -263,7 +265,7 @@ async def test_unexpected_response(aresponses):
 
 
 @pytest.mark.asyncio
-async def test_ipp_error_0x0503(aresponses):
+async def test_ipp_error_0x0503(aresponses: ResponsesMockServer) -> None:
     """Test IPP Error 0x0503 response handling."""
     aresponses.add(
         MATCH_DEFAULT_HOST,
