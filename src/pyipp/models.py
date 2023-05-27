@@ -155,32 +155,29 @@ class Printer:
         )
 
     @staticmethod
-    def merge_marker_data(data: dict[str, Any]) -> list[Marker]:  # noqa: PLR0912
+    def merge_marker_data(  # noqa: PLR0912, C901
+        data: dict[str, Any],
+    ) -> list[Marker]:
         """Return Marker data from IPP response."""
-        markers = []
-        mlen = 0
-
+        marker_names = []
         marker_colors = []
         marker_levels = []
         marker_types = []
         marker_highs = []
         marker_lows = []
 
-        marker_names = None
-        if isinstance(data.get("marker-names"), list):
-            marker_names = data["marker-names"]
-            mlen = len(marker_names)
+        if not data.get("marker-names"):
+            return []
 
-            for _k in range(mlen):
-                marker_colors.append("")
-                marker_levels.append(-2)
-                marker_types.append("unknown")
-                marker_highs.append(100)
-                marker_lows.append(0)
-        elif isinstance(data.get("marker-names"), str):
+        if isinstance(data["marker-names"], list):
+            marker_names = data["marker-names"]
+        elif isinstance(data["marker-names"], str):
             marker_names = [data["marker-names"]]
 
-            mlen = 1
+        if not (mlen := len(marker_names)):
+            return []
+
+        for _ in range(mlen):
             marker_colors.append("")
             marker_levels.append(-2)
             marker_types.append("unknown")
@@ -222,78 +219,71 @@ class Printer:
         elif isinstance(data.get("marker-types"), str) and mlen == 1:
             marker_types[0] = data["marker-types"]
 
-        if isinstance(marker_names, list) and mlen > 0:
-            markers = [
-                Marker(
-                    marker_id=marker_id,
-                    marker_type=marker_types[marker_id],
-                    name=marker_names[marker_id],
-                    color=marker_colors[marker_id],
-                    level=marker_levels[marker_id],
-                    high_level=marker_highs[marker_id],
-                    low_level=marker_lows[marker_id],
-                )
-                for marker_id in range(mlen)
-            ]
-            markers.sort(key=lambda x: x.name)
+        markers = [
+            Marker(
+                marker_id=marker_id,
+                marker_type=marker_types[marker_id],
+                name=marker_names[marker_id],
+                color=marker_colors[marker_id],
+                level=marker_levels[marker_id],
+                high_level=marker_highs[marker_id],
+                low_level=marker_lows[marker_id],
+            )
+            for marker_id in range(mlen)
+        ]
+        markers.sort(key=lambda x: x.name)
 
         return markers
 
     @staticmethod
-    def merge_uri_data(data: dict[str, Any]) -> list[Uri]:
+    def merge_uri_data(data: dict[str, Any]) -> list[Uri]:  # noqa: PLR0912
         """Return URI data from IPP response."""
-        uris = []
-        ulen = 0
-
         _uris: list[str] = []
         auth: list[str | None] = []
         security: list[str | None] = []
 
-        if isinstance(data.get("printer-uri-supported"), list):
+        if not data.get("printer-uri-supported"):
+            return []
+
+        if isinstance(data["printer-uri-supported"], list):
             _uris = data["printer-uri-supported"]
-            ulen = len(_uris)
-
-            for _k in range(ulen):
-                auth.append(None)
-                security.append(None)
-
-        elif isinstance(data.get("printer-uri-supported"), str):
+        elif isinstance(data["printer-uri-supported"], str):
             _uris = [data["printer-uri-supported"]]
-            ulen = 1
 
+        if not (ulen := len(_uris)):
+            return []
+
+        for _ in range(ulen):
             auth.append(None)
             security.append(None)
 
         if isinstance(data.get("uri-authentication-supported"), list):
             for k, list_value in enumerate(data["uri-authentication-supported"]):
                 if k < ulen:
-                    auth[k] = list_value if list_value != "none" else None
+                    auth[k] = _str_or_none(list_value)
         elif isinstance(data.get("uri-authentication-supported"), str) and ulen == 1:
-            auth[0] = (
-                data["uri-authentication-supported"]
-                if data["uri-authentication-supported"] != "none"
-                else None
-            )
+            auth[0] = _str_or_none(data["uri-authentication-supported"])
 
         if isinstance(data.get("uri-security-supported"), list):
             for k, list_value in enumerate(data["uri-security-supported"]):
                 if k < ulen:
-                    security[k] = list_value if list_value != "none" else None
+                    security[k] = _str_or_none(list_value)
         elif isinstance(data.get("uri-security-supported"), str) and ulen == 1:
-            security[0] = (
-                data["uri-security-supported"]
-                if data["uri-security-supported"] != "none"
-                else None
+            security[0] = _str_or_none(data["uri-security-supported"])
+
+        return [
+            Uri(
+                uri=_uris[uri_id],
+                authentication=auth[uri_id],
+                security=security[uri_id],
             )
+            for uri_id in range(ulen)
+        ]
 
-        if isinstance(_uris, list) and ulen > 0:
-            uris = [
-                Uri(
-                    uri=_uris[uri_id],
-                    authentication=auth[uri_id],
-                    security=security[uri_id],
-                )
-                for uri_id in range(ulen)
-            ]
 
-        return uris
+def _str_or_none(value: str) -> str | None:
+    """Return string while handling string representations of None."""
+    if value == "none":
+        return None
+
+    return value
