@@ -196,7 +196,7 @@ async def test_printer() -> None:  # noqa: PLR0915
 
 @pytest.mark.asyncio
 async def test_printer_with_single_marker() -> None:
-    """Test Printer model with multiple markers."""
+    """Test Printer model with single marker."""
     data = IPPE10_PRINTER_ATTRS.copy()
     data["marker-names"] = "Black"
     data["marker-types"] = "ink-cartridge"
@@ -217,73 +217,111 @@ async def test_printer_with_single_marker() -> None:
 
 
 @pytest.mark.asyncio
-async def test_printer_with_marker_data() -> None:  # noqa: PLR0915
-    """Test Printer model with multiple markers."""
+async def test_printer_with_single_marker_empty_strings() -> None:
+    """Test Printer model with single marker with empty string values."""
     data = IPPE10_PRINTER_ATTRS.copy()
-    data["marker-names"] = []
-    data["marker-types"] = []
-    data["marker-colors"] = []
-    data["marker-levels"] = []
-    data["marker-high-levels"] = []
-    data["marker-low-levels"] = []
+    data["marker-names"] = ""
+    data["marker-types"] = ""
+    data["marker-colors"] = ""
+    data["marker-levels"] = ""
+    data["marker-low-levels"] = ""
+    data["marker-high-levels"] = ""
 
-    # empty but valid types
     printer = models.Printer.from_dict(data)
     assert printer
     assert len(printer.markers) == 0
 
-    # no names
+
+@pytest.mark.asyncio
+async def test_printer_with_single_marker_invalid() -> None:
+    """Test Printer model with single invalid marker name."""
+    data = IPPE10_PRINTER_ATTRS.copy()
     data["marker-names"] = -1
 
     printer = models.Printer.from_dict(data)
     assert printer
     assert len(printer.markers) == 0
 
-    # partial valid data
+
+@pytest.mark.asyncio
+async def test_printer_with_extra_marker_data() -> None:
+    """Test Printer model with extra marker data."""
+    data = IPPE10_PRINTER_ATTRS.copy()
     data["marker-names"] = ["Black"]
-    data["marker-colors"] = -2
+    data["marker-types"] = ["ink-cartridge", "ink"]
+    data["marker-colors"] = ["#FF0000", "#FF1111"]
+    data["marker-levels"] = [99, 33]
+    data["marker-low-levels"] = [0, 10]
+    data["marker-high-levels"] = [99, 100]
 
     printer = models.Printer.from_dict(data)
     assert printer
     assert len(printer.markers) == 1
-    assert printer.markers[0]
-    assert printer.markers[0].name == "Black"
-    assert printer.markers[0].color == ""
-    assert printer.markers[0].level == -2
-    assert printer.markers[0].high_level == 100
-    assert printer.markers[0].low_level == 0
-    assert printer.markers[0].marker_type == "unknown"
-
-    # partial valid data, extra data
-    data["marker-names"] = ["Black"]
-    data["marker-colors"] = -2
-    data["marker-levels"] = [99, 98]
-
-    printer = models.Printer.from_dict(data)
-    assert printer
-    assert len(printer.markers) == 1
-    assert printer.markers[0]
-    assert printer.markers[0].name == "Black"
-    assert printer.markers[0].color == ""
-    assert printer.markers[0].level == 99
-    assert printer.markers[0].high_level == 100
-    assert printer.markers[0].low_level == 0
-    assert printer.markers[0].marker_type == "unknown"
-
-    # full valid
-    data["marker-names"] = ["Black"]
-    data["marker-types"] = ["ink-cartridge"]
-    data["marker-colors"] = ["#FF0000"]
-    data["marker-levels"] = [77]
-    data["marker-high-levels"] = [100]
-    data["marker-low-levels"] = [0]
-
-    printer = models.Printer.from_dict(data)
-    assert printer
     assert printer.markers[0]
     assert printer.markers[0].name == "Black"
     assert printer.markers[0].color == "#FF0000"
-    assert printer.markers[0].level == 77
-    assert printer.markers[0].high_level == 100
+    assert printer.markers[0].level == 99
+    assert printer.markers[0].high_level == 99
     assert printer.markers[0].low_level == 0
     assert printer.markers[0].marker_type == "ink-cartridge"
+
+
+@pytest.mark.asyncio
+async def test_printer_with_single_supported_uri() -> None:
+    """Test Printer model with single supported uri."""
+    data = IPPE10_PRINTER_ATTRS.copy()
+    data["printer-uri-supported"] = "ipp://10.104.12.95:631/ipp/print"
+    data["uri-authentication-supported"] = "none"
+    data["uri-security-supported"] = "none"
+
+    printer = models.Printer.from_dict(data)
+    assert printer
+    assert printer.uris[0]
+    assert printer.uris[0].uri == "ipp://10.104.12.95:631/ipp/print"
+    assert printer.uris[0].authentication is None
+    assert printer.uris[0].security is None
+
+
+@pytest.mark.asyncio
+async def test_printer_with_single_supported_uri_extra_data() -> None:
+    """Test Printer model with single supported uri with extra data."""
+    data = IPPE10_PRINTER_ATTRS.copy()
+    data["printer-uri-supported"] = "ipp://10.104.12.95:631/ipp/print"
+    data["uri-authentication-supported"] = ["none", "basic"]
+    data["uri-security-supported"] = ["none", "tls"]
+
+    printer = models.Printer.from_dict(data)
+    assert printer
+    assert printer.uris[0]
+    assert printer.uris[0].uri == "ipp://10.104.12.95:631/ipp/print"
+    assert printer.uris[0].authentication is None
+    assert printer.uris[0].security is None
+
+
+@pytest.mark.asyncio
+async def test_printer_with_single_supported_uri_invalid_uri() -> None:
+    """Test Printer model with single invalid supported uri."""
+    data = IPPE10_PRINTER_ATTRS.copy()
+    data["printer-uri-supported"] = -1
+    data["uri-authentication-supported"] = "none"
+    data["uri-security-supported"] = "none"
+
+    printer = models.Printer.from_dict(data)
+    assert printer
+    assert len(printer.uris) == 0
+
+
+@pytest.mark.asyncio
+async def test_printer_with_single_supported_uri_with_security() -> None:
+    """Test Printer model with multiple markers."""
+    data = IPPE10_PRINTER_ATTRS.copy()
+    data["printer-uri-supported"] = "ipps://10.104.12.95:631/ipp/print"
+    data["uri-authentication-supported"] = "basic"
+    data["uri-security-supported"] = "tls"
+
+    printer = models.Printer.from_dict(data)
+    assert printer
+    assert printer.uris[0]
+    assert printer.uris[0].uri == "ipps://10.104.12.95:631/ipp/print"
+    assert printer.uris[0].authentication == "basic"
+    assert printer.uris[0].security == "tls"
