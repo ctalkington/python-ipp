@@ -155,7 +155,9 @@ class Printer:
         )
 
     @staticmethod
-    def merge_marker_data(data: dict[str, Any]) -> list[Marker]:  # noqa: PLR0912
+    def merge_marker_data(  # noqa: PLR0912, PLR0915
+        data: dict[str, Any],
+    ) -> list[Marker]:
         """Return Marker data from IPP response."""
         markers = []
         mlen = 0

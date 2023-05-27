@@ -195,8 +195,30 @@ async def test_printer() -> None:  # noqa: PLR0915
 
 
 @pytest.mark.asyncio
-async def test_printer_with_marker_data() -> None:  # noqa: PLR0915, assignment
-    """Test Printer model."""
+async def test_printer_with_single_marker() -> None:
+    """Test Printer model with multiple markers."""
+    data = IPPE10_PRINTER_ATTRS.copy()
+    data["marker-names"] = "Black"
+    data["marker-types"] = "ink-cartridge"
+    data["marker-colors"] = "#FF0000"
+    data["marker-levels"] = 77
+    data["marker-high-levels"] = 100
+    data["marker-low-levels"] = 0
+
+    printer = models.Printer.from_dict(data)
+    assert printer
+    assert printer.markers[0]
+    assert printer.markers[0].name == "Black"
+    assert printer.markers[0].color == "#FF0000"
+    assert printer.markers[0].level == 77
+    assert printer.markers[0].high_level == 100
+    assert printer.markers[0].low_level == 0
+    assert printer.markers[0].marker_type == "ink-cartridge"
+
+
+@pytest.mark.asyncio
+async def test_printer_with_marker_data() -> None:  # noqa: PLR0915
+    """Test Printer model with multiple markers."""
     data = IPPE10_PRINTER_ATTRS.copy()
     data["marker-names"] = []
     data["marker-types"] = []
