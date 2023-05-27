@@ -174,8 +174,7 @@ class Printer:
         elif isinstance(data["marker-names"], str):
             marker_names = [data["marker-names"]]
 
-        mlen = len(marker_names)
-        if not mlen:
+        if not (mlen := len(marker_names)):
             return []
 
         for _ in range(mlen):
@@ -251,8 +250,7 @@ class Printer:
         elif isinstance(data["printer-uri-supported"], str):
             _uris = [data["printer-uri-supported"]]
 
-        ulen = len(_uris)
-        if not ulen:
+        if not (ulen := len(_uris)):
             return []
 
         for _ in range(ulen):
