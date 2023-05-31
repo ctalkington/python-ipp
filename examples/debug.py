@@ -41,7 +41,7 @@ async def main() -> None:
             },
         )
 
-        with open("printer-attributes.bin", "wb") as file:  # noqa: PTH123
+        with open("printer-attributes.bin", "wb") as file:  # noqa: PTH123, ASYNC101
             file.write(response)
             file.close()
 

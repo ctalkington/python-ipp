@@ -702,7 +702,7 @@ def test_parse_kyocera_ecosys_m2540dn_get_jobs() -> None:
         "job-id": 1000,
         "job-impressions": "",
         "job-impressions-completed": 3,
-        "job-name": "Microsoft Word - ТСД",  # noqa: RUF001
+        "job-name": "Microsoft Word - ТСД",
         "job-originating-user-name": "CORP\\OFFICE20708$",
         "job-printer-up-time": 179727,
         "job-printer-uri": "ipps://10.104.12.95:443/ipp/print",
