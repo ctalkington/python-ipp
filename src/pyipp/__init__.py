@@ -8,10 +8,20 @@ from .exceptions import (
     IPPVersionNotSupportedError,
 )
 from .ipp import IPP
-from .models import Printer
+from .models import (
+    Info,
+    Marker,
+    Printer,
+    State,
+    Uri,
+)
 
 __all__ = [
+    "Info",
+    "Marker",
     "Printer",
+    "State",
+    "Uri",
     "IPP",
     "IPPConnectionError",
     "IPPConnectionUpgradeRequired",
