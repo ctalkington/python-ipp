@@ -12,7 +12,7 @@ from .parser import parse_ieee1284_device_id, parse_make_and_model
 PRINTER_STATES = {3: "idle", 4: "printing", 5: "stopped"}
 
 
-@dataclass(frozen=True)
+@dataclass
 class Info:
     """Object holding information from IPP."""
 
@@ -90,7 +90,7 @@ class Info:
         )
 
 
-@dataclass(frozen=True)
+@dataclass
 class Marker:
     """Object holding marker (ink) info from IPP."""
 
@@ -103,7 +103,7 @@ class Marker:
     high_level: int
 
 
-@dataclass(frozen=True)
+@dataclass
 class Uri:
     """Object holding URI info from IPP."""
 
@@ -112,7 +112,7 @@ class Uri:
     security: str | None
 
 
-@dataclass(frozen=True)
+@dataclass
 class State:
     """Object holding the IPP printer state."""
 
@@ -135,7 +135,7 @@ class State:
         )
 
 
-@dataclass(frozen=True)
+@dataclass
 class Printer:
     """Object holding the IPP printer information."""
 
