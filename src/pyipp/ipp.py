@@ -44,7 +44,7 @@ class IPP:
     base_path: str = "/ipp/print"
     password: str | None = None
     port: int = 631
-    request_timeout: float = 8.0
+    request_timeout: int = 8
     session: aiohttp.client.ClientSession | None = None
     tls: bool = False
     username: str | None = None
