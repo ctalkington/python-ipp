@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+from dataclasses import dataclass
 from importlib import metadata
 from socket import gaierror
 from struct import error as structerror
@@ -35,39 +36,29 @@ if TYPE_CHECKING:
     from collections.abc import Mapping
 
 
+@dataclass
 class IPP:
     """Main class for handling connections with IPP servers."""
 
-    def __init__(  # noqa: PLR0913
-        self,
-        host: str,
-        base_path: str = "/ipp/print",
-        password: str | None = None,
-        port: int = 631,
-        request_timeout: int = 8,
-        session: aiohttp.client.ClientSession | None = None,
-        tls: bool = False,  # noqa: FBT002, FBT001
-        username: str | None = None,
-        verify_ssl: bool = False,  # noqa: FBT002, FBT001
-        user_agent: str | None = None,
-    ) -> None:
-        """Initialize connection with IPP server."""
-        self._session = session
-        self._close_session = False
+    host: str
+    base_path: str = "/ipp/print"
+    password: str | None = None
+    port: int = 631
+    request_timeout: int = 8
+    session: aiohttp.client.ClientSession | None = None
+    tls: bool = False
+    username: str | None = None
+    verify_ssl: bool = False
+    user_agent: str | None = None
 
-        self.base_path = base_path
-        self.host = host
-        self.password = password
-        self.port = port
-        self.request_timeout = request_timeout
-        self.tls = tls
-        self.username = username
-        self.verify_ssl = verify_ssl
-        self.user_agent = user_agent
+    _close_session: bool = False
+    _printer_uri: str = ""
 
-        if host.startswith(("ipp://", "ipps://")):
-            self.printer_uri = host
-            printer_uri = URL(host)
+    def __post_init__(self) -> None:
+        """Initialize connection parameters."""
+        if self.host.startswith(("ipp://", "ipps://")):
+            self._printer_uri = self.host
+            printer_uri = URL(self.host)
 
             if printer_uri.host is not None:
                 self.host = printer_uri.host
@@ -78,10 +69,11 @@ class IPP:
             self.tls = printer_uri.scheme == "ipps"
             self.base_path = printer_uri.path
         else:
-            self.printer_uri = self._build_printer_uri()
+            self._printer_uri = self._build_printer_uri()
 
-        if user_agent is None:
+        if self.user_agent is None:
             version = metadata.version(__package__)
+
             self.user_agent = f"PythonIPP/{version}"
 
     async def _request(
@@ -111,8 +103,8 @@ class IPP:
             "Accept": "application/ipp, text/plain, */*",
         }
 
-        if self._session is None:
-            self._session = aiohttp.ClientSession()
+        if self.session is None:
+            self.session = aiohttp.ClientSession()
             self._close_session = True
 
         if isinstance(data, dict):
@@ -120,7 +112,7 @@ class IPP:
 
         try:
             async with async_timeout.timeout(self.request_timeout):
-                response = await self._session.request(
+                response = await self.session.request(
                     method,
                     url,
                     auth=auth,
@@ -178,7 +170,7 @@ class IPP:
             "operation-attributes-tag": {  # these are required to be in this order
                 "attributes-charset": DEFAULT_CHARSET,
                 "attributes-natural-language": DEFAULT_CHARSET_LANGUAGE,
-                "printer-uri": self.printer_uri,
+                "printer-uri": self._printer_uri,
                 "requesting-user-name": "PythonIPP",
             },
         }
@@ -218,8 +210,8 @@ class IPP:
 
     async def close(self) -> None:
         """Close open client session."""
-        if self._session and self._close_session:
-            await self._session.close()
+        if self.session and self._close_session:
+            await self.session.close()
 
     async def printer(self) -> Printer:
         """Get printer information from server."""
