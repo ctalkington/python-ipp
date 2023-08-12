@@ -35,6 +35,7 @@ from .serializer import encode_dict
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+VERSION = metadata.version(__package__)
 
 @dataclass
 class IPP:
@@ -72,9 +73,7 @@ class IPP:
             self._printer_uri = self._build_printer_uri()
 
         if self.user_agent is None:
-            version = metadata.version(__package__)
-
-            self.user_agent = f"PythonIPP/{version}"
+            self.user_agent = f"PythonIPP/{VERSION}"
 
     async def _request(
         self,
