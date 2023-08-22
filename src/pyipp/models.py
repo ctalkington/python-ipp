@@ -18,7 +18,7 @@ class Info:
 
     name: str
     printer_name: str
-    printer_uri_supported: list[Uri]
+    printer_uri_supported: list[str]
     uptime: int
     command_set: str | None = None
     location: str | None = None
