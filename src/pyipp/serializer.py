@@ -61,7 +61,7 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
     return byte_str
 
 
-def encode_dict(data: dict[str, Any]) -> bytes:
+def encode_dict(data: dict[str, Any], doc: bytes | None = None) -> bytes:
     """Serialize a dictionary of data into IPP format."""
     version = data["version"] or DEFAULT_PROTO_VERSION
     operation = data["operation"]
@@ -92,5 +92,8 @@ def encode_dict(data: dict[str, Any]) -> bytes:
             encoded += construct_attribute(attr, value)
 
     encoded += struct.pack(">b", IppTag.END.value)
+
+    if doc:
+        encoded += doc
 
     return encoded

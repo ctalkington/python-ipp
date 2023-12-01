@@ -37,6 +37,7 @@ if TYPE_CHECKING:
 
 VERSION = metadata.version(__package__)
 
+
 @dataclass
 class IPP:
     """Main class for handling connections with IPP servers."""
@@ -80,6 +81,7 @@ class IPP:
         uri: str = "",
         data: Any | None = None,
         params: Mapping[str, str] | None = None,
+        doc: bytes | None = None,
     ) -> bytes:
         """Handle a request to an IPP server."""
         scheme = "https" if self.tls else "http"
@@ -107,7 +109,7 @@ class IPP:
             self._close_session = True
 
         if isinstance(data, dict):
-            data = encode_dict(data)
+            data = encode_dict(data, doc=doc)
 
         try:
             async with async_timeout.timeout(self.request_timeout):
@@ -180,10 +182,11 @@ class IPP:
         self,
         operation: IppOperation,
         message: dict[str, Any],
+        doc: bytes | None = None,
     ) -> dict[str, Any]:
         """Send a request message to the server."""
         message = self._message(operation, message)
-        response = await self._request(data=message)
+        response = await self._request(data=message, doc=doc)
 
         try:
             parsed = parse_response(response)
@@ -196,10 +199,55 @@ class IPP:
         if parsed["status-code"] not in range(0, 0x200):
             raise IPPError(
                 "Unexpected printer status code",
-                {"status-code": parsed["status-code"]},
+                {
+                    "status-code": parsed["status-code"],
+                    "status": IppStatus(parsed["status-code"]),
+                },
             )
 
         return parsed
+
+    async def print_job(
+        self,
+        document: bytes,
+        filename: str,
+        document_format: str = "application/octet-stream",
+        copies: int = 1,
+    ):
+        """Print a document."""
+        response_data = await self.execute(
+            IppOperation.PRINT_JOB,
+            {
+                "operation-attributes-tag": {
+                    "job-name": filename,
+                    "document-format": document_format,
+                },
+                "job-attributes-tag": {
+                    "copies": copies,
+                },
+            },
+            doc=document,
+        )
+
+        return response_data
+
+    async def validate_job(
+        self,
+        filename: str,
+        document_format: str = "application/octet-stream",
+    ):
+        """Validate that the printer can accept this job."""
+        response_data = await self.execute(
+            IppOperation.VALIDATE_JOB,
+            {
+                "operation-attributes-tag": {
+                    "job-name": filename,
+                    "document-format": document_format,
+                },
+            },
+        )
+
+        return response_data
 
     async def raw(self, operation: IppOperation, message: dict[str, Any]) -> bytes:
         """Send a request message to the server and return raw response."""
