@@ -42,6 +42,13 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "marker-low-levels",
     "marker-names",
     "marker-types",
+    "document-format-supported",
+    "printer-resolution-default",
+    "printer-resolution-supported",
+    "pwg-raster-document-resolution-supported",
+    "pwg-raster-document-type-supported",
+    "media-supported",
+    "compression-supported",
 ]
 
 DEFAULT_PORT = 631

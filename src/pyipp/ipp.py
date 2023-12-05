@@ -276,6 +276,7 @@ class IPP:
         try:
             printer = Printer.from_dict(parsed)
         except Exception as exc:  # noqa: BLE001
+            print("Error parsing printer response", exc)
             raise IPPParseError from exc
 
         return printer

@@ -2,7 +2,7 @@
 # pylint: disable=R0912,R0915
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from typing import Any
 
 from yarl import URL
@@ -29,6 +29,13 @@ class Info:
     uuid: str | None = None
     version: str | None = None
     more_info: str | None = None
+    document_format_supported: list[str] | None = None
+    raster_resolution_supported: tuple | None = None
+    printer_resolution_default: tuple | None = None
+    printer_resolution_supported: list[tuple] | None = None
+    raster_document_type_supported: list[str] | None = None
+    media_supported: list[str] | None = None
+    compression_supported: list[str] | None = None
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Info:
@@ -87,7 +94,23 @@ class Info:
             uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
             version=data.get("printer-firmware-string-version", None),
             more_info=data.get("printer-more-info", None),
+            document_format_supported=data.get("document-format-supported", None),
+            raster_resolution_supported=data.get(
+                "pwg-raster-document-resolution-supported", None
+            ),
+            printer_resolution_default=data.get("printer-resolution-default", None),
+            printer_resolution_supported=data.get("printer-resolution-supported", None),
+            raster_document_type_supported=data.get(
+                "pwg-raster-document-type-supported", None
+            ),
+            media_supported=data.get("media-supported", None),
+            compression_supported=data.get("compression-supported", None),
         )
+
+    @property
+    def as_dict(self) -> dict[str, Any]:
+        """Return Info object as dictionary."""
+        return asdict(self)
 
 
 @dataclass
@@ -143,6 +166,9 @@ class Printer:
     markers: list[Marker]
     state: State
     uris: list[Uri]
+
+    def __hash__(self):
+        return hash(self.info.printer_name)
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Printer:
