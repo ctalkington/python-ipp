@@ -249,6 +249,42 @@ class IPP:
 
         return response_data
 
+    async def get_jobs(
+        self,
+        which_jobs: str = "not-completed",
+    ) -> list[dict[str, Any]]:
+        """Get printer jobs."""
+        response_data = await self.execute(
+            IppOperation.GET_JOBS,
+            {
+                "operation-attributes-tag": {
+                    "which-jobs": which_jobs,
+                },
+            },
+        )
+
+        return response_data['jobs']
+
+    async def get_job_attributes(
+        self,
+        job_id: int,
+    ) -> list[dict[str, Any]] :
+        """Get job attributes by job ID."""
+        response_data = {'jobs': [{'job-id': job_id}]}
+        try:
+            response_data = await self.execute(
+                IppOperation.GET_JOB_ATTRIBUTES,
+                {
+                    "operation-attributes-tag": {
+                        "job-id": job_id,
+                    },
+                },
+            )
+        except IPPError as exc:
+            print("Error getting job attributes", exc)
+
+        return response_data['jobs']
+
     async def raw(self, operation: IppOperation, message: dict[str, Any]) -> bytes:
         """Send a request message to the server and return raw response."""
         message = self._message(operation, message)

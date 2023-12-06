@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, asdict
 from typing import Any
+from urllib.parse import urlparse, ParseResult
 
 from yarl import URL
 
@@ -130,7 +131,7 @@ class Marker:
 class Uri:
     """Object holding URI info from IPP."""
 
-    uri: str
+    uri: str | ParseResult
     authentication: str | None
     security: str | None
 
@@ -299,7 +300,7 @@ class Printer:
 
         return [
             Uri(
-                uri=_uris[uri_id],
+                uri=urlparse(_uris[uri_id]),
                 authentication=auth[uri_id],
                 security=security[uri_id],
             )
