@@ -131,7 +131,8 @@ class Marker:
 class Uri:
     """Object holding URI info from IPP."""
 
-    uri: str | ParseResult
+    uri: str
+    parsed_uri: ParseResult
     authentication: str | None
     security: str | None
 
@@ -300,7 +301,8 @@ class Printer:
 
         return [
             Uri(
-                uri=urlparse(_uris[uri_id]),
+                uri=_uris[uri_id],
+                parsed_uri=urlparse(_uris[uri_id]),
                 authentication=auth[uri_id],
                 security=security[uri_id],
             )
