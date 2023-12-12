@@ -259,31 +259,33 @@ class IPP:
             {
                 "operation-attributes-tag": {
                     "which-jobs": which_jobs,
+                    "requested-attributes": "all",
                 },
             },
         )
 
-        return response_data['jobs']
+        return response_data["jobs"]
 
     async def get_job_attributes(
         self,
         job_id: int,
-    ) -> list[dict[str, Any]] :
+    ) -> list[dict[str, Any]]:
         """Get job attributes by job ID."""
-        response_data = {'jobs': [{'job-id': job_id}]}
+        response_data = {"jobs": [{"job-id": job_id}]}
         try:
             response_data = await self.execute(
                 IppOperation.GET_JOB_ATTRIBUTES,
                 {
                     "operation-attributes-tag": {
                         "job-id": job_id,
+                        "requested-attributes": "all",
                     },
                 },
             )
         except IPPError as exc:
             print("Error getting job attributes", exc)
 
-        return response_data['jobs']
+        return response_data["jobs"]
 
     async def raw(self, operation: IppOperation, message: dict[str, Any]) -> bytes:
         """Send a request message to the server and return raw response."""
