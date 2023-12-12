@@ -252,6 +252,7 @@ class IPP:
     async def get_jobs(
         self,
         which_jobs: str = "not-completed",
+        job_id: int | None = None,
     ) -> list[dict[str, Any]]:
         """Get printer jobs."""
         response_data = await self.execute(
@@ -266,26 +267,48 @@ class IPP:
 
         return response_data["jobs"]
 
+    async def get_all_jobs(
+        self,
+    ) -> list[dict[str, Any]]:
+        """Get all printer jobs."""
+        not_completed_res = self.get_jobs()
+        completed_res = self.get_jobs(which_jobs="completed")
+
+        async with asyncio.TaskGroup() as tg:
+            not_completed_data = tg.create_task(not_completed_res)
+            completed_res = tg.create_task(completed_res)
+
+        return not_completed_data.result() + completed_res.result()
+
     async def get_job_attributes(
         self,
         job_id: int,
     ) -> list[dict[str, Any]]:
         """Get job attributes by job ID."""
-        response_data = {"jobs": [{"job-id": job_id}]}
-        try:
-            response_data = await self.execute(
-                IppOperation.GET_JOB_ATTRIBUTES,
-                {
-                    "operation-attributes-tag": {
-                        "job-id": job_id,
-                        "requested-attributes": "all",
-                    },
+        response_data = await self.execute(
+            IppOperation.GET_JOB_ATTRIBUTES,
+            {
+                "operation-attributes-tag": {
+                    "job-id": job_id,
+                    "requested-attributes": "all",
                 },
-            )
-        except IPPError as exc:
-            print("Error getting job attributes", exc)
+            },
+        )
 
         return response_data["jobs"]
+
+    async def get_printer_attributes(
+        self,
+    ) -> dict[str, Any]:
+        """Get printer attributes."""
+        return await self.execute(
+            IppOperation.GET_PRINTER_ATTRIBUTES,
+            {
+                "operation-attributes-tag": {
+                    "requested-attributes": "all",
+                },
+            },
+        )
 
     async def raw(self, operation: IppOperation, message: dict[str, Any]) -> bytes:
         """Send a request message to the server and return raw response."""
