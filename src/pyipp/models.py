@@ -172,6 +172,9 @@ class Printer:
     def __hash__(self):
         return hash(self.info.printer_name)
 
+    def __eq__(self, other):
+        return hash(self.info.printer_name) == hash(other.info.printer_name)
+
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Printer:
         """Return Printer object from IPP response."""
