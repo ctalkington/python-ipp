@@ -43,11 +43,13 @@ class Info:
         uri_supported = data.get("printer-uri-supported", [])
         uuid = data.get("printer-uuid")
 
-        if isinstance(uri_supported, list):
-            for uri in uri_supported:
-                if (URL(uri).path.lstrip("/")) == _printer_name.lstrip("/"):
-                    _printer_name = ""
-                    break
+        if not isinstance(uri_supported, list):
+            uri_supported = [str(uri_supported)]
+
+        for uri in uri_supported:
+            if (URL(uri).path.lstrip("/")) == _printer_name.lstrip("/"):
+                _printer_name = ""
+                break
 
         make, model = parse_make_and_model(make_model)
         parsed_device_id = parse_ieee1284_device_id(device_id)

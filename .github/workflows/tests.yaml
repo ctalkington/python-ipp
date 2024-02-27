@@ -21,12 +21,12 @@ jobs:
         python: ["3.9", "3.10", "3.11"]
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ matrix.python }}
         id: python
-        uses: actions/setup-python@v4.7.0
+        uses: actions/setup-python@v4.8.0
         with:
           python-version: ${{ matrix.python }}
           cache: "poetry"
@@ -49,7 +49,7 @@ jobs:
     needs: pytest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
       - name: Download coverage data
@@ -58,7 +58,7 @@ jobs:
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
         id: python
-        uses: actions/setup-python@v4.7.0
+        uses: actions/setup-python@v4.8.0
         with:
           python-version: ${{ env.DEFAULT_PYTHON }}
           cache: "poetry"
@@ -73,4 +73,4 @@ jobs:
           poetry run coverage combine coverage*/.coverage*
           poetry run coverage xml -i
       - name: Upload coverage report
-        uses: codecov/codecov-action@v3.1.4
+        uses: codecov/codecov-action@v4.1.0
