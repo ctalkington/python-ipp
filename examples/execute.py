@@ -12,6 +12,7 @@ async def main() -> None:
         response = await ipp.execute(
             IppOperation.GET_PRINTER_ATTRIBUTES,
             {
+                "version": (2, 0),  # try (1, 1) for older devices
                 "operation-attributes-tag": {
                     "requested-attributes": [
                         "printer-device-id",
