@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
@@ -64,7 +64,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
@@ -87,7 +87,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
@@ -136,7 +136,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
@@ -159,7 +159,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
@@ -182,7 +182,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
