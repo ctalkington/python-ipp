@@ -198,7 +198,7 @@ class IPP:
         if parsed["status-code"] == IppStatus.ERROR_VERSION_NOT_SUPPORTED:
             raise IPPVersionNotSupportedError("IPP version not supported by server")
 
-        if parsed["status-code"] not in range(0, 0x200):
+        if parsed["status-code"] not in range(0x200):
             raise IPPError(
                 "Unexpected printer status code",
                 {"status-code": parsed["status-code"]},
@@ -237,10 +237,10 @@ class IPP:
 
         return printer
 
-    async def __aenter__(self) -> IPP:
+    async def __aenter__(self) -> IPP:   # noqa: PYI034
         """Async enter."""
         return self
 
-    async def __aexit__(self, *_exec_info: Any) -> None:
+    async def __aexit__(self, *_exec_info: object) -> None:
         """Async exit."""
         await self.close()

@@ -91,7 +91,7 @@ def parse_attribute(  # noqa: PLR0912, PLR0915
             )
 
         raw_date = dict(
-            zip(  # noqa: B905
+            zip(
                 (
                     "year",
                     "month",

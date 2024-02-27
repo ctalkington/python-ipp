@@ -82,13 +82,13 @@ class Info:
             manufacturer=make,
             model=model,
             printer_name=printer_name,
-            printer_info=data.get("printer-info", None),
+            printer_info=data.get("printer-info"),
             printer_uri_supported=uri_supported,
             serial=serial,
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
-            version=data.get("printer-firmware-string-version", None),
-            more_info=data.get("printer-more-info", None),
+            version=data.get("printer-firmware-string-version"),
+            more_info=data.get("printer-more-info"),
         )
 
 
@@ -127,13 +127,13 @@ class State:
         """Return State object from IPP response."""
         state = data.get("printer-state", 0)
 
-        if (reasons := data.get("printer-state-reasons", None)) == "none":
+        if (reasons := data.get("printer-state-reasons")) == "none":
             reasons = None
 
         return State(
             printer_state=PRINTER_STATES.get(state, state),
             reasons=reasons,
-            message=data.get("printer-state-message", None),
+            message=data.get("printer-state-message"),
         )
 
 
