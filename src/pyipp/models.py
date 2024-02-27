@@ -44,7 +44,8 @@ class Info:
         uuid = data.get("printer-uuid")
 
         if not isinstance(uri_supported, list):
-            uri_supported = [uri_supported]
+            uri_supported = [str(uri_supported)]
+
         for uri in uri_supported:
             if (URL(uri).path.lstrip("/")) == _printer_name.lstrip("/"):
                 _printer_name = ""
