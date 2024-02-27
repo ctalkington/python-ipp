@@ -21,7 +21,7 @@ jobs:
         python: ["3.9", "3.10", "3.11"]
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ matrix.python }}
@@ -49,7 +49,7 @@ jobs:
     needs: pytest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.0.0
+        uses: actions/checkout@v4.1.1
         with:
           fetch-depth: 0
       - name: Download coverage data
