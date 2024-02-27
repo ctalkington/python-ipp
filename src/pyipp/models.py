@@ -40,7 +40,7 @@ class Info:
         _printer_name = printer_name = data.get("printer-name", "")
         make_model = data.get("printer-make-and-model", "")
         device_id = data.get("printer-device-id", "")
-        uri_supported = data.get("printer-uri-supported")
+        uri_supported = data.get("printer-uri-supported", [])
         uuid = data.get("printer-uuid")
 
         if not isinstance(uri_supported, list):
