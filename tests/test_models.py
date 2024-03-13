@@ -207,7 +207,7 @@ def test_printer_as_dict() -> None:
     assert isinstance(printer_dict["state"], dict)
     assert isinstance(printer_dict["markers"], List)
     assert len(printer_dict["markers"]) == 8
-    assert isinstance(printet_dict["uris"], List)
+    assert isinstance(printer_dict["uris"], List)
     assert len(printer_dict["uris"]) == 0
 
 @pytest.mark.asyncio
