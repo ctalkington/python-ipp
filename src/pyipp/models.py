@@ -2,7 +2,7 @@
 # pylint: disable=R0912,R0915
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any
 
 from yarl import URL
@@ -145,6 +145,15 @@ class Printer:
     markers: list[Marker]
     state: State
     uris: list[Uri]
+
+    def as_dict(self) -> dict[str, Any]:
+        """Return dictionary version of this printer."""
+        return {
+            "info": asdict(self.info),
+            "state": asdict(self.state),
+            "markers": [asdict(marker) for marker in self.markers],
+            "uris": [asdict(uri) for uri in self.uris],
+        }
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Printer:

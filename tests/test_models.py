@@ -2,7 +2,7 @@
 # pylint: disable=R0912,R0915
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, List
 
 import pytest
 
@@ -193,6 +193,22 @@ async def test_printer() -> None:  # noqa: PLR0915
     assert printer.uris[1].authentication is None
     assert printer.uris[1].security is None
 
+def test_printer_as_dict() -> None:
+    """Test the dictionary version of Printer."""
+    parsed = parser.parse(load_fixture_binary("get-printer-attributes-epsonxp6000.bin"))
+    printer = models.Printer.from_dict(parsed["printers"][0])
+
+    assert printer
+
+    printer_dict = printer.as_dict()
+    assert printer_dict
+    assert isinstance(printer_dict, dict)
+    assert isinstance(printer_dict["info"], dict)
+    assert isinstance(printer_dict["state"], dict)
+    assert isinstance(printer_dict["markers"], List)
+    assert len(printer_dict["markers"]) == 5
+    assert isinstance(printer_dict["uris"], List)
+    assert len(printer_dict["uris"]) == 2
 
 @pytest.mark.asyncio
 async def test_printer_with_single_marker() -> None:
