@@ -151,8 +151,8 @@ class Printer:
         return {
             "info": asdict(self.info),
             "state": asdict(self.state),
-            "markers": asdict(marker) for marker in self.markers],
-            "uris": asdict(uri) for uri in self.uris],
+            "markers": [asdict(marker) for marker in self.markers],
+            "uris": [asdict(uri) for uri in self.uris],
         }
 
     @staticmethod
