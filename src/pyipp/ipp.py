@@ -56,6 +56,7 @@ class IPP:
     username: str | None = None
     verify_ssl: bool = False
     user_agent: str | None = None
+    ipp_version: tuple[int, int] = DEFAULT_PROTO_VERSION
 
     _close_session: bool = False
     _printer_uri: str = ""
@@ -168,7 +169,7 @@ class IPP:
     def _message(self, operation: IppOperation, msg: dict[str, Any]) -> dict[str, Any]:
         """Build a request message to be sent to the server."""
         base = {
-            "version": DEFAULT_PROTO_VERSION,
+            "version": self.ipp_version,
             "operation": operation,
             "request-id": None,  # will get added by serializer if one isn't given
             "operation-attributes-tag": {  # these are required to be in this order
