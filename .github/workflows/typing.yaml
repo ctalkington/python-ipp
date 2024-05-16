@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Check out code from GitHub
-        uses: actions/checkout@v4.1.4
+        uses: actions/checkout@v4.1.5
       - name: Set up Poetry
         run: pipx install poetry
       - name: Set up Python ${{ env.DEFAULT_PYTHON }}
