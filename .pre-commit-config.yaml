@@ -6,7 +6,7 @@ repos:
         name: Ruff
         language: system
         types: [python]
-        entry: poetry run ruff --fix
+        entry: poetry run ruff check --fix
         require_serial: true
         stages: [commit, push, manual]
       - id: black
