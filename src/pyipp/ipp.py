@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import sys
 from dataclasses import dataclass
 from importlib import metadata
 from socket import gaierror
@@ -9,7 +10,6 @@ from struct import error as structerror
 from typing import TYPE_CHECKING, Any
 
 import aiohttp
-import async_timeout
 from deepmerge import always_merger
 from yarl import URL
 
@@ -35,6 +35,11 @@ from .serializer import encode_dict
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
+if sys.version_info >= (3, 11):
+    from asyncio import timeout
+else:
+    from async_timeout import timeout
+
 VERSION = metadata.version(__package__)
 
 @dataclass
@@ -51,6 +56,7 @@ class IPP:
     username: str | None = None
     verify_ssl: bool = False
     user_agent: str | None = None
+    ipp_version: tuple[int, int] = DEFAULT_PROTO_VERSION
 
     _close_session: bool = False
     _printer_uri: str = ""
@@ -110,7 +116,7 @@ class IPP:
             data = encode_dict(data)
 
         try:
-            async with async_timeout.timeout(self.request_timeout):
+            async with timeout(self.request_timeout):
                 response = await self.session.request(
                     method,
                     url,
@@ -163,7 +169,7 @@ class IPP:
     def _message(self, operation: IppOperation, msg: dict[str, Any]) -> dict[str, Any]:
         """Build a request message to be sent to the server."""
         base = {
-            "version": DEFAULT_PROTO_VERSION,
+            "version": self.ipp_version,
             "operation": operation,
             "request-id": None,  # will get added by serializer if one isn't given
             "operation-attributes-tag": {  # these are required to be in this order
@@ -193,7 +199,7 @@ class IPP:
         if parsed["status-code"] == IppStatus.ERROR_VERSION_NOT_SUPPORTED:
             raise IPPVersionNotSupportedError("IPP version not supported by server")
 
-        if parsed["status-code"] not in range(0, 0x200):
+        if parsed["status-code"] not in range(0x200):
             raise IPPError(
                 "Unexpected printer status code",
                 {"status-code": parsed["status-code"]},
@@ -227,15 +233,15 @@ class IPP:
 
         try:
             printer = Printer.from_dict(parsed)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             raise IPPParseError from exc
 
         return printer
 
-    async def __aenter__(self) -> IPP:
+    async def __aenter__(self) -> IPP:   # noqa: PYI034
         """Async enter."""
         return self
 
-    async def __aexit__(self, *_exec_info: Any) -> None:
+    async def __aexit__(self, *_exec_info: object) -> None:
         """Async exit."""
         await self.close()

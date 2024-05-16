@@ -2,7 +2,7 @@
 # pylint: disable=R0912,R0915
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from typing import Any
 
 from yarl import URL
@@ -43,11 +43,13 @@ class Info:
         uri_supported = data.get("printer-uri-supported", [])
         uuid = data.get("printer-uuid")
 
-        if isinstance(uri_supported, list):
-            for uri in uri_supported:
-                if (URL(uri).path.lstrip("/")) == _printer_name.lstrip("/"):
-                    _printer_name = ""
-                    break
+        if not isinstance(uri_supported, list):
+            uri_supported = [str(uri_supported)]
+
+        for uri in uri_supported:
+            if (URL(uri).path.lstrip("/")) == _printer_name.lstrip("/"):
+                _printer_name = ""
+                break
 
         make, model = parse_make_and_model(make_model)
         parsed_device_id = parse_ieee1284_device_id(device_id)
@@ -80,13 +82,13 @@ class Info:
             manufacturer=make,
             model=model,
             printer_name=printer_name,
-            printer_info=data.get("printer-info", None),
+            printer_info=data.get("printer-info"),
             printer_uri_supported=uri_supported,
             serial=serial,
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
-            version=data.get("printer-firmware-string-version", None),
-            more_info=data.get("printer-more-info", None),
+            version=data.get("printer-firmware-string-version"),
+            more_info=data.get("printer-more-info"),
         )
 
 
@@ -125,13 +127,13 @@ class State:
         """Return State object from IPP response."""
         state = data.get("printer-state", 0)
 
-        if (reasons := data.get("printer-state-reasons", None)) == "none":
+        if (reasons := data.get("printer-state-reasons")) == "none":
             reasons = None
 
         return State(
             printer_state=PRINTER_STATES.get(state, state),
             reasons=reasons,
-            message=data.get("printer-state-message", None),
+            message=data.get("printer-state-message"),
         )
 
 
@@ -143,6 +145,15 @@ class Printer:
     markers: list[Marker]
     state: State
     uris: list[Uri]
+
+    def as_dict(self) -> dict[str, Any]:
+        """Return dictionary version of this printer."""
+        return {
+            "info": asdict(self.info),
+            "state": asdict(self.state),
+            "markers": [asdict(marker) for marker in self.markers],
+            "uris": [asdict(uri) for uri in self.uris],
+        }
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Printer:
