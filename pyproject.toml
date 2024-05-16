@@ -34,7 +34,7 @@ python = "^3.9"
 yarl = ">=1.6.0"
 
 [tool.poetry.dev-dependencies]
-aresponses = "2.1.6"
+aresponses = "3.0.0"
 black = "24.4.2"
 blacken-docs = "1.16.0"
 codespell = "2.2.6"
