@@ -74,3 +74,5 @@ jobs:
           poetry run coverage xml -i
       - name: Upload coverage report
         uses: codecov/codecov-action@v4.4.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
