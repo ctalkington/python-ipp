@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 env:
-  DEFAULT_PYTHON: "3.10"
+  DEFAULT_PYTHON: "3.11"
 
 jobs:
   codespell:
@@ -57,7 +57,7 @@ jobs:
       - name: Install Python dependencies
         run: poetry install --no-interaction
       - name: Run Ruff
-        run: poetry run ruff .
+        run: poetry run ruff check .
 
   black:
     name: black

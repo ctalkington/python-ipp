@@ -232,7 +232,7 @@ class IPP:
 
         try:
             printer = Printer.from_dict(parsed)
-        except Exception as exc:  # noqa: BLE001
+        except Exception as exc:
             raise IPPParseError from exc
 
         return printer
