@@ -57,7 +57,7 @@ jobs:
       - name: Install Python dependencies
         run: poetry install --no-interaction
       - name: Run Ruff
-        run: poetry run ruff .
+        run: poetry run ruff check .
 
   black:
     name: black
