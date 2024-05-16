@@ -42,7 +42,7 @@ You need at least:
 
 - Python 3.9+
 - [Poetry](https://python-poetry.org/docs/#installation)
-- NodeJS 18+ (including NPM)
+- NodeJS 20+ (including NPM)
 
 To install all packages, including all development requirements:
 
