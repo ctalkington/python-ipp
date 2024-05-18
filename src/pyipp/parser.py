@@ -36,6 +36,31 @@ def parse_ieee1284_device_id(device_id: str) -> dict[str, str]:
     return device_info
 
 
+def parse_collection(data: bytes, offset: int) -> tuple[dict[str, Any], int]:
+    """Parse member attributes from IPP collection."""
+    collection_data: dict[str, Any] = {}
+    member_name: str = "unknown"
+
+    _LOGGER.debug("#BeginCollectionOffset: %s", offset)
+    while struct.unpack_from("b", data, offset)[0] != IppTag.END_COLLECTION.value:
+        attribute, new_offset = parse_attribute(data, offset)
+
+        if attribute["tag"] == IppTag.MEMBER_NAME.value:
+            member_name = attribute["value"]
+        else:
+            collection_data[member_name] = attribute["value"]
+
+        offset = new_offset
+
+    next_attribute, next_attr_offset = parse_attribute(data, offset)
+    if next_attribute["tag"] == IppTag.END_COLLECTION.value:
+        offset = next_attr_offset
+
+    _LOGGER.debug("#EndCollectionOffset: %s", new_offset)
+
+    return collection_data, offset
+
+
 # pylint: disable=R0912,R0915
 def parse_attribute(  # noqa: PLR0912, PLR0915
     data: bytes,
@@ -61,10 +86,16 @@ def parse_attribute(  # noqa: PLR0912, PLR0915
     attribute["name"] = data[offset:offset_length].decode("utf-8")
     offset += attribute["name-length"]
 
+    if attribute["name"]:
+        _LOGGER.debug(
+            "Attribute Name: %s (%s)", attribute["name"], hex(attribute["tag"]),
+        )
+    else:
+        _LOGGER.debug("Attribute Tag: %s", hex(attribute["tag"]))
+
     attribute["value-length"] = struct.unpack_from(">h", data, offset)[0]
     offset += 2
 
-    _LOGGER.debug("Attribute Name: %s", attribute["name"])
     _LOGGER.debug("Attribute Value Offset: %s", offset)
     _LOGGER.debug("Attribute Value Length: %s", attribute["value-length"])
 
@@ -133,6 +164,7 @@ def parse_attribute(  # noqa: PLR0912, PLR0915
         for i in range(int(attribute["value-length"] / 4)):
             attribute["value"].append(struct.unpack_from(">i", data, offset + i * 4)[0])
         offset += attribute["value-length"]
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
     elif attribute["tag"] == IppTag.RESOLUTION.value:
         attribute["value"] = struct.unpack_from(">iib", data, offset)
         offset += attribute["value-length"]
@@ -153,6 +185,14 @@ def parse_attribute(  # noqa: PLR0912, PLR0915
         attribute["value"] = data[offset:offset_length].decode("utf-8")
         offset += attribute["text-length"]
         _LOGGER.debug("Attribute Value: %s", attribute["value"])
+    elif attribute["tag"] == IppTag.BEGIN_COLLECTION.value:
+        offset += attribute["value-length"]
+        collection, new_offset = parse_collection(data, offset)
+        attribute["value"] = collection
+        offset = new_offset
+        _LOGGER.debug("Attribute Value: %s", attribute["value"])
+    elif attribute["tag"] == IppTag.END_COLLECTION.value:
+        offset += attribute["value-length"]
     else:
         offset_length = offset + attribute["value-length"]
         attribute["value"] = data[offset:offset_length]
