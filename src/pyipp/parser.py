@@ -39,32 +39,33 @@ def parse_ieee1284_device_id(device_id: str) -> dict[str, str]:
 def parse_collection(data: bytes, offset: int) -> tuple[dict[str, Any], int]:
     """Parse member attributes from IPP collection."""
     collection_data: dict[str, Any] = {}
-    member_name: str = "unknown"
+    member_name: str = ""
 
     _LOGGER.debug("#BeginCollectionOffset: %s", offset)
+
     while struct.unpack_from("b", data, offset)[0] != IppTag.END_COLLECTION.value:
-        attribute, new_offset = parse_attribute(data, offset)
+        attribute, next_attr_offset = parse_attribute(data, offset, member_name)
 
         if attribute["tag"] == IppTag.MEMBER_NAME.value:
             member_name = attribute["value"]
-        else:
+        elif member_name:
             collection_data[member_name] = attribute["value"]
 
-        offset = new_offset
-
-    next_attribute, next_attr_offset = parse_attribute(data, offset)
-    if next_attribute["tag"] == IppTag.END_COLLECTION.value:
         offset = next_attr_offset
 
-    _LOGGER.debug("#EndCollectionOffset: %s", new_offset)
+    _LOGGER.debug("#EndCollectionOffset: %s", offset)
 
-    return collection_data, offset
+    # skip over end of collection marker
+    _, next_attr_offset = parse_attribute(data, offset)
+
+    return collection_data, next_attr_offset
 
 
 # pylint: disable=R0912,R0915
 def parse_attribute(  # noqa: PLR0912, PLR0915
     data: bytes,
     offset: int,
+    prev_attr_name: str = "",
 ) -> tuple[dict[str, Any], int]:
     """Parse attribute from IPP data.
 
@@ -86,6 +87,8 @@ def parse_attribute(  # noqa: PLR0912, PLR0915
     attribute["name"] = data[offset:offset_length].decode("utf-8")
     offset += attribute["name-length"]
 
+    resolved_attr_name = attribute["name"] or prev_attr_name
+
     if attribute["name"]:
         _LOGGER.debug(
             "Attribute Name: %s (%s)", attribute["name"], hex(attribute["tag"]),
@@ -104,9 +107,9 @@ def parse_attribute(  # noqa: PLR0912, PLR0915
 
         if (
             attribute["tag"] == IppTag.ENUM.value
-            and attribute["name"] in ATTRIBUTE_ENUM_MAP
+            and resolved_attr_name in ATTRIBUTE_ENUM_MAP
         ):
-            enum_class = ATTRIBUTE_ENUM_MAP[attribute["name"]]
+            enum_class = ATTRIBUTE_ENUM_MAP[resolved_attr_name]
             attribute["value"] = enum_class(attribute["value"])
 
         offset += 4
@@ -287,7 +290,9 @@ def parse(  # noqa: PLR0912, PLR0915
             attribute_key = "unsupported-attributes"
             offset += 1
 
-        attribute, new_offset = parse_attribute(raw_data, offset)
+        attribute, new_offset = parse_attribute(
+            raw_data, offset, previous_attribute_name,
+        )
 
         # if attribute has a name -> add it
         # if attribute doesn't have a name -> it is part of an array
