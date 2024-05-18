@@ -312,11 +312,19 @@ class IppOrientationRequested(IntEnum):
 
 
 ATTRIBUTE_ENUM_MAP = {
-    "document-state": IppDocumentState,
-    "finishings": IppFinishing,
-    "job-state": IppJobState,
-    "orientation-requested": IppOrientationRequested,
-    "printer-state": IppPrinterState,
-    "print-quality": IppPrintQuality,
-    "status-code": IppStatus,
+    "document-state": IppDocumentState, # PWG5100.5
+    "finishings": IppFinishing, # RFC8011
+    "finishings-default": IppFinishing, # RFC8011
+    "finishings-supported": IppFinishing, # RFC8011
+    "job-state": IppJobState, # RFC8011
+    "media-source-feed-orientation": IppOrientationRequested, # PWG5100.7
+    "operations-supported": IppOperation, # RFC8011
+    "orientation-requested": IppOrientationRequested, # RFC8011
+    "orientation-requested-default": IppOrientationRequested, # RFC8011
+    "orientation-requested-supported": IppOrientationRequested, # RFC8011
+    "printer-state": IppPrinterState, # RFC8011
+    "print-quality": IppPrintQuality, # RFC8011
+    "print-quality-default": IppPrintQuality, # RFC8011
+    "print-quality-supported": IppPrintQuality, # RFC8011
+    "status-code": IppStatus, # RFC8011
 }
