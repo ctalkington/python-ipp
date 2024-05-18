@@ -93,7 +93,7 @@ def encode_dict(data: dict[str, Any]) -> bytes:
 
     encoded += struct.pack(">b", IppTag.END.value)
 
-    if 'data' in data:
-        encoded += data['data']
+    if "data" in data:
+        encoded += data["data"]
 
     return encoded
