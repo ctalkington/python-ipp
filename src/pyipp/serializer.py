@@ -12,6 +12,12 @@ from .tags import ATTRIBUTE_TAG_MAP
 
 _LOGGER = logging.getLogger(__name__)
 
+class UnsupportedAttributeError(RuntimeError):
+    """Some attribute name in a message is unsupported."""
+
+    def __init__(self, name: str) -> None:
+        """Initialize Exception with name of unsupported attribute."""
+        super(Exception, self).__init__(name)
 
 def construct_attribute_values(tag: IppTag, value: Any) -> bytes:
     """Serialize the attribute values into IPP format."""
@@ -36,8 +42,7 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
     byte_str = b""
 
     if not tag and not (tag := ATTRIBUTE_TAG_MAP.get(name, None)):
-        _LOGGER.debug("Unknown IppTag for %s", name)
-        return byte_str
+        raise UnsupportedAttributeError(name)
 
     if isinstance(value, (list, tuple, set)):
         for index, list_value in enumerate(value):
