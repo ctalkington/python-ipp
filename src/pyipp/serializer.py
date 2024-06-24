@@ -19,6 +19,13 @@ class UnsupportedAttributeError(RuntimeError):
         """Initialize Exception with name of unsupported attribute."""
         super(Exception, self).__init__(name)
 
+class DatatypeMismatchError(RuntimeError):
+    """Some attribute value has an unexpected data type."""
+
+    def __init__(self, msg: str) -> None:
+        """Initialize Exception with message."""
+        super(Exception, self).__init__(msg)
+
 def construct_attribute_values(tag: IppTag, value: Any) -> bytes:
     """Serialize the attribute values into IPP format."""
     byte_str = b""
@@ -55,6 +62,25 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
                 byte_str += struct.pack(">h", 0)
 
             byte_str += construct_attribute_values(tag, list_value)
+    elif isinstance(value, dict):
+        if tag != IppTag.BEGIN_COLLECTION:
+            msg = (f"Attribute {name} has data of type dict, but "
+                   f"its tag is not a collection but a {tag}")
+            raise DatatypeMismatchError(msg)
+        byte_str += struct.pack(">b", tag.value)  # value-tag
+        byte_str += struct.pack(">h", len(name))  # name-length
+        byte_str += name.encode("utf-8")          # name
+        byte_str += struct.pack(">h", 0)          # value-length
+        for k, v in value.items():
+            byte_str += struct.pack(">b", IppTag.MEMBER_NAME.value)  # value-tag
+            byte_str += struct.pack(">h", 0)       # name-length
+            byte_str += struct.pack(">h", len(k))  # value-length
+            byte_str += k.encode("utf-8")          # value (member-name)
+            byte_str += construct_attribute(k, v)
+        byte_str += struct.pack(">b", IppTag.END_COLLECTION.value)  # end-value-tag
+        byte_str += struct.pack(">h", 0)          # end-name-length
+        byte_str += struct.pack(">h", 0)          # end-value-length
+
     else:
         byte_str = struct.pack(">b", tag.value)
 
