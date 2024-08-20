@@ -74,3 +74,28 @@ def test_encode_dict() -> None:
     assert result == load_fixture_binary(
         "serializer/get-printer-attributes-request-000.bin",
     )
+
+
+def test_encode_dict_with_file() -> None:
+    """Test the encode_dict method with upload file."""
+    result = serializer.encode_dict(
+        {
+            "version": DEFAULT_PROTO_VERSION,
+            "operation": IppOperation.CUPS_ADD_MODIFY_PRINTER,
+            "request-id": 1,
+            "operation-attributes-tag": {
+                "attributes-charset": DEFAULT_CHARSET,
+                "attributes-natural-language": DEFAULT_CHARSET_LANGUAGE,
+                "printer-uri": "ipp://printer.example.com:632/printers/My_New_Printer",
+                "requesting-user-name": "PythonIPP",
+            },
+            "printer-attributes-tag": {
+                "device-uri": "socket://0.0.0.0:9100",
+            },
+            "file": b"*PPD-Adobe:...",
+        },
+    )
+
+    assert result == load_fixture_binary(
+        "serializer/add-printer-with-driver-file-request-000.bin",
+    )
