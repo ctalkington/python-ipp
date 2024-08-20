@@ -1,18 +1,17 @@
 # pylint: disable=W0621
 """Asynchronous Python client for IPP."""
 import asyncio
+from pathlib import Path
 
 from pyipp import IPP
 from pyipp.enums import IppOperation
 
 
 async def main() -> None:
+    """Show an example of printing on your IP print server."""
+    content = Path("/path/to/pdf.pdf").read_bytes()
 
-    pdf_file = '/path/to/pdf.pfd'
-    with open(pdf_file, 'rb') as f:
-        content = f.read()
-
-    """Show example of executing operation against your IPP print server."""
+    # then the printer must be shared if CUPS is used
     async with IPP("ipp://192.168.1.92:631/ipp/print") as ipp:
         response = await ipp.execute(
             IppOperation.PRINT_JOB,
@@ -22,7 +21,7 @@ async def main() -> None:
                     "job-name": "My Test Job",
                     "document-format": "application/pdf",
                 },
-                'data': content,
+                "file": content,
             },
         )
 
