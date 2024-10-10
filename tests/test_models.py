@@ -217,14 +217,14 @@ def test_printer_update_from_dict() -> None:
 
     assert printer
     assert printer.info
-    assert prknter.info.uptime == 783801
+    assert printer.info.uptime == 783801
 
     parsed["printer-up-time"] = 2
     printer.update_from_dict(parsed)
 
     assert printer
     assert printer.info
-    assert prknter.info.uptime == 2
+    assert printer.info.uptime == 2
 
 @pytest.mark.asyncio
 async def test_printer_with_single_marker() -> None:
