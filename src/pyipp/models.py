@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta
 from typing import Any
 
 from yarl import URL
@@ -145,6 +146,7 @@ class Printer:
     markers: list[Marker]
     state: State
     uris: list[Uri]
+    booted_at: datetime
 
     def as_dict(self) -> dict[str, Any]:
         """Return dictionary version of this printer."""
@@ -153,16 +155,35 @@ class Printer:
             "state": asdict(self.state),
             "markers": [asdict(marker) for marker in self.markers],
             "uris": [asdict(uri) for uri in self.uris],
+            "booted_at": self.booted_at,
         }
+
+    def update(self, data: dict[str, Any])
+        """Return updated Printer object from IPP response data."""
+        last_uptime = self.info.uptime
+
+        self.info = Info.from_dict(data)
+        self.markers = Printer.merge_marker_data(data)
+        self.state = State.from_dict(data)
+        self.uris = Printer.merge_uri_data(data)
+
+        if self.info.uptime < last_uptime:
+            self.booted_at = utcnow() - timedelta(seconds=self.info.uptime)
+
+        return self
+
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Printer:
-        """Return Printer object from IPP response."""
+        """Return Printer object from IPP response data."""
+        info = Info.from_dict(data)
+
         return Printer(
-            info=Info.from_dict(data),
+            info=info,
             markers=Printer.merge_marker_data(data),
             state=State.from_dict(data),
             uris=Printer.merge_uri_data(data),
+            booted_at=(utcnow() - timedelta(seconds=info.uptime)),
         )
 
     @staticmethod
