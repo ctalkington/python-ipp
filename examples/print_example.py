@@ -9,7 +9,7 @@ from pyipp.enums import IppOperation
 async def main() -> None:
     """Show example of printing via IPP print server."""
     pdf_file = "/path/to/pdf.pfd"
-    with open(pdf_file, "rb") as f:  # noqa: PTH123, ASYNC101
+    with open(pdf_file, "rb") as f:  # noqa: PTH123, ASYNC230
         content = f.read()
 
     async with IPP("ipp://192.168.1.92:631/ipp/print") as ipp:
