@@ -62,7 +62,7 @@ RFC2911_PRINTER_ATTRS: dict[str, Any] = {
     "printer-resolution-default": "",
     "printer-state": "",
     "printer-state-reasons": "",
-    "printer-up-time": "",
+    "printer-up-time": 0,
     "printer-uri": "",
     "printer-uri-supported": "",
     "queued-job-count": "",

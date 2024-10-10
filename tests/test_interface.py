@@ -41,6 +41,33 @@ async def test_printer(aresponses: ResponsesMockServer) -> None:
 
 
 @pytest.mark.asyncio
+async def test_printer_update_logic(aresponses: ResponsesMockServer) -> None:
+    """Test getting updated IPP printer information."""
+    aresponses.add(
+        MATCH_DEFAULT_HOST,
+        DEFAULT_PRINTER_PATH,
+        "POST",
+        aresponses.Response(
+            status=200,
+            headers={"Content-Type": "application/ipp"},
+            body=load_fixture_binary("get-printer-attributes-epsonxp6000.bin"),
+        ),
+        repeat=2,
+    )
+
+    async with ClientSession() as session:
+        ipp = IPP(DEFAULT_PRINTER_URI, session=session)
+        printer = await ipp.printer()
+
+        assert printer
+        assert isinstance(printer, Printer)
+
+        printer = await ipp.printer()
+        assert printer
+        assert isinstance(printer, Printer)
+
+
+@pytest.mark.asyncio
 async def test_raw(aresponses: ResponsesMockServer) -> None:
     """Test raw method is handled correctly."""
     aresponses.add(
