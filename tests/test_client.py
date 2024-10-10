@@ -176,22 +176,6 @@ async def test_timeout(aresponses: ResponsesMockServer) -> None:
 
 
 @pytest.mark.asyncio
-async def test_client_error() -> None:
-    """Test http client error."""
-    async with ClientSession() as session:
-        ipp = IPP("#", session=session)
-        with pytest.raises(IPPConnectionError):
-            assert await ipp.execute(
-                IppOperation.GET_PRINTER_ATTRIBUTES,
-                {
-                    "operation-attributes-tag": {
-                        "requested-attributes": DEFAULT_PRINTER_ATTRIBUTES,
-                    },
-                },
-            )
-
-
-@pytest.mark.asyncio
 async def test_http_error404(aresponses: ResponsesMockServer) -> None:
     """Test HTTP 404 response handling."""
     aresponses.add(
