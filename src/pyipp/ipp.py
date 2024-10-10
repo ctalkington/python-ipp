@@ -60,6 +60,7 @@ class IPP:
 
     _close_session: bool = False
     _printer_uri: str = ""
+    _printer: Printer | None = None
 
     def __post_init__(self) -> None:
         """Initialize connection parameters."""
@@ -232,11 +233,14 @@ class IPP:
         parsed: dict[str, Any] = next(iter(response_data["printers"] or []), {})
 
         try:
-            printer = Printer.from_dict(parsed)
+            if self._printer is None:
+                self._printer = Printer.from_dict(parsed)
+            else:
+                self._printer.update_from_dict(parsed)
         except Exception as exc:
             raise IPPParseError from exc
 
-        return printer
+        return self._printer
 
     async def __aenter__(self) -> IPP:   # noqa: PYI034
         """Async enter."""
