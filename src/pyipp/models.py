@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import asdict, dataclass
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from yarl import URL
@@ -168,7 +168,7 @@ class Printer:
         self.uris = Printer.merge_uri_data(data)
 
         if self.info.uptime < last_uptime:
-            self.booted_at = utcnow() - timedelta(seconds=self.info.uptime)
+            self.booted_at = _utcnow() - timedelta(seconds=self.info.uptime)
 
         return self
 
@@ -183,7 +183,7 @@ class Printer:
             markers=Printer.merge_marker_data(data),
             state=State.from_dict(data),
             uris=Printer.merge_uri_data(data),
-            booted_at=(utcnow() - timedelta(seconds=info.uptime)),
+            booted_at=(_utcnow() - timedelta(seconds=info.uptime)),
         )
 
     @staticmethod
@@ -312,6 +312,10 @@ class Printer:
             for uri_id in range(ulen)
         ]
 
+
+def _utcnow() -> datetime:
+    """Return the current date and time in UTC."""
+    return datetime.now(tz=timezone.utc)
 
 def _str_or_none(value: str) -> str | None:
     """Return string while handling string representations of None."""
