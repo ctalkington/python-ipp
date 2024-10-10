@@ -52,6 +52,7 @@ async def test_printer_update_logic(aresponses: ResponsesMockServer) -> None:
             headers={"Content-Type": "application/ipp"},
             body=load_fixture_binary("get-printer-attributes-epsonxp6000.bin"),
         ),
+        repeat=2,
     )
 
     async with ClientSession() as session:
