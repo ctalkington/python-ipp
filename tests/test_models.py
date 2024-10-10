@@ -210,6 +210,22 @@ def test_printer_as_dict() -> None:
     assert isinstance(printer_dict["uris"], List)
     assert len(printer_dict["uris"]) == 2
 
+def test_printer_update_from_dict() -> None:
+    """Test updating data of Printer."""
+    parsed = parser.parse(load_fixture_binary("get-printer-attributes-epsonxp6000.bin"))
+    printer = models.Printer.from_dict(parsed["printers"][0])
+
+    assert printer
+    assert printer.info
+    assert prknter.info.uptime = 783801
+
+    parsed["printer-up-time"] = 2
+    printer.update_from_dict(parsed)
+
+    assert printer
+    assert printer.info
+    assert prknter.info.uptime = 2
+
 @pytest.mark.asyncio
 async def test_printer_with_single_marker() -> None:
     """Test Printer model with single marker."""
