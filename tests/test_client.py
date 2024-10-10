@@ -179,7 +179,7 @@ async def test_timeout(aresponses: ResponsesMockServer) -> None:
 async def test_client_error() -> None:
     """Test http client error."""
     async with ClientSession() as session:
-        ipp = IPP("#", session=session)
+        ipp = IPP(":", session=session)
         with pytest.raises(IPPConnectionError):
             assert await ipp.execute(
                 IppOperation.GET_PRINTER_ATTRIBUTES,
