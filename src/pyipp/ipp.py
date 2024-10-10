@@ -74,7 +74,7 @@ class IPP:
             if printer_uri.port is not None:
                 self.port = printer_uri.port
 
-            self.tls = printer_uri.scheme == "ipps"  # noqa: W0143
+            self.tls = printer_uri.scheme == "ipps"  # disable=W0143
             self.base_path = printer_uri.path
         else:
             self._printer_uri = self._build_printer_uri()
