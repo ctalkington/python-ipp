@@ -158,7 +158,7 @@ class Printer:
             "booted_at": self.booted_at,
         }
 
-    def update(self, data: dict[str, Any])
+    def update_from_dict(self, data: dict[str, Any]) -> Printer:
         """Return updated Printer object from IPP response data."""
         last_uptime = self.info.uptime
 
