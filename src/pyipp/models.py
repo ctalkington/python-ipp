@@ -43,7 +43,6 @@ class Info:
         device_id = data.get("printer-device-id", "")
         uri_supported = data.get("printer-uri-supported", [])
         uuid = data.get("printer-uuid")
-        uptime = data.get("printer-up-time", 0)
 
         if not isinstance(uri_supported, list):
             uri_supported = [str(uri_supported)]
@@ -87,7 +86,7 @@ class Info:
             printer_info=data.get("printer-info"),
             printer_uri_supported=uri_supported,
             serial=serial,
-            uptime=int(uptime),
+            uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
             version=data.get("printer-firmware-string-version"),
             more_info=data.get("printer-more-info"),
