@@ -37,7 +37,7 @@ yarl = ">=1.6.0"
 aresponses = "3.0.0"
 black = "24.4.2"
 blacken-docs = "1.16.0"
-codespell = "2.2.6"
+codespell = "2.3.0"
 covdefaults = "2.3.0"
 coverage = {version = "7.6.2", extras = ["toml"]}
 mypy = "1.10.0"
