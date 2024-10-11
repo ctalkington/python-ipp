@@ -43,6 +43,7 @@ jobs:
         with:
           name: coverage-${{ matrix.python }}
           path: .coverage
+          include-hidden-files: true
 
   coverage:
     runs-on: ubuntu-latest
