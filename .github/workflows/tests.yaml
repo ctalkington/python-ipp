@@ -39,10 +39,11 @@ jobs:
       - name: Run pytest
         run: poetry run pytest --cov pyipp tests
       - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4.3.3
+        uses: actions/upload-artifact@v4.4.3
         with:
           name: coverage-${{ matrix.python }}
           path: .coverage
+          include-hidden-files: true
 
   coverage:
     runs-on: ubuntu-latest
