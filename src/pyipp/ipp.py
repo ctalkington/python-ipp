@@ -181,7 +181,7 @@ class IPP:
             },
         }
 
-        return always_merger.merge(base, msg)  # type: ignore  # noqa: PGH003
+        return always_merger.merge(base, msg)
 
     async def execute(
         self,
