@@ -1,48 +1,83 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
-    "config:base",
+    "config:recommended",
     "schedule:daily"
   ],
   "timezone": "America/Chicago",
-  "labels": ["dependencies"],
+  "labels": [
+    "dependencies"
+  ],
   "lockFileMaintenance": {
     "enabled": true,
     "automerge": true
   },
   "packageRules": [
     {
-      "matchManagers": ["poetry"],
-      "addLabels": ["python"]
+      "matchManagers": [
+        "poetry"
+      ],
+      "addLabels": [
+        "python"
+      ]
     },
     {
-      "matchManagers": ["poetry"],
-      "matchDepTypes": ["dev"],
+      "matchManagers": [
+        "poetry"
+      ],
+      "matchDepTypes": [
+        "dev"
+      ],
       "rangeStrategy": "pin"
     },
     {
-      "matchManagers": ["poetry"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "poetry"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     },
     {
-      "matchManagers": ["npm", "nvm"],
-      "addLabels": ["javascript"],
+      "matchManagers": [
+        "npm",
+        "nvm"
+      ],
+      "addLabels": [
+        "javascript"
+      ],
       "rangeStrategy": "pin"
     },
     {
-      "matchManagers": ["npm", "nvm"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "npm",
+        "nvm"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     },
     {
-      "matchManagers": ["github-actions"],
-      "addLabels": ["github_actions"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "addLabels": [
+        "github_actions"
+      ],
       "rangeStrategy": "pin"
     },
     {
-      "matchManagers": ["github-actions"],
-      "matchUpdateTypes": ["minor", "patch"],
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
       "automerge": true
     }
   ]
