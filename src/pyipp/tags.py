@@ -1,4 +1,5 @@
 """Attribute Tags for IPP."""
+
 from .enums import IppTag
 
 ATTRIBUTE_TAG_MAP = {
@@ -61,4 +62,5 @@ ATTRIBUTE_TAG_MAP = {
     "time-at-completed": IppTag.INTEGER,
     "media": IppTag.NAME,
     "center-of-pixel": IppTag.BOOLEAN,
+    "sides": IppTag.KEYWORD,
 }
