@@ -61,6 +61,10 @@ ATTRIBUTE_TAG_MAP = {
     "time-at-processing": IppTag.INTEGER,
     "time-at-completed": IppTag.INTEGER,
     "media": IppTag.NAME,
+    "media-col": IppTag.BEGIN_COLLECTION,
+    "media-color": IppTag.KEYWORD,
+    "media-source": IppTag.KEYWORD,
+    "media-size": IppTag.BEGIN_COLLECTION,
     "center-of-pixel": IppTag.BOOLEAN,
     "sides": IppTag.KEYWORD,
 }

@@ -147,6 +147,7 @@ class Printer:
     state: State
     uris: list[Uri]
     booted_at: datetime
+    raw: dict[str, Any]
 
     def as_dict(self) -> dict[str, Any]:
         """Return dictionary version of this printer."""
@@ -184,6 +185,7 @@ class Printer:
             state=State.from_dict(data),
             uris=Printer.merge_uri_data(data),
             booted_at=(_utcnow() - timedelta(seconds=info.uptime)),
+            raw=data,
         )
 
     @staticmethod

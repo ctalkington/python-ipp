@@ -7,7 +7,7 @@ import struct
 from typing import Any
 
 from .const import DEFAULT_PROTO_VERSION
-from .enums import IppTag
+from .enums import IppTag,ATTRIBUTE_ENUM_MAP
 from .tags import ATTRIBUTE_TAG_MAP
 
 _LOGGER = logging.getLogger(__name__)
@@ -50,6 +50,16 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
                 byte_str += struct.pack(">h", 0)
 
             byte_str += construct_attribute_values(tag, list_value)
+    elif isinstance(value, dict):
+        byte_str += struct.pack(">b", tag.value)
+        byte_str += construct_attribute_values(tag, name)
+        byte_str += struct.pack(">h", 0)
+
+        for k,v in value.items():
+            byte_str += construct_attribute("", k, IppTag.MEMBER_NAME)
+            byte_str += construct_attribute("", v, ATTRIBUTE_TAG_MAP.get(k, None))
+        
+        byte_str += construct_attribute("", "", IppTag.END_COLLECTION)
     else:
         byte_str = struct.pack(">b", tag.value)
 

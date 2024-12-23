@@ -42,6 +42,15 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "marker-low-levels",
     "marker-names",
     "marker-types",
+    "media-col-default",
+    "media-col-ready",
+    "media-col-supported",
+    "media-color-supported",
+    "media-default",
+    "media-ready",
+    "media-size-supported",
+    "media-source-supported",
+    "media-supported"
 ]
 
 DEFAULT_PORT = 631
