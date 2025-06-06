@@ -63,4 +63,5 @@ ATTRIBUTE_TAG_MAP = {
     "media": IppTag.NAME,
     "center-of-pixel": IppTag.BOOLEAN,
     "sides": IppTag.KEYWORD,
+    "media-source": IppTag.KEYWORD
 }
