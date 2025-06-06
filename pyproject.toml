@@ -26,7 +26,7 @@ version = "0.0.0"
 
 [tool.poetry.dependencies]
 aiohttp = ">=3.0.0"
-async-timeout = { version = "4.0.3", python = "<3.11" }
+async-timeout = { version = "5.0.1", python = "<3.11" }
 awesomeversion = ">=21.10.1"
 backoff = ">=2.2.0"
 deepmerge = ">=1.1.0"
