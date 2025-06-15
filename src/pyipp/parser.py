@@ -289,26 +289,28 @@ def parse(  # noqa: PLR0912, PLR0915
 
             attribute_key = "unsupported-attributes"
             offset += 1
+        else:
+            attribute, new_offset = parse_attribute(
+                raw_data,
+                offset,
+                previous_attribute_name,
+            )
 
-        attribute, new_offset = parse_attribute(
-            raw_data, offset, previous_attribute_name,
-        )
+            # if attribute has a name -> add it
+            # if attribute doesn't have a name -> it is part of an array
+            if attribute["name"]:
+                tmp_data[attribute["name"]] = attribute["value"]
+                previous_attribute_name = attribute["name"]
+            elif previous_attribute_name:
+                # check if attribute is already an array
+                # else convert it to an array
+                if isinstance(tmp_data[previous_attribute_name], list):
+                    tmp_data[previous_attribute_name].append(attribute["value"])
+                else:
+                    tmp_value = tmp_data[previous_attribute_name]
+                    tmp_data[previous_attribute_name] = [tmp_value, attribute["value"]]
 
-        # if attribute has a name -> add it
-        # if attribute doesn't have a name -> it is part of an array
-        if attribute["name"]:
-            tmp_data[attribute["name"]] = attribute["value"]
-            previous_attribute_name = attribute["name"]
-        elif previous_attribute_name:
-            # check if attribute is already an array
-            # else convert it to an array
-            if isinstance(tmp_data[previous_attribute_name], list):
-                tmp_data[previous_attribute_name].append(attribute["value"])
-            else:
-                tmp_value = tmp_data[previous_attribute_name]
-                tmp_data[previous_attribute_name] = [tmp_value, attribute["value"]]
-
-        offset = new_offset
+            offset = new_offset
 
     if isinstance(data[attribute_key], list):
         data[attribute_key].append(tmp_data)
