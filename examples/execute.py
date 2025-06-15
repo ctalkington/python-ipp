@@ -23,7 +23,7 @@ async def main() -> None:
                         "printer-make-and-model",
                         "printer-state",
                         "printer-state-message",
-                        "printer-state-reason",
+                        "printer-state-reasons",
                         "printer-supply",
                         "printer-up-time",
                         "printer-uri-supported",
