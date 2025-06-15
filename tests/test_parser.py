@@ -163,3 +163,13 @@ def test_parse_kyocera_ecosys_m2540dn(snapshot: SnapshotAssertion) -> None:
 
     result = parser.parse(response)
     assert result == snapshot
+
+
+def test_parse_empty_attribute_group(snapshot: SnapshotAssertion) -> None:
+    """Test the parse method against a sample response with an empty attribute group."""
+    response = load_fixture_binary(
+        "get-printer-attributes-empty-attribute-group.bin",
+    )
+
+    result = parser.parse(response)
+    assert result == snapshot

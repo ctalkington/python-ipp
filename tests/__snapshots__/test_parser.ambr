@@ -446,6 +446,31 @@
     ),
   })
 # ---
+# name: test_parse_empty_attribute_group
+  dict({
+    'data': b'',
+    'jobs': list([
+    ]),
+    'operation-attributes': dict({
+      'attributes-charset': 'utf-8',
+      'attributes-natural-language': 'en-US',
+      'printer-uri': 'ipp://printer.example.com:361/ipp/print',
+      'requesting-user-name': 'PythonIPP',
+    }),
+    'printers': list([
+    ]),
+    'request-id': 1,
+    'status-code': 11,
+    'unsupported-attributes': list([
+      dict({
+      }),
+    ]),
+    'version': tuple(
+      2,
+      0,
+    ),
+  })
+# ---
 # name: test_parse_epson_xp6000
   dict({
     'data': b'',
