@@ -187,13 +187,14 @@ class IPP:
         self,
         operation: IppOperation,
         message: dict[str, Any],
+        contains_data: bool = False,
     ) -> dict[str, Any]:
         """Send a request message to the server."""
         message = self._message(operation, message)
         response = await self._request(data=message)
 
         try:
-            parsed = parse_response(response)
+            parsed = parse_response(response, contains_data)
         except (structerror, Exception) as exc:  # disable=broad-except
             raise IPPParseError from exc
 
