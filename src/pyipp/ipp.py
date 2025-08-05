@@ -200,11 +200,12 @@ class IPP:
         if parsed["status-code"] == IppStatus.ERROR_VERSION_NOT_SUPPORTED:
             raise IPPVersionNotSupportedError("IPP version not supported by server")
 
-        if parsed["status-code"] not in range(0x200):
-            raise IPPError(
-                "Unexpected printer status code",
-                {"status-code": parsed["status-code"]},
-            )
+        # Not Works On HP Printer Some Functionalities
+        # if parsed["status-code"] not in range(0x200):
+        #     raise IPPError(
+        #         "Unexpected printer status code",
+        #         {"status-code": parsed["status-code"]},
+        #     )
 
         return parsed
 
