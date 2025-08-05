@@ -1,5 +1,6 @@
 """Tests for Serializer."""
 from pyipp import serializer
+from pyipp import parser
 from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
 from pyipp.enums import IppOperation, IppTag
 
@@ -74,3 +75,47 @@ def test_encode_dict() -> None:
     assert result == load_fixture_binary(
         "serializer/get-printer-attributes-request-000.bin",
     )
+
+def test_encode_collections() -> None:
+    """Test encoding collections."""
+    message = {
+        "version": DEFAULT_PROTO_VERSION,
+        "operation": IppOperation.VALIDATE_JOB,
+        "request-id": 1,
+        "operation-attributes-tag": {
+            "attributes-charset": DEFAULT_CHARSET,
+            "attributes-natural-language": DEFAULT_CHARSET_LANGUAGE,
+            "requesting-user-name": "PythonIPP",
+            "printer-uri": "ipp://printer.example.com:361/ipp/print",
+        },
+        "job-attributes-tag": {
+            "media-col": {
+                "media-bottom-margin": 0,
+                "media-left-margin": 0,
+                "media-right-margin": 0,
+                "media-size": {
+                    "x-dimension": 10000,
+                    "y-dimension": 14800,
+                },
+                "media-source": "photo",
+                "media-top-margin": 0,
+                "media-type": "photographic",
+            },
+        },
+    }
+    encoded = serializer.encode_dict(message)
+    parsed = parser.parse(encoded)
+    assert parsed["jobs"] == [
+        {
+            "ipp-attribute-fidelity": True,
+            "media-col": {
+                "media-bottom-margin": 0,
+                "media-left-margin": 0,
+                "media-right-margin": 0,
+                "media-size": {"x-dimension": 10000, "y-dimension": 14800},
+                "media-source": "photo",
+                "media-top-margin": 0,
+                "media-type": "photographic",
+            },
+        },
+    ]
