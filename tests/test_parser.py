@@ -1,4 +1,5 @@
 """Tests for Parser."""
+
 import pytest
 from syrupy.assertion import SnapshotAssertion
 

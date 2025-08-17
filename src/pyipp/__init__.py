@@ -1,4 +1,5 @@
 """Asynchronous Python client for IPP."""
+
 from .exceptions import (
     IPPConnectionError,
     IPPConnectionUpgradeRequired,

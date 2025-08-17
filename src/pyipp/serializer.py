@@ -1,4 +1,5 @@
 """Data Serializer for IPP."""
+
 from __future__ import annotations
 
 import logging
@@ -61,6 +62,52 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
     return byte_str
 
 
+def encode_collection(name: str, collection: dict[str, Any]) -> bytes:
+    """Encode a dict representing an IPP collection as a byte string.
+
+    Args:
+    ----
+        name (str): The name of the collection
+        collection (dict[str, Any]): The collection contents
+
+    Returns:
+    -------
+        bytes: A binary string representing the collection
+
+    """
+    byte_str = b""
+
+    byte_str += struct.pack(">b", IppTag.BEGIN_COLLECTION.value)
+    byte_str += struct.pack(">h", len(name))
+    byte_str += name.encode("utf-8")
+    byte_str += struct.pack(">h", 0)
+
+    for member_name, value in collection.items():
+        if isinstance(value, dict):
+            byte_str += encode_collection(name=member_name, collection=value)
+        else:
+            byte_str += struct.pack(">b", IppTag.MEMBER_NAME.value)
+            byte_str += struct.pack(">h", 0)
+            byte_str += struct.pack(">h", len(member_name))
+            byte_str += member_name.encode("utf-8")
+            if isinstance(value, int):
+                byte_str += struct.pack(">b", IppTag.INTEGER.value)
+                byte_str += struct.pack(">h", 0)
+                byte_str += struct.pack(">h", 4)
+                byte_str += struct.pack(">h", value)
+            else:
+                byte_str += struct.pack(">b", IppTag.KEYWORD.value)
+                byte_str += struct.pack(">h", 0)
+                byte_str += struct.pack(">h", len(value))
+                byte_str += value.encode("utf-8")
+
+    byte_str += struct.pack(">b", IppTag.END_COLLECTION.value)
+    byte_str += struct.pack(">h", 0)
+    byte_str += struct.pack(">h", 0)
+
+    return byte_str
+
+
 def encode_dict(data: dict[str, Any]) -> bytes:
     """Serialize a dictionary of data into IPP format."""
     version = data["version"] or DEFAULT_PROTO_VERSION
@@ -83,7 +130,11 @@ def encode_dict(data: dict[str, Any]) -> bytes:
         encoded += struct.pack(">b", IppTag.JOB.value)
 
         for attr, value in data["job-attributes-tag"].items():
-            encoded += construct_attribute(attr, value)
+            encoded += (
+                encode_collection(attr, value)
+                if isinstance(value, dict)
+                else construct_attribute(attr, value)
+            )
 
     if isinstance(data.get("printer-attributes-tag"), dict):
         encoded += struct.pack(">b", IppTag.PRINTER.value)

@@ -1,4 +1,5 @@
 """Models for IPP."""
+
 # pylint: disable=R0912,R0915
 from __future__ import annotations
 
@@ -172,7 +173,6 @@ class Printer:
 
         return self
 
-
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Printer:
         """Return Printer object from IPP response data."""
@@ -316,6 +316,7 @@ class Printer:
 def _utcnow() -> datetime:
     """Return the current date and time in UTC."""
     return datetime.now(tz=timezone.utc)
+
 
 def _str_or_none(value: str) -> str | None:
     """Return string while handling string representations of None."""

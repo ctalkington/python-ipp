@@ -1,4 +1,5 @@
 """Response Parser for IPP."""
+
 from __future__ import annotations
 
 import logging
@@ -91,7 +92,9 @@ def parse_attribute(  # noqa: PLR0912, PLR0915
 
     if attribute["name"]:
         _LOGGER.debug(
-            "Attribute Name: %s (%s)", attribute["name"], hex(attribute["tag"]),
+            "Attribute Name: %s (%s)",
+            attribute["name"],
+            hex(attribute["tag"]),
         )
     else:
         _LOGGER.debug("Attribute Tag: %s", hex(attribute["tag"]))

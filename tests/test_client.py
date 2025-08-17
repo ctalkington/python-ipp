@@ -1,4 +1,5 @@
 """Tests for IPP Client."""
+
 import asyncio
 
 import pytest

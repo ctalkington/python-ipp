@@ -1,4 +1,5 @@
 """Asynchronous Python client for IPP."""
+
 from __future__ import annotations
 
 import asyncio
@@ -41,6 +42,7 @@ else:
     from async_timeout import timeout
 
 VERSION = metadata.version(__package__)
+
 
 @dataclass
 class IPP:
@@ -242,7 +244,7 @@ class IPP:
 
         return self._printer
 
-    async def __aenter__(self) -> IPP:   # noqa: PYI034
+    async def __aenter__(self) -> IPP:  # noqa: PYI034
         """Async enter."""
         return self
 

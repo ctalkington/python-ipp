@@ -1,4 +1,5 @@
 """Tests for Serializer."""
+
 from pyipp import serializer
 from pyipp.const import DEFAULT_CHARSET, DEFAULT_CHARSET_LANGUAGE, DEFAULT_PROTO_VERSION
 from pyipp.enums import IppOperation, IppTag

@@ -1,4 +1,5 @@
 """Tests for IPP public interface."""
+
 import pytest
 from aiohttp import ClientSession
 from aresponses import ResponsesMockServer
