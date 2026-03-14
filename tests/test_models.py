@@ -356,6 +356,7 @@ async def test_counters() -> None:
 
     assert counters
     assert counters.impressions_completed == 1234
+    assert counters.impressions_completed_col == {}
     assert counters.pages_completed == 5678
     assert counters.media_sheets_completed == 9012
 
@@ -367,8 +368,43 @@ async def test_counters_defaults() -> None:
 
     assert counters
     assert counters.impressions_completed == -1
+    assert counters.impressions_completed_col == {}
     assert counters.pages_completed == -1
     assert counters.media_sheets_completed == -1
+
+
+@pytest.mark.asyncio
+async def test_counters_col() -> None:
+    """Test Counters model with collection-based impressions."""
+    data: dict[str, Any] = {
+        "printer-impressions-completed-col": {
+            "monochrome": 0,
+            "full-color": 10,
+        },
+    }
+
+    counters = models.Counters.from_dict(data)
+
+    assert counters
+    assert counters.impressions_completed == 10
+    assert counters.impressions_completed_col == {"monochrome": 0, "full-color": 10}
+
+
+@pytest.mark.asyncio
+async def test_counters_col_does_not_override_scalar() -> None:
+    """Test that scalar impressions-completed takes precedence over col."""
+    data: dict[str, Any] = {
+        "printer-impressions-completed": 500,
+        "printer-impressions-completed-col": {
+            "monochrome": 100,
+            "full-color": 200,
+        },
+    }
+
+    counters = models.Counters.from_dict(data)
+
+    assert counters.impressions_completed == 500
+    assert counters.impressions_completed_col == {"monochrome": 100, "full-color": 200}
 
 
 @pytest.mark.asyncio

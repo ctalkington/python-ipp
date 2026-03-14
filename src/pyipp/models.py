@@ -120,14 +120,24 @@ class Counters:
     """Object holding page counter information from IPP."""
 
     impressions_completed: int
+    impressions_completed_col: dict[str, int]
     pages_completed: int
     media_sheets_completed: int
 
     @staticmethod
     def from_dict(data: dict[str, Any]) -> Counters:
         """Return Counters object from IPP response."""
+        col = data.get("printer-impressions-completed-col", {})
+        if not isinstance(col, dict):
+            col = {}
+
+        impressions = data.get("printer-impressions-completed", -1)
+        if impressions == -1 and col:
+            impressions = sum(col.values())
+
         return Counters(
-            impressions_completed=data.get("printer-impressions-completed", -1),
+            impressions_completed=impressions,
+            impressions_completed_col=col,
             pages_completed=data.get("printer-pages-completed", -1),
             media_sheets_completed=data.get("printer-media-sheets-completed", -1),
         )

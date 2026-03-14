@@ -43,6 +43,7 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "marker-names",
     "marker-types",
     "printer-impressions-completed",
+    "printer-impressions-completed-col",
     "printer-pages-completed",
     "printer-media-sheets-completed",
 ]
