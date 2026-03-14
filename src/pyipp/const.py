@@ -42,6 +42,9 @@ DEFAULT_PRINTER_ATTRIBUTES = [
     "marker-low-levels",
     "marker-names",
     "marker-types",
+    "printer-impressions-completed",
+    "printer-pages-completed",
+    "printer-media-sheets-completed",
 ]
 
 DEFAULT_PORT = 631

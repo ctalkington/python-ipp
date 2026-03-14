@@ -344,6 +344,61 @@ async def test_printer_with_single_supported_uri_invalid_uri() -> None:
 
 
 @pytest.mark.asyncio
+async def test_counters() -> None:
+    """Test Counters model."""
+    data: dict[str, Any] = {
+        "printer-impressions-completed": 1234,
+        "printer-pages-completed": 5678,
+        "printer-media-sheets-completed": 9012,
+    }
+
+    counters = models.Counters.from_dict(data)
+
+    assert counters
+    assert counters.impressions_completed == 1234
+    assert counters.pages_completed == 5678
+    assert counters.media_sheets_completed == 9012
+
+
+@pytest.mark.asyncio
+async def test_counters_defaults() -> None:
+    """Test Counters model with missing data."""
+    counters = models.Counters.from_dict({})
+
+    assert counters
+    assert counters.impressions_completed == -1
+    assert counters.pages_completed == -1
+    assert counters.media_sheets_completed == -1
+
+
+@pytest.mark.asyncio
+async def test_printer_counters() -> None:
+    """Test Printer model includes counters."""
+    data = IPPE10_PRINTER_ATTRS.copy()
+    data["printer-impressions-completed"] = 500
+    data["printer-pages-completed"] = 400
+    data["printer-media-sheets-completed"] = 300
+
+    printer = models.Printer.from_dict(data)
+    assert printer
+    assert printer.counters.impressions_completed == 500
+    assert printer.counters.pages_completed == 400
+    assert printer.counters.media_sheets_completed == 300
+
+
+@pytest.mark.asyncio
+async def test_printer_counters_in_as_dict() -> None:
+    """Test Printer as_dict includes counters."""
+    data = IPPE10_PRINTER_ATTRS.copy()
+    data["printer-impressions-completed"] = 100
+
+    printer = models.Printer.from_dict(data)
+    printer_dict = printer.as_dict()
+    assert "counters" in printer_dict
+    assert printer_dict["counters"]["impressions_completed"] == 100
+
+
+@pytest.mark.asyncio
 async def test_printer_with_single_supported_uri_with_security() -> None:
     """Test Printer model with multiple markers."""
     data = IPPE10_PRINTER_ATTRS.copy()
