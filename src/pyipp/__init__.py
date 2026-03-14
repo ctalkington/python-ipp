@@ -9,6 +9,7 @@ from .exceptions import (
 )
 from .ipp import IPP
 from .models import (
+    Counters,
     Info,
     Marker,
     Printer,
@@ -17,6 +18,7 @@ from .models import (
 )
 
 __all__ = [
+    "Counters",
     "Info",
     "Marker",
     "Printer",

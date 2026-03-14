@@ -62,4 +62,7 @@ ATTRIBUTE_TAG_MAP = {
     "media": IppTag.NAME,
     "center-of-pixel": IppTag.BOOLEAN,
     "sides": IppTag.KEYWORD,
+    "printer-impressions-completed": IppTag.INTEGER,
+    "printer-pages-completed": IppTag.INTEGER,
+    "printer-media-sheets-completed": IppTag.INTEGER,
 }

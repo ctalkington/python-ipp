@@ -116,6 +116,34 @@ class Uri:
 
 
 @dataclass
+class Counters:
+    """Object holding page counter information from IPP."""
+
+    impressions_completed: int
+    impressions_completed_col: dict[str, int]
+    pages_completed: int
+    media_sheets_completed: int
+
+    @staticmethod
+    def from_dict(data: dict[str, Any]) -> Counters:
+        """Return Counters object from IPP response."""
+        col = data.get("printer-impressions-completed-col", {})
+        if not isinstance(col, dict):
+            col = {}
+
+        impressions = data.get("printer-impressions-completed", -1)
+        if impressions == -1 and col:
+            impressions = sum(col.values())
+
+        return Counters(
+            impressions_completed=impressions,
+            impressions_completed_col=col,
+            pages_completed=data.get("printer-pages-completed", -1),
+            media_sheets_completed=data.get("printer-media-sheets-completed", -1),
+        )
+
+
+@dataclass
 class State:
     """Object holding the IPP printer state."""
 
@@ -143,6 +171,7 @@ class Printer:
     """Object holding the IPP printer information."""
 
     info: Info
+    counters: Counters
     markers: list[Marker]
     state: State
     uris: list[Uri]
@@ -152,6 +181,7 @@ class Printer:
         """Return dictionary version of this printer."""
         return {
             "info": asdict(self.info),
+            "counters": asdict(self.counters),
             "state": asdict(self.state),
             "markers": [asdict(marker) for marker in self.markers],
             "uris": [asdict(uri) for uri in self.uris],
@@ -163,6 +193,7 @@ class Printer:
         last_uptime = self.info.uptime
 
         self.info = Info.from_dict(data)
+        self.counters = Counters.from_dict(data)
         self.markers = Printer.merge_marker_data(data)
         self.state = State.from_dict(data)
         self.uris = Printer.merge_uri_data(data)
@@ -180,6 +211,7 @@ class Printer:
 
         return Printer(
             info=info,
+            counters=Counters.from_dict(data),
             markers=Printer.merge_marker_data(data),
             state=State.from_dict(data),
             uris=Printer.merge_uri_data(data),
