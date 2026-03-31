@@ -59,7 +59,7 @@ ATTRIBUTE_TAG_MAP = {
     "time-at-creation": IppTag.INTEGER,
     "time-at-processing": IppTag.INTEGER,
     "time-at-completed": IppTag.INTEGER,
-    "media": IppTag.NAME,
+    "media": IppTag.KEYWORD,
     "center-of-pixel": IppTag.BOOLEAN,
     "sides": IppTag.KEYWORD,
 }
