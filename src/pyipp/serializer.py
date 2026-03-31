@@ -36,7 +36,7 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
     byte_str = b""
 
     if not tag and not (tag := ATTRIBUTE_TAG_MAP.get(name, None)):
-        _LOGGER.debug("Unknown IppTag for %s", name)
+        _LOGGER.warning("Unknown IppTag for %s", name)
         return byte_str
 
     if isinstance(value, (list, tuple, set)):
