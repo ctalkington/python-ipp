@@ -1,16 +1,67 @@
 """Data Serializer for IPP."""
+
 from __future__ import annotations
 
 import logging
 import random
 import struct
-from typing import Any
+from typing import Any, Iterable
 
 from .const import DEFAULT_PROTO_VERSION
 from .enums import IppTag
 from .tags import ATTRIBUTE_TAG_MAP
 
 _LOGGER = logging.getLogger(__name__)
+
+
+class IppAttribute(object):
+    """
+    Wrapper for job, printer and operation attributes.
+
+    If an attribute you're attempting to send with your operation is not in the
+    `ATTRIBUTE_TAG_MAP`, this module will ignore serializing it, unless you
+    wrap the value of the attribute in an IppAttribute (with the correct
+    `IppTag` supplied on the constructor).  This will allow the serialization
+    machinery to know how to serialize your desired attribute.
+
+    To serialize collections, just use a plain `dict()`.
+
+    Example code using `IppAttribute`s:
+
+        async with pyipp.IPP(
+            host="localhost",
+            port=631,
+            base_path="/printers/Cups-PDF",
+            tls=False,
+            verify_ssl=True,
+        ) as ipp:
+            opattrs: dict[str, Any] = {"document-format": "text/plain"}
+            jobattrs: dict[str, Any] = {}
+            jobattrs["media-col"] = {
+                "media-size": {
+                    "x-dimension": IppAttribute(IppTag.INTEGER, 21590),  # ; US Letter Width
+                    "y-dimension": IppAttribute(IppTag.INTEGER, 27940),  # ; US Letter Length
+                },
+            }
+            jobattrs["print-scaling"] = IppAttribute(IppTag.KEYWORD, "none")
+
+            pp = {
+                "operation-attributes-tag": opattrs,
+                "job-attributes-tag": jobattrs,
+                "data": "hello world!".encode(
+                    "utf-8"
+                ),
+            }
+            await ipp.execute(
+                pyipp.enums.IppOperation.PRINT_JOB,
+                pp,
+            )
+        )
+    """
+
+    def __init__(self, tag: IppTag, value: Any):
+        self.tag = tag
+        self.value = value
 
 
 def construct_attribute_values(tag: IppTag, value: Any) -> bytes:
@@ -35,9 +86,10 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
     """Serialize the attribute into IPP format."""
     byte_str = b""
 
-    if not tag and not (tag := ATTRIBUTE_TAG_MAP.get(name, None)):
-        _LOGGER.debug("Unknown IppTag for %s", name)
-        return byte_str
+    if not isinstance(value, IppAttribute) and not isinstance(value, dict):
+        if not tag and not (tag := ATTRIBUTE_TAG_MAP.get(name, None)):
+            _LOGGER.warning("Unknown IppTag for %s", name)
+            return byte_str
 
     if isinstance(value, (list, tuple, set)):
         for index, list_value in enumerate(value):
@@ -50,6 +102,39 @@ def construct_attribute(name: str, value: Any, tag: IppTag | None = None) -> byt
                 byte_str += struct.pack(">h", 0)
 
             byte_str += construct_attribute_values(tag, list_value)
+    elif isinstance(value, IppAttribute):
+        byte_str = struct.pack(">b", value.tag.value)
+
+        byte_str += struct.pack(">h", len(name))
+        byte_str += name.encode("utf-8")
+
+        byte_str += construct_attribute_values(value.tag.value, value.value)
+    elif isinstance(value, dict):
+        if value:
+            byte_str = struct.pack(">b", IppTag.BEGIN_COLLECTION)
+            encoded_name = name.encode("utf-8")
+            byte_str += struct.pack(">h", len(encoded_name))
+            byte_str += encoded_name
+            byte_str += struct.pack(">h", 0)  # no value
+            for k, v in value.items():
+                byte_str += struct.pack(">b", IppTag.MEMBER_NAME)
+                byte_str += struct.pack(">h", 0)
+                encoded_k = k.encode("utf-8")
+                byte_str += struct.pack(">h", len(encoded_k))
+                byte_str += encoded_k
+                if isinstance(v, dict):
+                    # K must be empty string now, since we have already
+                    # serialized K here, so the first two items after
+                    # begCollection must be zero-length markers.
+                    k = ""
+                    byte_str += construct_attribute(k, v)
+                else:
+                    # Same here.
+                    k = ""
+                    byte_str += construct_attribute(k, v)
+            byte_str += struct.pack(">b", IppTag.END_COLLECTION)
+            byte_str += struct.pack(">h", 0)
+            byte_str += struct.pack(">h", 0)
     else:
         byte_str = struct.pack(">b", tag.value)
 
