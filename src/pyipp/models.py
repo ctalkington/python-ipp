@@ -88,7 +88,7 @@ class Info:
             serial=serial,
             uptime=data.get("printer-up-time", 0),
             uuid=uuid[9:] if uuid else None,  # strip urn:uuid: from uuid
-            version=data.get("printer-firmware-string-version"),
+            version=_join_if_list(data.get("printer-firmware-string-version")),
             more_info=data.get("printer-more-info"),
         )
 
@@ -316,6 +316,17 @@ class Printer:
 def _utcnow() -> datetime:
     """Return the current date and time in UTC."""
     return datetime.now(tz=timezone.utc)
+
+def _join_if_list(value: Any) -> str | None:
+    """Return value joined into a single string if it is a list."""
+    if value is None:
+        return None
+
+    if isinstance(value, list):
+        return ", ".join(str(item) for item in value)
+
+    return str(value)
+
 
 def _str_or_none(value: str) -> str | None:
     """Return string while handling string representations of None."""

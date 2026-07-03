@@ -84,6 +84,18 @@ async def test_info() -> None:  # noqa: PLR0915
 
 
 @pytest.mark.asyncio
+async def test_info_version_list() -> None:
+    """Test Info model with firmware version reported as multiple values."""
+    parsed = parser.parse(load_fixture_binary("get-printer-attributes-epsonxp6000.bin"))
+    data = parsed["printers"][0]
+    data["printer-firmware-string-version"] = ["2.0", "1.02", "CXNZJ.250.038"]
+    info = models.Info.from_dict(data)
+
+    assert info
+    assert info.version == "2.0, 1.02, CXNZJ.250.038"
+
+
+@pytest.mark.asyncio
 async def test_state() -> None:
     """Test State model."""
     data: dict[str, Any] = {
